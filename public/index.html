@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<title>WhatsApp Sender</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:linear-gradient(135deg,#0f172a,#1e293b,#064e3b);min-height:100vh;color:#e2e8f0;display:flex;flex-direction:column;align-items:center}
+nav{width:100%;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;background:rgba(15,23,42,.85);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.06)}
+.logo{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:700;color:#22c55e}
+.logo span{font-weight:400;color:#94a3b8}
+.lang-toggle{padding:4px 10px;border-radius:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);color:#94a3b8;font-size:12px;font-weight:600;cursor:pointer;outline:none;min-width:48px}
+.lang-toggle:hover{background:rgba(255,255,255,.15)}
+.lang-toggle option{background:#0f172a;color:#e2e8f0}
+.hero{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:20px 24px 40px;max-width:700px}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:8px 18px;border-radius:999px;font-size:13px;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.2);color:#4ade80;margin-bottom:24px}
+.dot{width:8px;height:8px;border-radius:50%;background:#4ade80;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+h1{font-size:clamp(28px,6vw,52px);font-weight:800;line-height:1.2;margin-bottom:16px;color:#f1f5f9}
+h1 em{font-style:normal;color:#22c55e}
+p{font-size:16px;line-height:1.7;color:#94a3b8;margin-bottom:32px;max-width:560px}
+.actions{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:14px 32px;border-radius:12px;font-size:15px;font-weight:700;text-decoration:none;transition:all .25s;cursor:pointer;border:none}
+.btn-primary{background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;box-shadow:0 4px 20px rgba(34,197,94,.25)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(34,197,94,.35)}
+.btn-secondary{background:rgba(255,255,255,.06);color:#94a3b8;border:1px solid rgba(255,255,255,.08)}
+.btn-secondary:hover{background:rgba(255,255,255,.1)}
+.stats{display:flex;gap:24px;margin-top:8px;font-size:13px;color:#64748b;flex-wrap:wrap;justify-content:center;font-weight:700}
+.stats span{display:flex;align-items:center;gap:6px}
+.stats i{color:#4ade80;font-style:normal}
+
+.pricing-section{width:100%;max-width:1100px;padding:40px 24px 60px}
+.pricing-section h2{text-align:center;font-size:clamp(22px,4vw,36px);font-weight:700;margin-bottom:8px;color:#f1f5f9}
+.pricing-section h2 span{color:#22c55e}
+.pricing-section .sub{color:#64748b;font-size:13px;margin-bottom:40px;font-weight:700;text-align:center}
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
+.p-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:32px 28px;text-align:center;transition:all .25s;position:relative;display:flex;flex-direction:column;height:100%;min-height:400px}
+.p-card:hover{transform:translateY(-4px);border-color:rgba(34,197,94,.3);box-shadow:0 8px 30px rgba(34,197,94,.1)}
+.p-card.popular{border-color:#22c55e;background:rgba(34,197,94,.06);box-shadow:0 0 30px rgba(34,197,94,.08)}
+.p-card .pop-badge{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:#22c55e;color:#fff;font-size:11px;font-weight:700;padding:4px 14px;border-radius:999px}
+.p-card h3{font-size:17px;font-weight:700;color:#f1f5f9;margin:12px 0 6px}
+.p-card .price{font-size:22px;font-weight:400;color:#22c55e;margin:8px 0;word-break:break-word}
+.p-card .price span{font-size:14px;color:#64748b;font-weight:400}
+.p-card .msgs{font-size:14px;color:#94a3b8;margin-bottom:16px}
+.p-card ul{list-style:none;padding:0;text-align:start;font-size:13px;color:#94a3b8;flex:1}
+.p-card ul li{display:flex;align-items:center;gap:8px;padding:6px 0}
+.p-card ul li::before{content:'✓';color:#22c55e;font-weight:700}
+.p-card .btn{margin-top:auto;width:100%;justify-content:center;padding:12px}
+.p-card .btn.current{background:rgba(255,255,255,.06);color:#64748b;cursor:default}
+footer{width:100%;padding:20px;text-align:center;font-size:13px;color:#94a3b8;border-top:1px solid rgba(255,255,255,.04);font-weight:700}
+@media(max-width:600px){
+  nav{padding:12px 16px;flex-wrap:wrap;gap:8px}
+  .logo{font-size:15px}
+  .hero{padding:16px 16px 32px}
+  .badge{font-size:12px;padding:6px 14px}
+  .actions .btn{padding:12px 20px;font-size:14px;width:100%}
+  .stats{gap:16px;font-size:12px}
+  .pricing-section{padding:24px 16px 40px}
+  .p-card{padding:24px 20px;min-height:0}
+  .p-card .price{font-size:20px}
+  footer{padding:16px;font-size:12px}
+}
+@media(max-width:400px){
+  nav .lang-toggle{min-width:40px;font-size:11px;padding:3px 6px}
+  .pricing-grid{grid-template-columns:1fr;gap:12px}
+  h1{font-size:24px}
+  p{font-size:14px}
+}
+</style>
+</head>
+<body>
+<nav>
+  <div class="logo">W<span>Sender</span></div>
+  <select class="lang-toggle" onchange="switchLang(this.value)" id="langSelect">
+    <option value="ar">AR</option>
+    <option value="en">EN</option>
+    <option value="de">DE</option>
+    <option value="fr">FR</option>
+    <option value="es">ES</option>
+    <option value="tr">TR</option>
+  </select>
+</nav>
+
+<div class="hero">
+  <div class="badge"><span class="dot"></span><span data-i18n="live">شغال وجاهز</span></div>
+  <h1><span data-i18n="title1">WhatsApp Sender</span><br><em data-i18n="title2">احترافية وآمنة</em></h1>
+  <p data-i18n="desc" style="font-size:14.4px;font-weight:700;margin-bottom:8px">منصة متكاملة لإرسال رسائل واتساب</p>
+  <div class="stats">
+    <span>✓ <span data-i18n="users">أكثر من ٥٠ مستخدم</span></span>
+    <span>✓ <span data-i18n="secure">حماية من الحظر</span></span>
+    <span>✓ <span data-i18n="msgs_sent">خطط مرنة</span></span>
+    <span>✓ <span data-i18n="support">دعم فني 24/7</span></span>
+  </div>
+  <div class="actions" style="margin-top:24px">
+    <a href="/client/login.html" class="btn btn-primary"><span data-i18n="login">تسجيل الدخول</span></a>
+    <a href="mailto:admin@whatsapp.com" class="btn btn-secondary"><span data-i18n="contact">اتصل بنا</span></a>
+  </div>
+</div>
+
+<div class="pricing-section" id="pricingSection">
+  <h2 style="margin-bottom:24px"><span data-i18n="choose_plan">اختر</span> <span data-i18n="your_plan">باقتك</span></h2>
+  <div style="text-align:center;margin-bottom:20px">
+    <select id="currencySelect" style="padding:6px 12px;border-radius:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);color:#94a3b8;font-size:12px;font-weight:600;cursor:pointer;outline:none;min-width:80px" onchange="renderPricing()">
+      <option value="USD">$ USD</option><option value="EUR">€ EUR</option><option value="GBP">£ GBP</option>
+
+    </select>
+  </div>
+  <div class="pricing-grid" id="pricingGrid"><p style="text-align:center;grid-column:1/-1;color:#64748b;font-size:14px;padding:40px" data-i18n="loading">جاري التحميل...</p></div>
+</div>
+
+<footer><span data-i18n="footer">منصة احترافية لإرسال رسائل واتساب</span></footer>
+
+<script>
+const i18n={
+ar:{live:'Live',title1:'WhatsApp Sender',title2:'احترافية وآمنة',desc:'منصة متكاملة لإرسال رسائل واتساب',login:'تسجيل الدخول',contact:'اتصل بنا',users:'أكثر من ٥٠ مستخدم',secure:'حماية من الحظر',msgs_sent:'خطط مرنة',support:'دعم فني ٧/٢٤',plan_info:'معلومات الباقة',plan:'الباقة',free_plan:'تجربة مجانية',msgs:'الرسائل',sessions:'الجلسات',price:'السعر',free:'مجاني',footer:'منصة احترافية لإرسال رسائل واتساب',choose_plan:'اختر',your_plan:'باقتك',pricing_sub:'خطط مرنة تناسب احتياجك',loading:'جاري التحميل...',current:'الحالية',upgrade:'اشتراك',month:'الشهر',popular:'الأكثر طلباً'},
+en:{live:'Live',title1:'WhatsApp Sender',title2:'Professional & Secure',desc:'Complete platform for bulk WhatsApp messaging',login:'Login',contact:'Contact Us',users:'50+ Active Users',secure:'Anti-Ban Protection',msgs_sent:'Flexible plans',support:'24/7 Support',plan_info:'Plan Info',plan:'Plan',free_plan:'Free Trial',msgs:'Messages',sessions:'Sessions',price:'Price',free:'Free',footer:'Professional WhatsApp Sending Platform',choose_plan:'Choose',your_plan:'Your Plan',pricing_sub:'Flexible plans for every need',loading:'Loading...',current:'Current',upgrade:'Subscribe',month:'month',popular:'Most Popular'},
+de:{live:'Live',title1:'WhatsApp Sender',title2:'Professionell & Sicher',desc:'Komplette Plattform für WhatsApp-Massenversand',login:'Login',contact:'Kontakt',users:'50+ aktive Nutzer',secure:'Anti-Ban-Schutz',msgs_sent:'Flexible plans',support:'24/7 Support',plan_info:'Planinfo',plan:'Plan',free_plan:'Kostenlose Testversion',msgs:'Nachrichten',sessions:'Sitzungen',price:'Preis',free:'Kostenlos',footer:'Professionelle WhatsApp-Sendeplattform',choose_plan:'Wählen Sie',your_plan:'Ihren Plan',pricing_sub:'Flexible Pläne für jeden Bedarf',loading:'Laden...',current:'Aktuell',upgrade:'Abonnieren',month:'Monat',popular:'Beliebteste'},
+fr:{live:'Live',title1:'WhatsApp Sender',title2:'Professionnel & Sécurisé',desc:'Plateforme complète pour les messages WhatsApp en masse',login:'Connexion',contact:'Contact',users:'50+ utilisateurs actifs',secure:'Anti-bannissement',msgs_sent:'Flexible plans',support:'Support 24/7',plan_info:'Info forfait',plan:'Forfait',free_plan:'Essai gratuit',msgs:'Messages',sessions:'Sessions',price:'Prix',free:'Gratuit',footer:'Plateforme professionnelle d\'envoi WhatsApp',choose_plan:'Choisissez',your_plan:'Votre forfait',pricing_sub:'Forfaits flexibles pour chaque besoin',loading:'Chargement...',current:'Actuel',upgrade:'S\'abonner',month:'mois',popular:'Le plus populaire'},
+es:{live:'Live',title1:'WhatsApp Sender',title2:'Profesional & Seguro',desc:'Plataforma completa para mensajes WhatsApp masivos',login:'Iniciar sesión',contact:'Contacto',users:'50+ usuarios activos',secure:'Anti-bloqueo',msgs_sent:'Flexible plans',support:'Soporte 24/7',plan_info:'Info del plan',plan:'Plan',free_plan:'Prueba gratis',msgs:'Mensajes',sessions:'Sesiones',price:'Precio',free:'Gratis',footer:'Plataforma profesional de envío WhatsApp',choose_plan:'Elige',your_plan:'tu plan',pricing_sub:'Planes flexibles para cada necesidad',loading:'Cargando...',current:'Actual',upgrade:'Suscribirse',month:'mes',popular:'Más popular'},
+tr:{live:'Live',title1:'WhatsApp Sender',title2:'Profesyonel & Güvenli',desc:'Toplu WhatsApp mesajları için eksiksiz platform',login:'Giriş',contact:'İletişim',users:'50+ aktif kullanıcı',secure:'Anti-ban koruması',msgs_sent:'Flexible plans',support:'7/24 Destek',plan_info:'Plan Bilgisi',plan:'Plan',free_plan:'Ücretsiz Deneme',msgs:'Mesajlar',sessions:'Oturumlar',price:'Fiyat',free:'Ücretsiz',footer:'Profesyonel WhatsApp Gönderme Platformu',choose_plan:'Seç',your_plan:'Planınızı',pricing_sub:'Her ihtiyaca uygun esnek planlar',loading:'Yükleniyor...',current:'Mevcut',upgrade:'Abone Ol',month:'ay',popular:'En Popüler'}
+};
+let lang=localStorage.getItem('lang')||'ar';
+function t(k){return (i18n[lang]&&i18n[lang][k])||i18n.en[k]||k}
+function arNum(s){if(lang!=='ar')return s;return String(s).replace(/\d{1,3}(?=(\d{3})+(?!\d))/g,m=>m+',').replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]).replace('.',',')}
+const rates={EUR:.865,GBP:.743,SAR:3.75,AED:3.67,EGP:51.82,TRY:46.09,INR:95.27,PKR:278.68,BDT:122.72,IDR:18096};
+function curSym(k){const m={USD:'$',EUR:'€',GBP:'£',SAR:'SAR',AED:'AED',TRY:'₺',INR:'₹',PKR:'PKR',BDT:'BDT',IDR:'IDR'};return k==='EGP'?(lang==='ar'?'جنية':'EGP'):(m[k]||k)}
+const CURRENCY_NAMES={USD:{ar:'$ دولار',en:'$ USD',de:'$ USD',fr:'$ USD',es:'$ USD',tr:'$ USD'},EUR:{ar:'€ يورو',en:'€ EUR',de:'€ EUR',fr:'€ EUR',es:'€ EUR',tr:'€ EUR'},GBP:{ar:'£ جنيه إسترليني',en:'£ GBP',de:'£ GBP',fr:'£ GBP',es:'£ GBP',tr:'£ GBP'},SAR:{ar:'ريال',en:'SAR',de:'SAR',fr:'SAR',es:'SAR',tr:'SAR'},AED:{ar:'درهم',en:'AED',de:'AED',fr:'AED',es:'AED',tr:'AED'},EGP:{ar:'جنية',en:'EGP',de:'EGP',fr:'EGP',es:'EGP',tr:'EGP'},TRY:{ar:'₺ ليرة',en:'₺ TRY',de:'₺ TRY',fr:'₺ TRY',es:'₺ TRY',tr:'₺ TRY'},INR:{ar:'₹ روبية',en:'₹ INR',de:'₹ INR',fr:'₹ INR',es:'₹ INR',tr:'₹ INR'},PKR:{ar:'روبية باكستانية',en:'PKR',de:'PKR',fr:'PKR',es:'PKR',tr:'PKR'},BDT:{ar:'تاكا بنغلاديشي',en:'BDT',de:'BDT',fr:'BDT',es:'BDT',tr:'BDT'},IDR:{ar:'روبية إندونيسية',en:'IDR',de:'IDR',fr:'IDR',es:'IDR',tr:'IDR'}};
+function populateCurrencySelect(){const sel=document.getElementById('currencySelect');if(!sel)return;const v=sel.value;sel.innerHTML=Object.keys(CURRENCY_NAMES).map(c=>'<option value="'+c+'"'+(c===v?' selected':'')+'>'+(CURRENCY_NAMES[c][lang]||CURRENCY_NAMES[c].en||c)+'</option>').join('');}
+function switchLang(c){lang=c;localStorage.setItem('lang',c);document.documentElement.lang=c;document.documentElement.dir=c==='ar'?'rtl':'ltr';document.querySelectorAll('[data-i18n]').forEach(e=>e.textContent=t(e.dataset.i18n));document.getElementById('langSelect').value=c;populateCurrencySelect();renderPricing();}
+fetch('/api/pricing').then(r=>r.json()).then(p=>{window.plans=p;renderPricing();}).catch(()=>{});
+fetch('/api/rates').then(r=>r.json()).then(r=>{if(r.rates)Object.assign(rates,r.rates);renderPricing();}).catch(()=>{});
+function fmtP(v,sym){return lang==='ar'?arNum(v.toFixed(2))+' '+sym:Number(v.toFixed(2)).toLocaleString()+' '+sym}
+function renderPricing(){
+  const g=document.getElementById('pricingGrid');
+  const sel=document.getElementById('currencySelect');
+  if(!sel)return;
+  const cur=sel.value;const rate=rates[cur]||1;const sym=curSym(cur);
+  if(!window.plans||!window.plans.length){g.innerHTML='<p style="text-align:center;grid-column:1/-1;color:#64748b;font-size:14px;padding:40px">'+t('loading')+'</p>';return;}
+  g.innerHTML=window.plans.map(p=>{
+    const n=p.name[lang]||p.name.en||'';
+    const isFree=p.price===0;
+    const c=p.price*rate;const hd=p.discountActive&&p.discount>0;const dd=hd?c*(1-p.discount/100):c;
+    const priceStr=isFree?t('free'):fmtP(dd,sym)+(hd?' <span style="text-decoration:line-through;color:#64748b;font-size:12px">'+fmtP(c,sym)+'</span>':'')+(!isFree?' <span>/ '+t('month')+'</span>':'');
+    return '<div class="p-card'+(p.popular?' popular':'')+'">'+
+      (p.popular?'<div class="pop-badge">'+t('popular')+'</div>':'')+
+      (hd?'<div class="pop-badge" style="top:32px;background:#f59e0b">-'+(lang==='ar'?arNum(p.discount):p.discount)+'%</div>':'')+
+      '<h3>'+n+'</h3>'+
+      '<div class="price">'+priceStr+'</div>'+
+      '<ul>'+
+        (p.features[lang]||p.features.en||[]).map(f=>'<li>'+(lang==='ar'?arNum(f):f)+'</li>').join('')+
+      '</ul>'+
+      '<a href="/client/login.html" class="btn '+(isFree?'btn-secondary':'btn-primary')+'">'+(isFree?t('login'):t('upgrade'))+'</a>'+
+    '</div>';
+  }).join('');
+}
+switchLang(lang);
+</script>
+</body>
+</html>

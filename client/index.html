@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>!function(){var l=localStorage.getItem('lang')||'ar';document.documentElement.lang=l;document.documentElement.dir=l==='ar'?'rtl':'ltr'}()</script>
+<title>WhatsApp Sender - Client Panel</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous">
+<style>
+:root{--green:#16a34a;--green-hover:#15803d;--red:#dc2626;--red-hover:#b91c1c;--blue:#2563eb;--purple:#9333ea;--orange:#ea580c;--sidebar-bg:#0f172a;--sidebar-text:rgba(255,255,255,.55);--card-radius:16px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#f1f5f9;color:#1f2937;font-size:14px;line-height:1.5;visibility:hidden}
+.sidebar{background:var(--sidebar-bg);color:#fff;width:250px;position:fixed;top:0;height:100vh;z-index:50;overflow-y:auto;transition:transform .3s}
+[dir=rtl] .sidebar{right:0}[dir=ltr] .sidebar{left:0}
+[dir=rtl] .content{padding-right:250px}[dir=ltr] .content{padding-left:250px}
+.sidebar .logo{padding:20px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:12px}
+.nav-item{display:flex;align-items:center;gap:12px;padding:10px 16px;color:var(--sidebar-text);cursor:pointer;margin:2px 12px;border-radius:10px;font-size:13px;font-weight:500;transition:all .15s;border:none;background:none;width:calc(100% - 24px);text-align:inherit}
+.nav-item:hover,.nav-item.active{background:rgba(255,255,255,.1);color:#fff}
+.nav-item i{width:20px;text-align:center;font-size:15px;flex-shrink:0}
+.content{min-height:100vh;padding:20px;transition:padding .3s}
+.topbar{background:#fff;border-radius:var(--card-radius);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;box-shadow:0 1px 3px rgba(0,0,0,.05);gap:12px}
+.topbar h2{font-size:18px;font-weight:700;color:#1f2937;white-space:nowrap}
+.section{display:none}.section.active{display:block;animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.card{background:#fff;border-radius:var(--card-radius);padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 20px;border-radius:10px;font-size:13px;font-weight:600;border:none;cursor:pointer;transition:all .15s;text-decoration:none;line-height:1.4}
+.btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.1)}
+.btn:active{transform:translateY(0)}
+.btn-primary{background:var(--green);color:#fff}.btn-primary:hover{background:var(--green-hover);color:#fff}
+.btn-danger{background:var(--red);color:#fff}.btn-danger:hover{background:var(--red-hover);color:#fff}
+.btn-sm{padding:6px 12px;font-size:12px}
+.btn-ghost{background:#f1f5f9;color:#374151}.btn-ghost:hover{background:#e2e8f0}
+input,select,textarea{padding:10px 14px;border:1px solid #e2e8f0;border-radius:10px;font-size:13px;width:100%;outline:none;transition:border-color .15s,box-shadow .15s;font-family:inherit;background:#fff;color:#1f2937}
+::placeholder{color:#94a3b8}input::placeholder,textarea::placeholder{color:#94a3b8}
+input:focus,select:focus,textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(22,163,74,.12)}
+.lang-select{padding:4px 8px;border-radius:8px;background:#f1f5f9;border:1px solid #e2e8f0;cursor:pointer;font-size:12px;font-weight:600;text-transform:uppercase;min-width:56px;letter-spacing:.3px;width:auto}
+.stat-card{background:#fff;border-radius:var(--card-radius);padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.stat-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff}
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;white-space:nowrap}
+.badge-success{background:#dcfce7;color:#166534}
+.badge-danger{background:#fee2e2;color:#991b1b}
+.badge-warning{background:#fef3c7;color:#92400e}
+.badge-secondary{background:#f1f5f9;color:#475569}
+.progress-bar{height:6px;border-radius:999px;background:#e2e8f0;overflow:hidden}
+.progress-fill{height:100%;border-radius:999px;transition:width .5s ease}
+.table-wrap{overflow-x:auto;border-radius:12px;border:1px solid #f1f5f9}
+table{width:100%;border-collapse:collapse}
+th{padding:12px 16px;font-size:11px;text-transform:uppercase;color:#94a3b8;font-weight:600;border-bottom:2px solid #f1f5f9;text-align:start;letter-spacing:.5px;white-space:nowrap}
+td{padding:12px 16px;border-bottom:1px solid #f1f5f9;font-size:13px}
+tr:last-child td{border-bottom:none}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1e293b;color:#fff;padding:12px 24px;border-radius:12px;font-size:13px;z-index:200;display:none;box-shadow:0 10px 40px rgba(0,0,0,.2)}
+.toast.show{display:block}
+.spinner{display:inline-block;width:20px;height:20px;border:3px solid #e2e8f0;border-top-color:var(--green);border-radius:50%;animation:spin .6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:768px){
+  .sidebar{width:280px;max-width:85vw;transform:translateX(100%);z-index:100;box-shadow:none}
+  [dir=ltr] .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0);box-shadow:0 0 40px rgba(0,0,0,.3)}
+  .sidebar.open::after{content:'';position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:-1}
+  .content{padding:12px!important;padding-right:12px!important;padding-left:12px!important}
+  .stat-card{padding:14px}
+  .card{padding:14px;border-radius:12px}
+  .topbar{padding:10px 12px;border-radius:12px}
+  .topbar h2{font-size:15px}
+  #pageTitle{font-size:15px!important}
+  [style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr!important}
+  [style*="grid-template-columns:2fr 1fr"]{grid-template-columns:1fr!important}
+  .btn:not(.btn-sm):not(.btn-ghost){width:100%;justify-content:center}
+  .nav-item{padding:12px 14px;font-size:14px}
+  input,select,textarea{padding:11px 12px;font-size:15px}
+  #qrDisplay img{max-width:100%;height:auto;width:auto}
+  #section-history .card>div:nth-child(2){flex-direction:column}
+  #section-history .card>div:nth-child(2)>*{width:100%}
+  #sessionList>div{flex-wrap:wrap;gap:4px}
+  #sessionList>div>div:last-child{width:100%;justify-content:flex-start;padding-top:6px}
+  #createModal>div{padding:20px;margin:12px;width:auto;max-width:none}
+  .stat-card>div:first-child>div:last-child{font-size:20px!important}
+  .table-wrap{overflow-x:auto}
+  table{font-size:12px}
+  th,td{padding:8px 10px}
+  #section-sessions [style*="display:grid"]{grid-template-columns:1fr!important}
+}
+@media(max-width:480px){
+  .sidebar{width:100vw;max-width:100vw}
+  .card{padding:12px;border-radius:10px}
+  .topbar{padding:8px 10px;border-radius:10px}
+  .topbar h2{font-size:13px}
+  #pageTitle{font-size:13px!important}
+  .stat-card{padding:12px}
+  .stat-card>div:first-child>div:last-child{font-size:17px!important}
+  .stat-icon{width:36px;height:36px;font-size:16px}
+  input,select,textarea{padding:10px 10px;font-size:14px}
+  .btn{padding:10px 16px;font-size:13px}
+  .nav-item{padding:10px 12px;font-size:13px}
+  .lang-select{min-width:48px;font-size:11px;padding:4px 6px}
+  th,td{padding:6px 8px;font-size:11px}
+  [style*="gap:"]{gap:8px!important}
+}
+</style>
+</head>
+<body>
+
+<div class="sidebar" id="sidebar">
+  <div class="logo">
+    <div style="width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;background:linear-gradient(135deg,#22c55e,#059669);flex-shrink:0">WS</div>
+    <div style="min-width:0">
+      <div style="font-weight:700;color:#fff;font-size:14px" id="sBrand">WhatsApp Sender</div>
+      <div style="font-size:12px;color:#6ee7b7" id="sBrandSub">Client Panel</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:2px" id="sClientName"></div>
+    </div>
+  </div>
+  <div style="padding:16px 8px">
+    <button class="nav-item active" onclick="showSection('dashboard')" data-section="dashboard"><i class="fas fa-chart-pie"></i><span id="navDashboard">Dashboard</span></button>
+    <button class="nav-item" onclick="showSection('pricing')" data-section="pricing"><i class="fas fa-tags"></i><span id="navPricing">Pricing</span></button>
+    <button class="nav-item" onclick="showSection('sessions')" data-section="sessions"><i class="fab fa-whatsapp"></i><span id="navSessions">WhatsApp</span></button>
+    <button class="nav-item" onclick="showSection('send')" data-section="send"><i class="fas fa-paper-plane"></i><span id="navSend">Send</span></button>
+    <button class="nav-item" onclick="showSection('history')" data-section="history"><i class="fas fa-history"></i><span id="navHistory">History</span></button>
+    <hr style="border-color:rgba(255,255,255,.08);margin:12px 8px">
+    <button class="nav-item" onclick="showSection('api')" data-section="api"><i class="fas fa-key"></i><span id="navApi">API Key</span></button>
+    <button class="nav-item" onclick="showSection('settings')" data-section="settings"><i class="fas fa-cog"></i><span id="navSettings">Settings</span></button>
+    <button class="nav-item" onclick="logout()" style="color:#f87171"><i class="fas fa-sign-out-alt"></i><span id="navLogout">Logout</span></button>
+  </div>
+</div>
+
+<div class="content" id="mainContent">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:10px;min-width:0">
+      <button class="btn btn-sm btn-ghost" onclick="document.getElementById('sidebar').classList.toggle('open')" style="flex-shrink:0"><i class="fas fa-bars"></i></button>
+      <h2 id="pageTitle">Dashboard</h2>
+    </div>
+    <select class="lang-select" onchange="switchLang(this.value)" id="langSelect"></select>
+  </div>
+
+  <!-- Dashboard -->
+  <div id="section-dashboard" class="section active">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:16px" id="statsGrid"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div class="card">
+        <h3 style="font-weight:700;color:#1f2937;margin-bottom:12px;display:flex;align-items:center;gap:8px"><i class="fas fa-info-circle" style="color:var(--green)"></i> <span id="lblPlanInfo">Plan Info</span></h3>
+        <div id="planInfo"></div>
+      </div>
+      <div class="card">
+        <h3 style="font-weight:700;color:#1f2937;margin-bottom:12px;display:flex;align-items:center;gap:8px"><i class="fas fa-bolt" style="color:#eab308"></i> <span id="lblQuickActions">Quick Actions</span></h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <button class="btn btn-primary" onclick="showSection('sessions')"><i class="fas fa-qrcode"></i> <span id="lblNewSession">New Session</span></button>
+          <button class="btn" style="background:var(--blue);color:#fff" onclick="showSection('send')"><i class="fas fa-paper-plane"></i> <span id="lblSendMsg">Send</span></button>
+          <button class="btn" style="background:var(--purple);color:#fff" onclick="showSection('history')"><i class="fas fa-history"></i> <span id="lblHistory">History</span></button>
+          <button class="btn" style="background:var(--orange);color:#fff" onclick="showSection('api')"><i class="fas fa-key"></i> <span id="lblApiKey">API</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pricing -->
+  <div id="section-pricing" class="section">
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:12px;flex-wrap:wrap">
+        <h3 style="font-weight:700;color:#1f2937;display:flex;align-items:center;gap:8px"><i class="fas fa-tags" style="color:var(--green)"></i> <span id="lblPricingTitle">Pricing Plans</span></h3>
+        <select id="currencySelect" style="padding:6px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;background:#f9fafb;width:auto;min-width:80px" onchange="renderPricing()"></select>
+      </div>
+      <div id="pricingContainer" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px"><p style="text-align:center;color:#94a3b8;font-size:14px;padding:32px;grid-column:1/-1">Loading...</p></div>
+    </div>
+  </div>
+
+  <!-- Sessions -->
+  <div id="section-sessions" class="section">
+    <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px">
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+          <h3 style="font-weight:700;color:#1f2937;display:flex;align-items:center;gap:8px"><i class="fab fa-whatsapp" style="color:var(--green);font-size:20px"></i> <span id="lblSessions">Sessions</span></h3>
+          <button class="btn btn-primary btn-sm" onclick="openCreate()"><i class="fas fa-plus"></i> <span id="lblNewSessBtn">New</span></button>
+        </div>
+        <div id="sessionList" style="display:flex;flex-direction:column;gap:8px"><p style="text-align:center;color:#94a3b8;padding:32px;font-size:14px" id="lblLoading">Loading...</p></div>
+      </div>
+      <div class="card">
+        <h3 style="font-weight:700;color:#1f2937;margin-bottom:12px;display:flex;align-items:center;gap:8px"><i class="fas fa-qrcode" style="color:var(--green)"></i> <span id="lblQrTitle">QR</span></h3>
+        <div id="qrDisplay" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:200px;background:#f9fafb;border-radius:12px;padding:16px"><p style="color:#94a3b8;font-size:14px;text-align:center" id="lblQrPlaceholder">Create a session to see QR</p></div>
+        <div id="pairingSection" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid #f3f4f6">
+          <p style="font-size:12px;color:#6b7280;margin-bottom:8px" id="lblPairingHint">Or use pairing code</p>
+          <div style="display:flex;gap:8px"><input type="text" id="pairingPhone" placeholder="966501234567" style="direction:ltr;text-align:left"><button class="btn btn-primary btn-sm" onclick="requestPair()"><span id="lblPairingBtn">Request</span></button></div>
+          <div id="pairingCodeDisplay" style="display:none;margin-top:8px;font-size:18px;font-weight:700;color:#047857;text-align:center;background:#f0fdf4;border-radius:8px;padding:8px;direction:ltr;word-break:break-all"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Send -->
+  <div id="section-send" class="section">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div class="card">
+        <h3 style="font-weight:700;color:#1f2937;margin-bottom:12px;display:flex;align-items:center;gap:8px"><i class="fas fa-paper-plane" style="color:var(--green)"></i> <span id="lblSingleSend">Single Message</span></h3>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <select id="sendSessionSelect"><option value="">-- <span id="lblSelectSession">Select session</span> --</option></select>
+          <input type="text" id="sendTo" placeholder="966501234567" style="direction:ltr;text-align:left">
+          <textarea id="sendText" rows="3" placeholder="Message"></textarea>
+          <button class="btn btn-primary" onclick="sendOne()"><i class="fas fa-paper-plane"></i> <span id="lblSendBtn">Send</span></button>
+        </div>
+      </div>
+      <div class="card">
+        <h3 style="font-weight:700;color:#1f2937;margin-bottom:12px;display:flex;align-items:center;gap:8px"><i class="fas fa-users" style="color:var(--purple)"></i> <span id="lblBulkSend">Bulk Send</span></h3>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <select id="bulkSessionSelect"><option value="">-- <span id="lblBulkSelectSession">Select session</span> --</option></select>
+          <input type="file" id="excelFile" accept=".xlsx,.xls,.csv" style="font-size:13px;padding:8px" onchange="parseExcel(this)">
+          <p style="font-size:12px;color:#6b7280" id="lblExcelFormat">Column A = Phone, B = Message</p>
+          <div id="bulkPreview" style="display:none">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+              <span style="font-size:13px;font-weight:500;color:#374151"><span id="lblTotalRows">Total</span>: <span id="bulkCount">0</span></span>
+              <button class="btn btn-primary btn-sm" onclick="sendBulk()"><i class="fas fa-rocket"></i> <span id="lblSendAllBtn">Send All</span></button>
+            </div>
+            <div id="bulkTable" style="max-height:160px;overflow-y:auto;border:1px solid #e2e8f0;border-radius:8px"></div>
+          </div>
+          <div style="background:#fffbeb;border-radius:12px;padding:12px;font-size:12px;color:#92400e">
+            <strong><i class="fas fa-shield-alt"></i> <span id="lblAntiBan">Anti-Ban:</span></strong> <span id="lblAntiBanDesc">Random delays to prevent bans.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- History -->
+  <div id="section-history" class="section">
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <h3 style="font-weight:700;color:#1f2937;display:flex;align-items:center;gap:8px"><i class="fas fa-history" style="color:var(--green)"></i> <span id="lblMsgHistory">History</span></h3>
+        <div style="display:flex;gap:6px"><button class="btn btn-sm btn-ghost" onclick="exportPDF()" title="Download PDF"><i class="fas fa-file-pdf" style="color:#dc2626"></i></button><button class="btn btn-sm btn-ghost" onclick="loadHistory()"><i class="fas fa-sync"></i></button></div>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+        <input type="text" id="historySearch" placeholder="Search..." style="flex:1;min-width:120px;padding:8px 12px;font-size:13px" oninput="loadHistory()">
+        <select id="historyStatus" style="width:auto;padding:8px 12px;font-size:13px" onchange="loadHistory()">
+          <option value=""><span id="lblAllStatus">All Status</span></option>
+          <option value="queued">Queued</option>
+          <option value="sent">Sent</option>
+          <option value="delivered">Delivered</option>
+          <option value="read">Read</option>
+          <option value="failed">Failed</option>
+          <option value="unknown">Unknown</option>
+        </select>
+        <select id="historySort" style="width:auto;padding:8px 12px;font-size:13px" onchange="loadHistory()">
+          <option value="date_desc"><span id="lblNewest">Newest</span></option>
+          <option value="date_asc"><span id="lblOldest">Oldest</span></option>
+          <option value="status_asc"><span id="lblStatusAsc">Status A-Z</span></option>
+          <option value="status_desc"><span id="lblStatusDesc">Status Z-A</span></option>
+          <option value="to_asc"><span id="lblToAsc">Number A-Z</span></option>
+          <option value="to_desc"><span id="lblToDesc">Number Z-A</span></option>
+        </select>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th id="thFrom">Sender</th><th id="thTo">To</th><th id="thMessage">Message</th><th id="thStatus">Status</th><th id="thTime">Time</th></tr></thead>
+          <tbody id="historyTable"></tbody>
+        </table>
+      </div>
+      <div id="historyPagination" style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px"></div>
+    </div>
+  </div>
+
+  <!-- API -->
+  <div id="section-api" class="section">
+    <div class="card" style="max-width:500px;margin:0 auto;text-align:center">
+      <div style="width:64px;height:64px;border-radius:16px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:24px;margin:0 auto 16px;background:linear-gradient(135deg,#f97316,#eab308);box-shadow:0 10px 15px -3px rgba(0,0,0,.1)"><i class="fas fa-key"></i></div>
+      <h3 style="font-size:20px;font-weight:700;color:#1f2937;margin-bottom:8px" id="lblApiKeyTitle">API Key</h3>
+      <p style="color:#6b7280;font-size:14px;margin-bottom:16px" id="lblApiKeyDesc">Use this key to send messages via API.</p>
+      <div style="display:flex;gap:8px;background:#f9fafb;border-radius:12px;padding:12px;direction:ltr">
+        <code style="flex:1;text-align:left;font-size:13px;font-family:monospace;word-break:break-all" id="apiKeyDisplay">********</code>
+        <button class="btn btn-sm btn-ghost" onclick="copyKey()"><i class="fas fa-copy"></i></button>
+      </div>
+      <div style="margin-top:24px;text-align:left">
+        <h4 style="font-weight:700;color:#374151;margin-bottom:8px;font-size:14px" id="lblApiExamples">Examples:</h4>
+        <div style="background:#111827;border-radius:12px;padding:12px;font-size:12px;font-family:monospace;color:#34d399;direction:ltr;text-align:left;line-height:1.8">
+          <div><span style="color:#94a3b8"># Check Balance</span></div>
+          <div>curl -X GET /v1/balance -H "X-API-Key: YOUR_KEY"</div>
+          <div style="margin-top:8px"><span style="color:#94a3b8"># Send Message</span></div>
+          <div>curl -X POST /v1/send \</div>
+          <div>&nbsp;&nbsp;-H "X-API-Key: YOUR_KEY" \</div>
+          <div>&nbsp;&nbsp;-H "Content-Type: application/json" \</div>
+          <div>&nbsp;&nbsp;-d '{"to":"20123...","message":"Hi","sessionId":"..."}'</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings -->
+  <div id="section-settings" class="section">
+    <div class="card" style="max-width:500px;margin:0 auto">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid #f3f4f6">
+        <div style="width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;background:linear-gradient(135deg,#4b5563,#374151);box-shadow:0 4px 6px rgba(0,0,0,.1);flex-shrink:0"><i class="fas fa-cog"></i></div>
+        <div><h3 style="font-size:18px;font-weight:700;color:#1f2937" id="lblSettingsTitle">Settings</h3><p style="font-size:12px;color:#9ca3af" id="lblSettingsSub">Account settings</p></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div>
+          <h4 style="font-weight:700;color:#374151;font-size:14px;margin-bottom:12px;display:flex;align-items:center;gap:8px"><i class="fas fa-lock" style="color:var(--green)"></i> <span id="lblChangePass">Change Password</span></h4>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div><label style="display:block;font-size:12px;font-weight:500;color:#6b7280;margin-bottom:4px" id="lblCurrentPass">Current</label><input id="cpCurrent" type="password" placeholder="********"></div>
+            <div><label style="display:block;font-size:12px;font-weight:500;color:#6b7280;margin-bottom:4px" id="lblNewPass">New</label><div style="position:relative"><input id="cpNew" type="password" placeholder="********" style="width:100%;padding-inline-end:32px"><button type="button" onclick="togglePass('cpNew','eyeNew')" style="position:absolute;inset-inline-end:8px;top:50%;transform:translateY(-50%);color:#9ca3af;border:none;background:none;cursor:pointer;padding:0;font-size:14px" tabindex="-1"><i id="eyeNew" class="fas fa-eye"></i></button></div></div>
+            <div><label style="display:block;font-size:12px;font-weight:500;color:#6b7280;margin-bottom:4px" id="lblConfirmPass">Confirm</label><div style="position:relative"><input id="cpConfirm" type="password" placeholder="********" style="width:100%;padding-inline-end:32px"><button type="button" onclick="togglePass('cpConfirm','eyeConfirm')" style="position:absolute;inset-inline-end:8px;top:50%;transform:translateY(-50%);color:#9ca3af;border:none;background:none;cursor:pointer;padding:0;font-size:14px" tabindex="-1"><i id="eyeConfirm" class="fas fa-eye"></i></button></div></div>
+            <button class="btn btn-primary" onclick="changePass()"><i class="fas fa-save"></i> <span id="lblSavePass">Update</span></button>
+          </div>
+        </div>
+        <div style="border-radius:12px;padding:16px;font-size:14px;color:#166534;background:linear-gradient(135deg,#f0fdf4,rgba(236,253,245,.8));border:1px solid #bbf7d0">
+          <div style="display:flex;align-items:center;gap:12px">
+            <div style="width:36px;height:36px;background:#dcfce7;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fas fa-shield-alt" style="color:var(--green)"></i></div>
+            <div><strong id="lblTip" style="color:#15803d">Tip:</strong> <span id="lblTipText">Use a strong password with 8+ characters.</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Create Session Modal -->
+<div id="createModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:center;justify-content:center" onclick="if(event.target===this)closeCreate()">
+  <div style="background:#fff;border-radius:20px;padding:32px;width:90%;max-width:500px;max-height:85vh;overflow-y:auto;box-shadow:0 25px 50px rgba(0,0,0,.15)" onclick="event.stopPropagation()">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
+      <h3 style="font-size:20px;font-weight:700;color:#1f2937" id="modalCreateTitle">New Session</h3>
+      <button style="color:#9ca3af;font-size:24px;border:none;background:none;cursor:pointer;padding:4px;line-height:1" onclick="closeCreate()">&times;</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div><label style="display:block;font-size:14px;font-weight:500;color:#4b5563;margin-bottom:4px" id="lblPhone">Phone</label><input id="sessionPhone" placeholder="966501234567" style="direction:ltr;text-align:left"></div>
+      <div><label style="display:block;font-size:14px;font-weight:500;color:#4b5563;margin-bottom:4px" id="lblSessionName">Name (optional)</label><input id="sessionName" placeholder="My Phone"></div>
+    </div>
+    <div style="display:flex;gap:12px;margin-top:24px">
+      <button class="btn btn-primary" style="flex:1" onclick="createSession()"><span id="lblCreateBtn">Create</span></button>
+      <button class="btn btn-ghost" style="flex:1" onclick="closeCreate()"><span id="lblCancelBtn">Cancel</span></button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" crossorigin="anonymous"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+const LANG_LIST = ['ar','en','de','fr','es','tr'];
+let lang = localStorage.getItem('lang') || 'ar';
+function arNum(s){if(lang!=='ar')return s;return String(s).replace(/\d{1,3}(?=(\d{3})+(?!\d))/g,m=>m+',').replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]).replace('.',',')}
+const TOKEN = localStorage.getItem('clientToken');
+if (!TOKEN) { window.location.href = '/client/login.html'; }
+let waSocket = null;
+let bulkData = [];
+let qrPollTimer = null;
+
+const i18n = {
+  ar:{lblToDesc:'الرقم ي-أ',reconnect:'إعادة اتصال',session_limit_reached:'تم الوصول للحد الأقصى للجلسات',reset_trial:'إعادة تعيين التجربة',reset_trial_confirm:'إعادة تعيين التجربة؟ سيتم مسح جميع البيانات.',upgradeSent:'طلب الترقية قيد المراجعة',features_label:'الميزات',phone_header:'الهاتف',message_header:'الرسالة',no_key:'لا يوجد مفتاح',request_failed:'فشل الطلب',phone_required:'رقم الجوال مطلوب',session_created:'تم إنشاء الجلسة',reconnecting:'جاري إعادة الاتصال...',code_sent:'تم إرسال الكود',deleted_label:'تم الحذف',fill_all_fields:'املأ جميع الحقول',sent_ok:'تم الإرسال!',no_valid_data:'لا توجد بيانات صالحة',error_read_file:'خطأ في قراءة الملف',select_session_err:'اختر جلسة',no_key_to_copy:'لا يوجد مفتاح للنسخ',copied:'تم النسخ!',failed_copy:'فشل النسخ',passwords_mismatch:'كلمتا المرور غير متطابقتين',password_short:'كلمة المرور قصيرة جداً',password_updated:'تم تحديث كلمة المرور!',search:'بحث',lblSettingsTitle:'الإعدادات',lblSettingsSub:'إعدادات الحساب',downloadPdf:'تحميل PDF',page:'صفحة',status_queued:'قيد الانتظار',status_delivered:'تم التوصيل',status_read:'مقروءة',status_unknown:'غير معروف'},
+  en:{sendPlaceholder:'Message',upgrade:'Upgrade',current:'Current',popular:'Most Popular',per_month:'/mo',brand:'WhatsApp Sender',brandSub:'Client Panel',navDashboard:'Dashboard',navPricing:'Pricing',navSessions:'WhatsApp',navSend:'Send',navHistory:'History',navApi:'API Key',navSettings:'Settings',navLogout:'Logout',pageTitle:'Dashboard',lblPlanInfo:'Plan Info',lblQuickActions:'Quick Actions',lblNewSession:'New Session',lblSendMsg:'Send',lblHistory:'History',lblApiKey:'API Key',lblSessions:'Sessions',lblNewSessBtn:'New',lblQrTitle:'QR',lblQrPlaceholder:'Create a session to see QR',lblPairingHint:'Or use pairing code',lblPairingBtn:'Request',lblSingleSend:'Single Message',lblBulkSend:'Bulk Send',lblSelectSession:'Select session',lblBulkSelectSession:'Select session',lblExcelFormat:'Column A = Phone, B = Message',lblTotalRows:'Total',lblSendBtn:'Send',lblSendAllBtn:'Send All',lblAntiBan:'Anti-Ban:',lblAntiBanDesc:'Random delays to prevent bans.',lblMsgHistory:'Message History',thFrom:'Sender',thTo:'To',thMessage:'Message',thStatus:'Status',thTime:'Time',lblApiKeyTitle:'API Key',lblApiKeyDesc:'Use this key to send messages via API.',lblApiExamples:'Examples:',lblLoading:'Loading...',lblNewSessBtn:'New',modalCreateTitle:'New Session',lblPhone:'Phone',lblSessionName:'Name (optional)',lblCreateBtn:'Create',lblCancelBtn:'Cancel',connected:'Connected',waiting_qr:'Waiting QR',disconnected:'Disconnected',sent:'Sent',failed:'Failed',no_sessions:'No sessions',msgs_used:'Used',msgs_remaining:'Remaining',msgs_total:'Total',stats_connected:'Connected',expiry:'Expiry',lblStatus:'Status',active:'Active',pricing_plans:'Pricing Plans',lblPricingTitle:'Pricing',lblChangePass:'Change Password',lblCurrentPass:'Current Password',lblNewPass:'New Password',lblConfirmPass:'Confirm Password',lblSavePass:'Update',lblTip:'Tip:',lblTipText:'Use a strong password with 8+ characters.',no_data:'No data',delete:'Delete',s_delete:'Delete session',lblAllStatus:'All Status',lblNewest:'Newest',lblOldest:'Oldest',lblStatusAsc:'Status A-Z',lblStatusDesc:'Status Z-A',lblToAsc:'Number A-Z',lblToDesc:'Number Z-A',reconnect:'Reconnect',session_limit_reached:'Session limit reached',reset_trial:'Reset Trial',reset_trial_confirm:'Reset your trial? All data will be cleared.',upgradeSent:'Upgrade request sent to admin',features_label:'Features',phone_header:'Phone',message_header:'Message',no_key:'No key',request_failed:'Request failed',phone_required:'Phone required',session_created:'Session created',reconnecting:'Reconnecting...',code_sent:'Code sent',deleted_label:'Deleted',fill_all_fields:'Fill all fields',sent_ok:'Sent!',no_valid_data:'No valid data',error_read_file:'Error reading file',select_session_err:'Select session',no_key_to_copy:'No key to copy',copied:'Copied!',failed_copy:'Failed to copy',passwords_mismatch:'Passwords mismatch',password_short:'Password too short',password_updated:'Password updated!',search:'Search',lblSettingsTitle:'Settings',lblSettingsSub:'Account settings',downloadPdf:'Download PDF',page:'Page'},
+  de:{sendPlaceholder:'Nachricht',brand:'WhatsApp Sender',brandSub:'Kundenbereich',navDashboard:'Dashboard',navPricing:'Preise',navSessions:'WhatsApp',navSend:'Senden',navHistory:'Verlauf',navApi:'API-Schlüssel',navSettings:'Einstellungen',navLogout:'Abmelden',pageTitle:'Dashboard',lblPlanInfo:'Planinfo',lblQuickActions:'Schnellzugriff',lblNewSession:'Neue Sitzung',lblSendMsg:'Senden',lblHistory:'Verlauf',lblApiKey:'API-Schlüssel',lblSessions:'Sitzungen',lblNewSessBtn:'Neu',lblQrTitle:'QR',lblQrPlaceholder:'Erstellen Sie eine Sitzung für QR',lblPairingHint:'Oder Pairing-Code verwenden',lblPairingBtn:'Anfordern',lblSingleSend:'Einzelnachricht',lblBulkSend:'Massenversand',lblSelectSession:'Sitzung wählen',lblBulkSelectSession:'Sitzung wählen',lblExcelFormat:'Spalte A = Telefon, B = Nachricht',lblTotalRows:'Gesamt',lblSendBtn:'Senden',lblSendAllBtn:'Alle senden',lblAntiBan:'Anti-Ban:',lblAntiBanDesc:'Zufällige Verzögerungen gegen Sperren.',lblMsgHistory:'Nachrichtenverlauf',thFrom:'Absender',thTo:'An',thMessage:'Nachricht',thStatus:'Status',thTime:'Zeit',lblApiKeyTitle:'API-Schlüssel',lblApiKeyDesc:'Diesen Schlüssel für API-Nachrichten verwenden.',lblApiExamples:'Beispiele:',lblLoading:'Laden...',lblNewSessBtn:'Neu',modalCreateTitle:'Neue Sitzung',lblPhone:'Telefon',lblSessionName:'Name (optional)',lblCreateBtn:'Erstellen',lblCancelBtn:'Abbrechen',connected:'Verbunden',waiting_qr:'Warte auf QR',disconnected:'Getrennt',sent:'Gesendet',failed:'Fehlgeschlagen',no_sessions:'Keine Sitzungen',msgs_used:'Genutzt',msgs_remaining:'Übrig',msgs_total:'Gesamt',stats_connected:'Verbunden',expiry:'Ablauf',lblStatus:'Status',active:'Aktiv',pricing_plans:'Preispläne',lblPricingTitle:'Preise',per_month:'/Monat',lblChangePass:'Passwort ändern',lblCurrentPass:'Aktuelles Passwort',lblNewPass:'Neues Passwort',lblConfirmPass:'Passwort bestätigen',lblSavePass:'Aktualisieren',lblTip:'Tipp:',lblTipText:'Verwenden Sie ein starkes Passwort mit 8+ Zeichen.',no_data:'Keine Daten',delete:'Löschen',s_delete:'Sitzung löschen',lblAllStatus:'Alle Status',lblNewest:'Neueste',lblOldest:'Älteste',lblStatusAsc:'Status A-Z',lblStatusDesc:'Status Z-A',lblToAsc:'Nummer A-Z',lblToDesc:'Nummer Z-A',reconnect:'Wiederverbinden',session_limit_reached:'Sitzungslimit erreicht',reset_trial:'Test zurücksetzen',reset_trial_confirm:'Test zurücksetzen? Alle Daten werden gelöscht.',upgradeSent:'Upgrade-Anfrage an Admin gesendet',lblSettingsTitle:'Einstellungen',lblSettingsSub:'Kontoeinstellungen',downloadPdf:'PDF herunterladen'},
+  fr:{sendPlaceholder:'Message',brand:'WhatsApp Sender',brandSub:'Espace client',navDashboard:'Tableau',navPricing:'Tarifs',navSessions:'WhatsApp',navSend:'Envoyer',navHistory:'Historique',navApi:'Clé API',navSettings:'Paramètres',navLogout:'Déconnexion',pageTitle:'Tableau de bord',lblPlanInfo:'Info forfait',lblQuickActions:'Actions rapides',lblNewSession:'Nouvelle session',lblSendMsg:'Envoyer',lblHistory:'Historique',lblApiKey:'Clé API',lblSessions:'Sessions',lblNewSessBtn:'Nouvelle',lblQrTitle:'QR',lblQrPlaceholder:'Créez une session pour voir le QR',lblPairingHint:'Ou utiliser le code WhatsApp',lblPairingBtn:'Demander',lblSingleSend:'Message unique',lblBulkSend:'Envoi groupé',lblSelectSession:'Choisir session',lblBulkSelectSession:'Choisir session',lblExcelFormat:'Colonne A = Téléphone, B = Message',lblTotalRows:'Total',lblSendBtn:'Envoyer',lblSendAllBtn:'Tout envoyer',lblAntiBan:'Anti-Ban:',lblAntiBanDesc:'Délais aléatoires anti-bannissement.',lblMsgHistory:'Historique des messages',thFrom:'Expéditeur',thTo:'À',thMessage:'Message',thStatus:'Statut',thTime:'Heure',lblApiKeyTitle:'Clé API',lblApiKeyDesc:'Utilisez cette clé pour envoyer via API.',lblApiExamples:'Exemples:',lblLoading:'Chargement...',lblNewSessBtn:'Nouvelle',modalCreateTitle:'Nouvelle session',lblPhone:'Téléphone',lblSessionName:'Nom (optionnel)',lblCreateBtn:'Créer',lblCancelBtn:'Annuler',connected:'Connecté',waiting_qr:'Attente QR',disconnected:'Déconnecté',sent:'Envoyé',failed:'Échoué',no_sessions:'Aucune session',msgs_used:'Utilisé',msgs_remaining:'Restant',msgs_total:'Total',stats_connected:'Connecté',expiry:'Expiration',lblStatus:'Statut',active:'Actif',pricing_plans:'Plans',lblPricingTitle:'Tarifs',per_month:'/mois',lblChangePass:'Changer mot de passe',lblCurrentPass:'Mot de passe actuel',lblNewPass:'Nouveau mot de passe',lblConfirmPass:'Confirmer',lblSavePass:'Mettre à jour',lblTip:'Conseil:',lblTipText:'Utilisez un mot de passe fort de 8+ caractères.',no_data:'Aucune donnée',delete:'Supprimer',s_delete:'Supprimer session',lblAllStatus:'Tous les statuts',lblNewest:'Plus récent',lblOldest:'Plus ancien',lblStatusAsc:'Statut A-Z',lblStatusDesc:'Statut Z-A',lblToAsc:'Numéro A-Z',lblToDesc:'Numéro Z-A',reconnect:'Reconnecter',session_limit_reached:'Limite de sessions atteinte',reset_trial:'Réinitialiser essai',reset_trial_confirm:'Réinitialiser votre essai ? Toutes les données seront effacées.',upgradeSent:'Demande d\'upgrade envoyée à l\'admin',lblSettingsTitle:'Paramètres',lblSettingsSub:'Paramètres du compte',downloadPdf:'Télécharger PDF'},
+  es:{sendPlaceholder:'Mensaje',brand:'WhatsApp Sender',brandSub:'Panel de cliente',navDashboard:'Panel',navPricing:'Precios',navSessions:'WhatsApp',navSend:'Enviar',navHistory:'Historial',navApi:'Clave API',navSettings:'Ajustes',navLogout:'Cerrar sesión',pageTitle:'Panel',lblPlanInfo:'Info del plan',lblQuickActions:'Acciones rápidas',lblNewSession:'Nueva sesión',lblSendMsg:'Enviar',lblHistory:'Historial',lblApiKey:'Clave API',lblSessions:'Sesiones',lblNewSessBtn:'Nueva',lblQrTitle:'QR',lblQrPlaceholder:'Cree una sesión para ver QR',lblPairingHint:'O use código de WhatsApp',lblPairingBtn:'Solicitar',lblSingleSend:'Mensaje único',lblBulkSend:'Envío masivo',lblSelectSession:'Seleccionar sesión',lblBulkSelectSession:'Seleccionar sesión',lblExcelFormat:'Columna A = Teléfono, B = Mensaje',lblTotalRows:'Total',lblSendBtn:'Enviar',lblSendAllBtn:'Enviar todo',lblAntiBan:'Anti-Bloqueo:',lblAntiBanDesc:'Retrasos aleatorios anti-bloqueo.',lblMsgHistory:'Historial de mensajes',thFrom:'Remitente',thTo:'Para',thMessage:'Mensaje',thStatus:'Estado',thTime:'Hora',lblApiKeyTitle:'Clave API',lblApiKeyDesc:'Use esta clave para enviar por API.',lblApiExamples:'Ejemplos:',lblLoading:'Cargando...',lblNewSessBtn:'Nueva',modalCreateTitle:'Nueva sesión',lblPhone:'Teléfono',lblSessionName:'Nombre (opcional)',lblCreateBtn:'Crear',lblCancelBtn:'Cancelar',connected:'Conectado',waiting_qr:'Esperando QR',disconnected:'Desconectado',sent:'Enviado',failed:'Fallido',no_sessions:'Sin sesiones',msgs_used:'Usado',msgs_remaining:'Restante',msgs_total:'Total',stats_connected:'Conectado',expiry:'Vencimiento',lblStatus:'Estado',active:'Activo',pricing_plans:'Planes',lblPricingTitle:'Precios',per_month:'/mes',lblChangePass:'Cambiar contraseña',lblCurrentPass:'Contraseña actual',lblNewPass:'Nueva contraseña',lblConfirmPass:'Confirmar',lblSavePass:'Actualizar',lblTip:'Consejo:',lblTipText:'Use una contraseña fuerte de 8+ caracteres.',no_data:'Sin datos',delete:'Eliminar',s_delete:'Eliminar sesión',lblAllStatus:'Todos los estados',lblNewest:'Más reciente',lblOldest:'Más antiguo',lblStatusAsc:'Estado A-Z',lblStatusDesc:'Estado Z-A',lblToAsc:'Número A-Z',lblToDesc:'Número Z-A',reconnect:'Reconectar',session_limit_reached:'Límite de sesiones alcanzado',reset_trial:'Restablecer prueba',reset_trial_confirm:'¿Restablecer su prueba? Todos los datos se borrarán.',upgradeSent:'Solicitud de mejora enviada al admin',lblSettingsTitle:'Ajustes',lblSettingsSub:'Ajustes de la cuenta',downloadPdf:'Descargar PDF'},
+  tr:{sendPlaceholder:'Mesaj',brand:'WhatsApp Sender',brandSub:'Müşteri Paneli',navDashboard:'Panel',navPricing:'Fiyatlar',navSessions:'WhatsApp',navSend:'Gönder',navHistory:'Geçmiş',navApi:'API Anahtarı',navSettings:'Ayarlar',navLogout:'Çıkış',pageTitle:'Panel',lblPlanInfo:'Plan Bilgisi',lblQuickActions:'Hızlı İşlemler',lblNewSession:'Yeni Oturum',lblSendMsg:'Gönder',lblHistory:'Geçmiş',lblApiKey:'API Anahtarı',lblSessions:'Oturumlar',lblNewSessBtn:'Yeni',lblQrTitle:'QR',lblQrPlaceholder:'QR görmek için oturum oluşturun',lblPairingHint:'Veya WhatsApp kodu kullan',lblPairingBtn:'İste',lblSingleSend:'Tek Mesaj',lblBulkSend:'Toplu Gönder',lblSelectSession:'Oturum seç',lblBulkSelectSession:'Oturum seç',lblExcelFormat:'Sütun A = Telefon, B = Mesaj',lblTotalRows:'Toplam',lblSendBtn:'Gönder',lblSendAllBtn:'Tümünü Gönder',lblAntiBan:'Anti-Ban:',lblAntiBanDesc:'Yasaklamayı önlemek için rastgele gecikmeler.',lblMsgHistory:'Mesaj Geçmişi',thFrom:'Gönderen',thTo:'Kime',thMessage:'Mesaj',thStatus:'Durum',thTime:'Zaman',lblApiKeyTitle:'API Anahtarı',lblApiKeyDesc:'API üzerinden göndermek için bu anahtarı kullanın.',lblApiExamples:'Örnekler:',lblLoading:'Yükleniyor...',lblNewSessBtn:'Yeni',modalCreateTitle:'Yeni Oturum',lblPhone:'Telefon',lblSessionName:'İsim (isteğe bağlı)',lblCreateBtn:'Oluştur',lblCancelBtn:'İptal',connected:'Bağlı',waiting_qr:'QR Bekleniyor',disconnected:'Bağlantı Koptu',sent:'Gönderildi',failed:'Başarısız',no_sessions:'Oturum yok',msgs_used:'Kullanılan',msgs_remaining:'Kalan',msgs_total:'Toplam',stats_connected:'Bağlı',expiry:'Bitiş',lblStatus:'Durum',active:'Aktif',pricing_plans:'Planlar',lblPricingTitle:'Fiyatlar',per_month:'/ay',lblChangePass:'Şifre Değiştir',lblCurrentPass:'Mevcut Şifre',lblNewPass:'Yeni Şifre',lblConfirmPass:'Şifreyi Onayla',lblSavePass:'Güncelle',lblTip:'İpucu:',lblTipText:'8+ karakterli güçlü bir şifre kullanın.',no_data:'Veri yok',delete:'Sil',s_delete:'Oturumu sil',lblAllStatus:'Tüm Durumlar',lblNewest:'En Yeni',lblOldest:'En Eski',lblStatusAsc:'Durum A-Z',lblStatusDesc:'Durum Z-A',lblToAsc:'Numara A-Z',lblToDesc:'Numara Z-A',reconnect:'Yeniden Bağlan',session_limit_reached:'Oturum sınırına ulaşıldı',reset_trial:'Denemeyi Sıfırla',reset_trial_confirm:'Denemeniz sıfırlansın mı? Tüm veriler silinecek.',upgradeSent:'Yükseltme talebi yöneticiye gönderildi',lblSettingsTitle:'Ayarlar',lblSettingsSub:'Hesap ayarları',downloadPdf:'PDF İndir'},
+};
+
+function t(k){return (i18n[lang]&&i18n[lang][k])||i18n.en[k]||k;}
+
+function apply(){
+  const sel=document.getElementById('langSelect');
+  const L={ar:'AR',en:'EN',de:'DE',fr:'FR',es:'ES',tr:'TR'};
+  if(sel)sel.innerHTML=LANG_LIST.map(c=>`<option value="${c}"${c===lang?' selected':''}>${L[c]}</option>`).join('');
+  document.documentElement.lang=lang;
+  document.documentElement.dir=lang==='ar'?'rtl':'ltr';
+  const ids='sBrand,sBrandSub,navDashboard,navPricing,navSessions,navSend,navHistory,navApi,navSettings,navLogout,pageTitle,lblPlanInfo,lblQuickActions,lblNewSession,lblSendMsg,lblHistory,lblApiKey,lblSessions,lblNewSessBtn,lblQrTitle,lblQrPlaceholder,lblPairingHint,lblPairingBtn,lblSingleSend,lblBulkSend,lblSelectSession,lblBulkSelectSession,lblExcelFormat,lblTotalRows,lblSendBtn,lblSendAllBtn,lblAntiBan,lblAntiBanDesc,lblMsgHistory,thFrom,thTo,thMessage,thStatus,thTime,lblApiKeyTitle,lblApiKeyDesc,lblApiExamples,lblLoading,modalCreateTitle,lblPhone,lblSessionName,lblCreateBtn,lblCancelBtn,lblSettingsTitle,lblSettingsSub,lblChangePass,lblCurrentPass,lblNewPass,lblConfirmPass,lblSavePass,lblTip,lblTipText,lblPricingTitle,s_delete,lblAllStatus,lblNewest,lblOldest,lblStatusAsc,lblStatusDesc,lblToAsc,lblToDesc,reconnect'.split(',');
+  ids.forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=t(id);});
+  const hs=document.getElementById('historySearch');if(hs)hs.placeholder=t('search');
+  const st=document.getElementById('sendText');if(st)st.placeholder=t('sendPlaceholder');
+  const pdfBtn=document.querySelector('button[onclick="exportPDF()"]');if(pdfBtn)pdfBtn.title=t('downloadPdf');
+  // Translate history status filter options
+  const statusOpts={queued:'status_queued',sent:'sent',delivered:'status_delivered',read:'status_read',failed:'failed',unknown:'status_unknown'};
+  Object.keys(statusOpts).forEach(k=>{const o=document.querySelector('#historyStatus option[value="'+k+'"]');if(o)o.textContent=t(statusOpts[k]);});
+  localStorage.setItem('lang', lang);
+  populateCurrencySelect();
+}
+
+const CUR_NAMES={USD:{ar:'$ دولار',en:'$ USD',de:'$ USD',fr:'$ USD',es:'$ USD',tr:'$ USD'},EUR:{ar:'€ يورو',en:'€ EUR',de:'€ EUR',fr:'€ EUR',es:'€ EUR',tr:'€ EUR'},GBP:{ar:'£ جنيه إسترليني',en:'£ GBP',de:'£ GBP',fr:'£ GBP',es:'£ GBP',tr:'£ GBP'},SAR:{ar:'ريال',en:'SAR',de:'SAR',fr:'SAR',es:'SAR',tr:'SAR'},AED:{ar:'درهم',en:'AED',de:'AED',fr:'AED',es:'AED',tr:'AED'},EGP:{ar:'جنية',en:'EGP',de:'EGP',fr:'EGP',es:'EGP',tr:'EGP'},TRY:{ar:'₺ ليرة',en:'₺ TRY',de:'₺ TRY',fr:'₺ TRY',es:'₺ TRY',tr:'₺ TRY'},INR:{ar:'₹ روبية',en:'₹ INR',de:'₹ INR',fr:'₹ INR',es:'₹ INR',tr:'₹ INR'},PKR:{ar:'روبية باكستانية',en:'PKR',de:'PKR',fr:'PKR',es:'PKR',tr:'PKR'},BDT:{ar:'تاكا بنغلاديشي',en:'BDT',de:'BDT',fr:'BDT',es:'BDT',tr:'BDT'},IDR:{ar:'روبية إندونيسية',en:'IDR',de:'IDR',fr:'IDR',es:'IDR',tr:'IDR'}};
+const CUR_SYM_MAP={USD:'$',EUR:'€',GBP:'£',SAR:'SAR',AED:'AED',TRY:'₺',INR:'₹',PKR:'PKR',BDT:'BDT',IDR:'IDR'};function curSym(k){return k==='EGP'?(lang==='ar'?'جنية':'EGP'):(CUR_SYM_MAP[k]||k)}
+function populateCurrencySelect(){const sel=document.getElementById('currencySelect');if(!sel)return;const v=sel.value;sel.innerHTML=Object.keys(CUR_NAMES).map(c=>'<option value="'+c+'"'+(c===v?' selected':'')+'>'+(CUR_NAMES[c][lang]||CUR_NAMES[c].en||c)+'</option>').join('');}
+function switchLang(c){lang=c;apply();populateCurrencySelect();if(typeof loadDashboard==='function')loadDashboard();if(typeof renderPricing==='function')renderPricing();}
+
+function toast(msg,tp){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.className='toast show';el.style.background=tp==='error'?'#dc2626':tp==='success'?'#16a34a':'#1e293b';
+  setTimeout(()=>el.classList.remove('show'),3000);
+}
+
+async function API(url,opts={}){
+  const res=await fetch(url,{...opts,headers:{...opts.headers,'Authorization':'Bearer '+TOKEN,'Content-Type':'application/json'}});
+  if(res.status===401){localStorage.removeItem('clientToken');localStorage.removeItem('clientUser');window.location.href='/client/login.html';}
+  return res;
+}
+
+function showSection(n){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active'));
+  const sec=document.getElementById('section-'+n);if(sec)sec.classList.add('active');
+  const nav=document.querySelector('[data-section="'+n+'"]');if(nav)nav.classList.add('active');
+  const T={dashboard:'pageTitle',pricing:'lblPricingTitle',sessions:'lblSessions',send:'lblSingleSend',history:'lblMsgHistory',api:'lblApiKeyTitle',settings:'lblSettingsTitle'};
+  const pt=document.getElementById('pageTitle');if(pt)pt.textContent=t(T[n]||'pageTitle');
+  if(n==='dashboard')loadDashboard();
+  else if(n==='pricing')loadPricing();
+  else if(n==='sessions'){connectWa();loadSessions();}
+  else if(n==='history'){historyPage=1;loadHistory();}
+  else if(n==='api')loadKey();
+}
+
+function closeCreate(){document.getElementById('createModal').style.display='none';}
+function openCreate(){document.getElementById('createModal').style.display='flex';}
+
+// ===== DASHBOARD =====
+async function loadDashboard(){
+  try{
+    const[sRes,mRes]=await Promise.all([API('/api/stats'),API('/api/me')]);
+    const d=await sRes.json();const me=await mRes.json();
+    if(!me||!me.user)throw Error('No user');
+    const user=me.user;const plan=me.plan;
+    localStorage.setItem('clientUser',JSON.stringify(user));
+    localStorage.setItem('sessionsLimit',String(me.stats?.sessionsLimit||1));
+    const el=document.getElementById('sClientName');if(el)el.textContent=user.name||user.email||'';
+    const total=d.total||0;const max=user.maxMessages||0;const rem=Math.max(0,max-total);
+    document.getElementById('statsGrid').innerHTML=[
+      {v:total,l:t('msgs_used'),c:'#16a34a',i:'fa-envelope'},
+      {v:rem,l:t('msgs_remaining'),c:'#2563eb',i:'fa-inbox'},
+      {v:max,l:t('msgs_total'),c:'#059669',i:'fa-database'},
+      {v:d.connectedSessions||0,l:t('stats_connected'),c:'#9333ea',i:'fa-wifi'}
+    ].map(c=>`<div class="stat-card"><div style="display:flex;align-items:center;gap:12px;margin-bottom:8px"><div class="stat-icon" style="background:${c.c}"><i class="fas ${c.i}"></i></div><div style="font-size:24px;font-weight:700;color:#111827">${c.v.toLocaleString()}</div></div><div style="font-size:14px;color:#6b7280">${c.l}</div></div>`).join('');
+    const pct=max>0?Math.min(total/max*100,100):0;
+    const pName=plan?(plan.name[lang]||plan.name.en||''):(user.name||'-');
+    const pFeat=plan?(plan.features[lang]||plan.features.en||[]):[];
+    const expiry=plan&&user.expiryDate?(()=>{const d=new Date(user.expiryDate);return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear();})():'-';
+    const isActive=user.status==='active';
+    document.getElementById('planInfo').innerHTML=`<div style="border-radius:12px;border:1px solid ${plan?'#bbf7d0':'#e5e7eb'};padding:16px">${plan?`
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <span style="font-size:12px;font-weight:600;color:#059669;background:#dcfce7;padding:4px 10px;border-radius:999px">${pName}</span>
+        <span style="font-size:20px;font-weight:800;color:#111827">${plan.currency||'$'}${plan.price}<span style="font-size:12px;color:#9ca3af;font-weight:400">${t('per_month')}</span></span>
+      </div>
+      <div style="margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:4px"><span style="color:#6b7280">${t('msgs_used')}</span><span style="font-weight:500">${total}/${max}</span></div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${pct>80?'#ef4444':'#22c55e'}"></div></div>
+        <div style="display:flex;justify-content:space-between;font-size:14px;margin-top:8px"><span style="color:#6b7280">${t('expiry')}</span><span style="font-weight:500">${expiry}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:14px;margin-top:4px"><span style="color:#6b7280">${t('lblStatus')}</span><span class="badge ${isActive?'badge-success':'badge-danger'}">${t(user.status)}</span></div>
+      </div>
+      ${pFeat.length?`<div style="border-top:1px solid #f3f4f6;padding-top:12px;margin-top:12px"><p style="font-size:12px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">${t('features_label')}</p><ul style="list-style:none;padding:0">${pFeat.map(f=>'<li style="display:flex;align-items:center;gap:8px;font-size:14px;color:#4b5563;margin-bottom:6px"><i class="fas fa-check-circle" style="color:#22c55e;font-size:12px"></i> '+f+'</li>').join('')}</ul></div>`:''}
+      <button class="btn btn-primary" style="margin-top:12px;width:100%" onclick="showSection('pricing')"><i class="fas fa-arrow-up"></i> ${t('upgrade')}</button>`:`<div style="text-align:center;padding:16px"><i class="fas fa-box-open" style="font-size:40px;color:#d1d5db;margin-bottom:8px"></i><p style="color:#6b7280;font-size:14px">${t('no_data')}</p></div>`}</div>`;
+  }catch(e){toast(e.message,'error');}
+}
+
+// ===== PRICING =====
+let rates={EUR:.865,GBP:.743,SAR:3.75,AED:3.67,EGP:51.82,TRY:46.09,INR:95.27,PKR:278.68,BDT:122.72,IDR:18096};
+let plans=[];
+
+async function loadPricing(){
+  try{
+    const[pRes,rRes]=await Promise.all([API('/api/pricing'),fetch('/api/rates')]);
+    plans=await pRes.json();try{const r=await rRes.json();if(r.rates)Object.assign(rates,r.rates);}catch{}
+    const sel=document.getElementById('currencySelect');sel.value=localStorage.getItem('pCurrency')||'USD';renderPricing();
+  }catch(e){toast(e.message,'error');}
+}
+
+function renderPricing(){
+  const sel=document.getElementById('currencySelect');const cur=sel.value;localStorage.setItem('pCurrency',cur);
+  const rate=rates[cur]||1;const CUR_SYM={USD:'$',EUR:'€',GBP:'£',SAR:'SAR',AED:'AED',EGP:lang==='ar'?'جنية':'EGP',TRY:'₺',INR:'₹',PKR:'PKR',BDT:'BDT',IDR:'IDR'};const sym=CUR_SYM[cur]||cur;
+  const user=JSON.parse(localStorage.getItem('clientUser')||'{}');const curPlan=user.planId||'';
+  document.getElementById('pricingContainer').innerHTML=plans.map(p=>{
+    const c=p.price*rate;const hd=p.discountActive&&p.discount>0;const dd=hd?c*(1-p.discount/100):c;const isCur=p.id===curPlan;
+    return `<div style="display:flex;flex-direction:column;height:100%;min-height:380px;border-radius:12px;padding:32px 24px 24px;border:2px solid ${isCur?'#22c55e':'#f3f4f6'};text-align:center;position:relative;${isCur?'background:linear-gradient(180deg,#fff,#f0fdf4)':p.popular?'border-color:#22c55e;box-shadow:0 10px 15px -3px rgba(0,0,0,.1)':''}">
+      ${isCur?'<div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:#059669;color:#fff;font-size:12px;font-weight:700;padding:4px 16px;border-radius:999px;display:flex;align-items:center;gap:4px"><i class="fas fa-check-circle" style="font-size:11px"></i> '+t('current')+'</div>':p.popular?'<div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:#22c55e;color:#fff;font-size:12px;font-weight:700;padding:4px 16px;border-radius:999px">'+t('popular')+'</div>':''}
+      <h3 style="font-size:16px;font-weight:700;color:#1f2937;margin-top:8px">${p.name[lang]||p.name.en||''}</h3>
+      <div style="margin:12px 0">${hd?`<span style="color:#9ca3af;font-size:14px;text-decoration:line-through">${sym} ${lang==='ar'?arNum(c.toFixed(2)):c.toFixed(2)}</span><br>`:''}<span style="font-size:20px;font-weight:400;color:#111827;word-break:break-word">${sym} ${lang==='ar'?arNum(dd.toFixed(2)):dd.toFixed(2)}</span>${hd?`<span style="font-size:12px;color:#16a34a;font-weight:600;margin-left:4px">-${lang==='ar'?arNum(p.discount):p.discount}%</span>`:''}</div>
+      <ul style="list-style:none;padding:0;text-align:left;font-size:14px;color:#4b5563;flex:1">
+        <li style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><i class="fas fa-check" style="color:#22c55e;font-size:12px;width:16px;flex-shrink:0"></i> ${lang==='ar'?arNum(p.sessions)+(p.sessions==1?' جلسة واتساب':' جلسات واتساب'):p.sessions+' WhatsApp Session'+(p.sessions>1?'s':'')}</li>
+        ${(p.features[lang]||p.features.en||[]).map(f=>'<li style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><i class="fas fa-check" style="color:#22c55e;font-size:12px;width:16px;flex-shrink:0"></i> '+(lang==='ar'?arNum(f):f)+'</li>').join('')}
+      </ul>
+      <div style="margin-top:auto;padding-top:16px">${isCur?'<button class="btn" style="width:100%;background:#f3f4f6;color:#9ca3af;cursor:default" disabled><i class="fas fa-check-circle" style="color:#22c55e"></i> '+t('current')+'</button>':'<button class="btn btn-primary" style="width:100%" onclick="upgrade(\''+p.id+'\')"><i class="fas fa-arrow-up"></i> '+t('upgrade')+'</button>'}</div>
+    </div>`;
+  }).join('');
+}
+
+async function upgrade(id){
+  try{
+    const r=await API('/api/request-upgrade',{method:'POST',body:JSON.stringify({planId:id})});
+    if(!r.ok){const txt=await r.text();try{const e=JSON.parse(txt);toast(e.error||'Error','error');}catch{toast(t('request_failed'),'error');}return;}
+    toast(t('upgradeSent'),'success');
+    loadPricing();
+  }catch(e){toast(e.message,'error');}
+}
+
+// ===== SESSIONS =====
+function connectWa(){
+  if(waSocket&&waSocket.connected)return;
+  waSocket=io({auth:{token:TOKEN}});
+  waSocket.on('qr',({sessionId,qr})=>{stopQrPoll();const d=document.getElementById('qrDisplay');if(d)d.innerHTML=`<img src="${qr}" style="width:200px;height:200px;border-radius:12px" alt="QR">`;});
+  waSocket.on('session-ready',()=>{loadSessions();toast(t('connected'),'success');});
+  waSocket.on('session-disconnected',()=>loadSessions());
+  waSocket.on('session-update',()=>loadSessions());
+}
+function startQrPoll(){if(qrPollTimer)clearInterval(qrPollTimer);qrPollTimer=setInterval(loadSessions,2000);}
+function stopQrPoll(){if(qrPollTimer){clearInterval(qrPollTimer);qrPollTimer=null;}}
+
+async function loadSessions(){
+  try{
+    const r=await API('/api/sessions');const s=await r.json();
+    const limit=parseInt(localStorage.getItem('sessionsLimit')||'1');
+    const btn=document.querySelector('#section-sessions .btn-primary.btn-sm');
+    if(btn){
+      if(s.length>=limit){btn.disabled=true;btn.style.opacity='0.5';btn.style.cursor='not-allowed';btn.title=t('session_limit_reached');}
+      else{btn.disabled=false;btn.style.opacity='1';btn.style.cursor='pointer';btn.title='';}
+    }
+    const cont=document.getElementById('sessionList');
+    if(!s||!s.length){cont.innerHTML=`<p style="text-align:center;color:#94a3b8;padding:32px;font-size:14px">${t('no_sessions')}</p>`;const ps=document.getElementById('pairingSection');if(ps)ps.style.display='none';return;}
+    const wait=s.find(x=>x.status==='waiting_qr'||x.status==='waiting_code');
+    const ps=document.getElementById('pairingSection');if(ps)ps.style.display=wait?'block':'none';
+    const qd=document.getElementById('qrDisplay');
+    if(qd){
+      if(wait&&wait.qrCode){stopQrPoll();qd.innerHTML=`<img src="${wait.qrCode}" style="width:200px;height:200px;border-radius:12px" alt="QR">`;}
+      else if(wait){qd.innerHTML=`<div class="spinner" style="margin:0 auto 12px"></div><p style="font-size:14px;color:#6b7280">${t('waiting_qr')}...</p>`;}
+      else{stopQrPoll();qd.innerHTML=`<p style="color:#94a3b8;font-size:14px;text-align:center">${t('lblQrPlaceholder')}</p>`;}
+    }
+    if(s.some(x=>x.status==='connected'))stopQrPoll();
+    cont.innerHTML=s.map(x=>{
+      const isC=x.status==='connected';const isW=x.status==='waiting_qr'||x.status==='waiting_code';const isD=!isC&&!isW;
+      const sc=isC?'#22c55e':isW?'#f59e0b':'#94a3b8';const sl=isC?t('connected'):isW?t('waiting_qr'):t('disconnected');const sb=isC?'badge-success':isW?'badge-warning':'badge-secondary';
+      const sd=(()=>{const d=new Date(x.createdAt);return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear();})();
+      return `<div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:#f9fafb;border-radius:12px;gap:8px">
+        <div style="display:flex;align-items:center;gap:12px;min-width:0">
+          <span style="width:10px;height:10px;border-radius:50%;background:${sc};flex-shrink:0"></span>
+          <div style="min-width:0"><div style="font-weight:500;font-size:14px;color:#1f2937;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${x.name||x.phone||'-'}</div><div style="font-size:11px;color:#94a3b8">${x.phone||''}</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
+          ${isD?'<button class="btn btn-sm" style="background:#2563eb;color:#fff;padding:4px 8px;font-size:11px;min-width:auto" onclick="reconnect(\''+x.id+'\')"><i class="fas fa-plug"></i> '+t('reconnect')+'</button>':''}
+          <span class="badge ${sb}">${sl}</span>
+          <button class="btn btn-sm btn-danger" onclick="deleteSession('${x.id}')" title="${t('s_delete')}" style="padding:4px 8px;font-size:11px;min-width:auto"><i class="fas fa-trash"></i></button>
+          <div style="font-size:11px;color:#94a3b8;white-space:nowrap">${sd}</div>
+        </div>
+      </div>`;
+    }).join('');
+    const ss=document.getElementById('sendSessionSelect');const bs=document.getElementById('bulkSessionSelect');
+    if(ss&&bs){
+      const opts=s.filter(x=>x.status==='connected').map(x=>'<option value="'+x.id+'">'+(x.name||x.phone||x.id)+'</option>').join('');
+      ss.innerHTML='<option value="">-- '+t('lblSelectSession')+' --</option>'+opts;
+      bs.innerHTML='<option value="">-- '+t('lblBulkSelectSession')+' --</option>'+opts;
+    }
+  }catch(e){toast(e.message,'error');}
+}
+
+async function createSession(){
+  const phone=document.getElementById('sessionPhone').value.trim();
+  const name=document.getElementById('sessionName').value.trim();
+  if(!phone){toast(t('phone_required'),'error');return;}
+  try{
+    const r=await API('/api/sessions',{method:'POST',body:JSON.stringify({phone,name:name||phone})});
+    if(!r.ok){const e=await r.json();toast(e.error||'Error','error');return;}
+    closeCreate();toast(t('session_created'),'success');
+    const qd=document.getElementById('qrDisplay');
+    if(qd)qd.innerHTML=`<div class="spinner" style="margin:0 auto 12px"></div><p style="font-size:14px;color:#6b7280">${t('waiting_qr')}...</p>`;
+    const ps=document.getElementById('pairingSection');if(ps)ps.style.display='block';
+    loadSessions();
+    startQrPoll();
+  }catch(e){toast(e.message,'error');}
+}
+
+async function reconnect(id){
+  try{
+    const r=await API('/api/sessions/'+id+'/reconnect',{method:'POST'});
+    if(!r.ok){const e=await r.json();toast(e.error||'Error','error');return;}
+    toast(t('reconnecting'),'success');
+    loadSessions();
+  }catch(e){toast(e.message,'error');}
+}
+
+async function requestPair(){
+  const phone=document.getElementById('pairingPhone').value.trim();
+  if(!phone){toast(t('phone_required'),'error');return;}
+  try{
+    const r=await API('/api/pairing-code',{method:'POST',body:JSON.stringify({phone})});
+    if(!r.ok){const e=await r.json();toast(e.error||'Error','error');return;}
+    const d=await r.json();
+    const el=document.getElementById('pairingCodeDisplay');if(el){el.textContent=d.code;el.style.display='block';}
+    toast(t('code_sent'),'success');
+  }catch(e){toast(e.message,'error');}
+}
+
+async function deleteSession(id){
+  if(!confirm(t('s_delete')+'?'))return;
+  try{
+    const r=await API('/api/sessions/'+id,{method:'DELETE'});
+    if(!r.ok){const e=await r.json();toast(e.error||'Error','error');return;}
+    toast(t('deleted_label'),'success');
+    loadSessions();
+    const qd=document.getElementById('qrDisplay');
+    if(qd)qd.innerHTML=`<p style="color:#94a3b8;font-size:14px;text-align:center">${t('lblQrPlaceholder')}</p>`;
+    const ps=document.getElementById('pairingSection');if(ps)ps.style.display='none';
+  }catch(e){toast(e.message,'error');}
+}
+
+// ===== SEND =====
+async function sendOne(){
+  const sid=document.getElementById('sendSessionSelect').value;
+  const to=document.getElementById('sendTo').value.trim();
+  const text=document.getElementById('sendText').value.trim();
+  if(!sid||!to||!text){toast(t('fill_all_fields'),'error');return;}
+  try{
+    const r=await API('/api/send',{method:'POST',body:JSON.stringify({sessionId:sid,to,message:text})});
+    if(!r.ok){const e=await r.json();toast(e.error||'Error','error');return;}
+    toast(t('sent_ok'),'success');document.getElementById('sendText').value='';
+  }catch(e){toast(e.message,'error');}
+}
+
+function parseExcel(input){
+  if(!input.files.length)return;
+  const file=input.files[0];
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const data=new Uint8Array(e.target.result);
+      const wb=XLSX.read(data,{type:'array'});
+      const ws=wb.Sheets[wb.SheetNames[0]];
+      const rows=XLSX.utils.sheet_to_json(ws,{header:1});
+      bulkData=rows.filter(r=>r.length>=2&&r[0]&&r[1]).map(r=>({phone:String(r[0]).trim(),message:String(r[r.length-1]).trim()}));
+      if(!bulkData.length){toast(t('no_valid_data'),'error');return;}
+      document.getElementById('bulkPreview').style.display='block';
+      document.getElementById('bulkCount').textContent=bulkData.length;
+      document.getElementById('bulkTable').innerHTML='<table><thead><tr><th>'+t('phone_header')+'</th><th>'+t('message_header')+'</th></tr></thead><tbody>'+bulkData.slice(0,20).map(x=>'<tr><td>'+x.phone+'</td><td style="max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+x.message+'</td></tr>').join('')+'</tbody></table>';
+    }catch(ex){toast(t('error_read_file'),'error');}
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+async function sendBulk(){
+  const sid=document.getElementById('bulkSessionSelect').value;
+  if(!sid){toast(t('select_session_err'),'error');return;}
+  if(!bulkData.length){toast(t('no_data'),'error');return;}
+  try{
+    const r=await API('/api/send-bulk',{method:'POST',body:JSON.stringify({sessionId:sid,messages:bulkData})});
+    if(!r.ok){const e=await r.json();toast(e.error||'Error','error');return;}
+    toast(t('sent_ok'),'success');
+  }catch(e){toast(e.message,'error');}
+}
+
+// ===== HISTORY =====
+let historyPage = 1;
+async function loadHistory(resetPage){
+  if(resetPage) historyPage = 1;
+  try{
+    const search = document.getElementById('historySearch').value.trim();
+    const status = document.getElementById('historyStatus').value;
+    const sortVal = document.getElementById('historySort').value;
+    const parts = sortVal.split('_');
+    const sort = parts[0]; const order = parts[1];
+    let url = '/api/history?page='+historyPage+'&limit=20';
+    if(search) url += '&search='+encodeURIComponent(search);
+    if(status) url += '&status='+encodeURIComponent(status);
+    if(sort) url += '&sort='+sort;
+    if(order) url += '&order='+order;
+    const r=await API(url);
+    if(!r.ok){const tb=document.getElementById('historyTable');if(tb)tb.innerHTML='<tr><td colspan="5" style="text-align:center;color:#94a3b8;padding:32px">'+t('no_data')+'</td></tr>';return;}
+    const d=await r.json();
+    const msgs=d.items||d||[];
+    const tb=document.getElementById('historyTable');
+    if(!tb)return;
+    if(!msgs.length){tb.innerHTML='<tr><td colspan="5" style="text-align:center;color:#94a3b8;padding:32px">'+t('no_data')+'</td></tr>';return;}
+    tb.innerHTML=msgs.map(m=>{
+      const sd=()=>{const d=new Date(m.createdAt||m.time);return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear()+' '+(()=>{let h=d.getHours();const a=h>=12?'PM':'AM';h=h%12||12;return h+':'+String(d.getMinutes()).padStart(2,'0')+' '+a;})();};
+      return '<tr><td style="font-weight:500">'+(m.sender||'-')+'</td><td>'+m.to+'</td><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(m.message||m.text||'')+'</td><td><span class="badge '+(m.status==='sent'||m.status==='delivered'||m.status==='read'?'badge-success':'badge-danger')+'">'+(m.status||'')+'</span></td><td>'+sd()+'</td></tr>';
+    }).join('');
+    // Pagination
+    const pg=document.getElementById('historyPagination');
+    if(pg){
+      pg.innerHTML='';
+      if(d.pages>1){
+        const prevBtn=document.createElement('button');prevBtn.className='btn btn-sm btn-ghost';prevBtn.innerHTML='<i class="fas fa-chevron-left"></i>';prevBtn.disabled=historyPage<=1;prevBtn.onclick=()=>{if(historyPage>1){historyPage--;loadHistory();}};pg.appendChild(prevBtn);
+        const pgSpan=document.createElement('span');pgSpan.style.cssText='font-size:13px;color:#6b7280;padding:0 8px';pgSpan.textContent=t('page')+' '+d.page+'/'+d.pages;pg.appendChild(pgSpan);
+        const nextBtn=document.createElement('button');nextBtn.className='btn btn-sm btn-ghost';nextBtn.innerHTML='<i class="fas fa-chevron-right"></i>';nextBtn.disabled=historyPage>=d.pages;nextBtn.onclick=()=>{if(historyPage<d.pages){historyPage++;loadHistory();}};pg.appendChild(nextBtn);
+      }
+    }
+  }catch(e){const tb=document.getElementById('historyTable');if(tb)tb.innerHTML='<tr><td colspan="5" style="text-align:center;color:#94a3b8;padding:32px">'+t('no_data')+'</td></tr>';}
+}
+
+// ===== API KEY =====
+async function loadKey(){
+  try{
+    const r=await API('/api/me');const d=await r.json();
+    const el=document.getElementById('apiKeyDisplay');if(el)el.textContent=d.user&&d.user.apiKey?d.user.apiKey:t('no_key');
+  }catch(e){toast(e.message,'error');}
+}
+
+function copyKey(){
+  const el=document.getElementById('apiKeyDisplay');
+  if(!el||el.textContent==='********'||el.textContent===t('no_key')){toast(t('no_key_to_copy'),'error');return;}
+  navigator.clipboard.writeText(el.textContent).then(()=>toast(t('copied'),'success')).catch(()=>toast(t('failed_copy'),'error'));
+}
+
+// ===== SETTINGS =====
+function togglePass(inputId,iconId){const i=document.getElementById(inputId);const e=document.getElementById(iconId);if(i.type==='password'){i.type='text';e.className='fas fa-eye-slash'}else{i.type='password';e.className='fas fa-eye'}}
+async function changePass(){
+  const cur=document.getElementById('cpCurrent').value;
+  const nw=document.getElementById('cpNew').value;
+  const cf=document.getElementById('cpConfirm').value;
+  if(!cur||!nw||!cf){toast(t('fill_all_fields'),'error');return;}
+  if(nw!==cf){toast(t('passwords_mismatch'),'error');return;}
+  if(nw.length<6){toast(t('password_short'),'error');return;}
+  try{
+    const r=await API('/api/change-password',{method:'PUT',body:JSON.stringify({currentPassword:cur,newPassword:nw})});
+    if(!r.ok){const e=await r.json();toast(e.error||'Error','error');return;}
+    toast(t('password_updated'),'success');
+    document.getElementById('cpCurrent').value='';document.getElementById('cpNew').value='';document.getElementById('cpConfirm').value='';
+  }catch(e){toast(e.message,'error');}
+}
+
+function logout(){
+  localStorage.removeItem('clientToken');localStorage.removeItem('clientUser');
+  window.location.href='/client/login.html';
+}
+
+async function exportPDF(){
+  const search=document.getElementById('historySearch').value.trim();
+  const status=document.getElementById('historyStatus').value;
+  const sortVal=document.getElementById('historySort').value;
+  const parts=sortVal.split('_');
+  let url='/api/history?limit=9999';
+  if(search)url+='&search='+encodeURIComponent(search);
+  if(status)url+='&status='+encodeURIComponent(status);
+  if(parts[0])url+='&sort='+parts[0];
+  if(parts[1])url+='&order='+parts[1];
+  try{
+    const r=await API(url);
+    if(!r.ok)return;
+    const d=await r.json();
+    const msgs=d.items||d||[];
+    if(!msgs.length){toast(t('no_data'),'error');return;}
+    const th=[t('thFrom'),t('thTo'),t('thMessage'),t('thStatus'),t('thTime')];
+    const rows=msgs.map(m=>{
+      const dt=new Date(m.createdAt||m.time);
+      const ds=String(dt.getDate()).padStart(2,'0')+'/'+String(dt.getMonth()+1).padStart(2,'0')+'/'+dt.getFullYear()+' '+(()=>{let h=dt.getHours();const a=h>=12?'PM':'AM';h=h%12||12;return h+':'+String(dt.getMinutes()).padStart(2,'0')+' '+a;})();
+      return[(m.sender||'-'),m.to,(m.message||m.text||''),(m.status||''),ds];
+    });
+    const w=window.open('','_blank');
+    w.document.write('<html><head><title>'+t('lblMsgHistory')+'</title><style>body{font:13px sans-serif;padding:20px}h2{color:#16a34a;margin-bottom:12px}table{border-collapse:collapse;width:100%}th,td{border:1px solid #ccc;padding:6px;text-align:'+(lang==='ar'?'right':'left')+'}th{background:#16a34a;color:#fff}</style></head><body><h2>'+t('lblMsgHistory')+'</h2><table><tr><th>'+th.join('</th><th>')+'</th></tr>'+rows.map(r=>'<tr><td>'+r.join('</td><td>')+'</td></tr>').join('')+'</table></body></html>');
+    w.document.close();
+    setTimeout(()=>{w.print();w.close();},500);
+  }catch(e){toast(e.message,'error');}
+}
+
+// ===== INIT =====
+apply();
+document.body.style.visibility='visible';
+loadDashboard();
+connectWa();
+// Clear stale QR display on load
+const qd=document.getElementById('qrDisplay');if(qd)qd.innerHTML=`<p style="color:#94a3b8;font-size:14px;text-align:center">${t('lblQrPlaceholder')}</p>`;
+</script>
+</body>
+</html>

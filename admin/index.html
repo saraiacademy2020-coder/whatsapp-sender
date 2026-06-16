@@ -1,0 +1,2515 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WhatsApp Sender - Dashboard</title>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<link rel="preconnect" href="https://cdn.tailwindcss.com">
+<link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+<link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+<script src="https://cdn.tailwindcss.com" defer></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        brand: { 50: '#f0fdf4', 100: '#dcfce7', 200: '#bbf7d0', 300: '#86efac', 400: '#4ade80', 500: '#22c55e', 600: '#16a34a', 700: '#15803d', 800: '#166534', 900: '#14532d' },
+        surface: { 50: '#f8fafc', 100: '#f1f5f9', 200: '#e2e8f0', 300: '#cbd5e1', 400: '#94a3b8', 500: '#64748b', 600: '#475569', 700: '#334155', 800: '#1e293b', 900: '#0f172a' }
+      }
+    }
+  }
+}
+</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" onerror="this.setAttribute('data-failed','1')">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+      <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #f8fafc; display: flex; min-height: 100vh; }
+        .sidebar { width: 260px; min-width: 260px; height: 100vh; position: fixed; top: 0; inset-inline-start: 0; background: #1e293b; overflow-y: auto; z-index: 50; display: flex; flex-direction: column; }
+        [data-theme="light"] .sidebar { background: #fff; border-inline-end: 1px solid #e2e8f0; }
+        [data-theme="light"] .nav-item { color: #475569; }
+        .content { flex: 1; margin-inline-start: 260px; min-height: 100vh; }
+        .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; margin: 2px 8px; border-radius: 10px; cursor: pointer; font-size: 14px; color: #94a3b8; transition: all .15s ease; }
+        .nav-item:hover { background: rgba(255,255,255,.06); color: #e2e8f0; }
+        .nav-item.active { background: rgba(34,197,94,.12); color: #22c55e; }
+        .nav-item i { width: 18px; text-align: center; font-size: 14px; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; background: #fff; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 40; }
+        .card { background: #fff; border-radius: 12px; padding: 20px; border: 1px solid #e2e8f0; }
+        .stat-card { background: #fff; border-radius: 12px; padding: 16px; border: 1px solid #e2e8f0; }
+        .stat-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; }
+        .badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 9999px; font-size: 12px; font-weight: 600; line-height: 1.4; }
+        .badge-success { background: #dcfce7; color: #16a34a; }
+        .badge-danger { background: #fef2f2; color: #dc2626; }
+        .badge-warning { background: #fef3c7; color: #d97706; }
+        .badge-secondary { background: #f1f5f9; color: #64748b; }
+        .badge-info { background: #dbeafe; color: #2563eb; }
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 16px; border-radius: 8px; font-size: 14px; font-weight: 600; border: none; cursor: pointer; transition: all .15s ease; }
+        .btn-sm { padding: 6px 12px; font-size: 13px; }
+        .btn-xs { padding: 4px 8px; font-size: 12px; }
+        .btn-primary { background: #16a34a; color: #fff; }
+        .btn-primary:hover { background: #15803d; }
+        .btn-danger { background: #dc2626; color: #fff; }
+        .btn-danger:hover { background: #b91c1c; }
+        [data-theme="dark"] .btn-primary { background: linear-gradient(135deg,#22c55e,#16a34a); color: #fff; box-shadow: 0 4px 20px rgba(34,197,94,.25); }
+        [data-theme="dark"] .btn-primary:hover { background: linear-gradient(135deg,#16a34a,#15803d); }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th { text-align: start; padding: 10px 12px; font-weight: 600; color: #64748b; font-size: 13px; border-bottom: 2px solid #e2e8f0; white-space: nowrap; user-select: none; }
+        td { padding: 10px 12px; border-bottom: 1px solid #f1f5f9; }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); display: none; align-items: center; justify-content: center; z-index: 100; }
+        .modal-overlay.show { display: flex; }
+        .modal { background: #fff; border-radius: 16px; padding: 24px; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; }
+        .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #1e293b; color: #fff; padding: 10px 24px; border-radius: 8px; font-size: 14px; z-index: 200; opacity: 0; transition: opacity .3s ease; pointer-events: none; }
+        .toast.show { opacity: 1; }
+        .hover-subtle { transition: all .15s ease; }
+        .hover-subtle:hover { background: rgba(0,0,0,.03); }
+        .flex-1 { flex: 1; min-width: 0; }
+        .min-w-48 { min-width: 48px; }
+        .hidden { display: none; }
+        .selected { background-color: rgba(59, 130, 246, 0.1); }
+        .table-container { overflow-x: auto; }
+        .section { display: none; }
+        .section.active { display: block; }
+        input, select, textarea { padding: 10px 14px 10px 10px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px; outline: none; width: 100%; background: #fff; color: #1e293b; }
+        ::placeholder { color: #94a3b8; opacity: 1; }
+        .select-all { user-select: all; }
+        .theme-btn { width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; cursor:pointer; background:#fff; border:1px solid #e2e8f0; color:#64748b; font-size:16px; flex-shrink:0; transition:all .15s ease; }
+.theme-btn:hover { border-color:#16a34a; color:#16a34a; background:#f0fdf4; }
+[data-theme="dark"] .theme-btn { background:rgba(255,255,255,.04); border-color:rgba(255,255,255,.1); color:#94a3b8; }
+[data-theme="dark"] .theme-btn:hover { border-color:#22c55e; color:#22c55e; background:rgba(34,197,94,.08); }
+.lang-toggle { height:36px; border-radius:10px; font-size:13px; padding:0 10px; cursor:pointer; background:#fff; border:1px solid #e2e8f0; color:#475569; min-width:48px; outline:none; transition:all .15s ease; }
+.lang-toggle:hover { border-color:#16a34a; color:#16a34a; }
+[data-theme="dark"] .lang-toggle { background:rgba(255,255,255,.04); border-color:rgba(255,255,255,.1); color:#94a3b8; }
+[data-theme="dark"] .lang-toggle:hover { border-color:#22c55e; color:#22c55e; }
+.filter-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 16px; }
+        .filter-bar-left { display: flex; align-items: center; gap: 8px; }
+        .filter-bar-center { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; flex-wrap: wrap; }
+        .filter-bar-right { display: flex; align-items: center; gap: 6px; }
+        .filter-select { position: relative; }
+        .filter-select select { padding: 8px 32px 8px 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 13px; outline: none; background: #fff; color: #1e293b; cursor: pointer; appearance: none; -webkit-appearance: none; min-width: 130px; transition: border-color .15s ease; }
+        .filter-select::after { content: '\f107'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: #94a3b8; pointer-events: none; font-size: 12px; }
+        .filter-select select:focus { border-color: #16a34a; }
+        .filter-search { position: relative; min-width: 200px; }
+        .filter-search .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 13px; pointer-events: none; }
+        .filter-search input { padding: 8px 12px 8px 34px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 13px; outline: none; width: 100%; background: #fff; color: #1e293b; transition: border-color .15s ease; }
+        .filter-search input:focus { border-color: #16a34a; }
+        .btn-outline { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; border: 1px solid #e2e8f0; background: #fff; color: #475569; cursor: pointer; transition: all .15s ease; }
+        .btn-outline:hover { border-color: #16a34a; color: #16a34a; background: #f0fdf4; }
+        .btn-icon { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 8px; border: 1px solid #e2e8f0; background: #fff; color: #64748b; cursor: pointer; transition: all .15s ease; font-size: 14px; }
+        .btn-icon:hover { border-color: #16a34a; color: #16a34a; background: #f0fdf4; }
+        .btn-icon-danger:hover { border-color: #ef4444; color: #ef4444; background: #fef2f2; }
+        [data-theme="dark"] .filter-select select { background: rgba(0,0,0,.2); border-color: rgba(255,255,255,.1); color: #e2e8f0; }
+        [data-theme="dark"] .filter-select select:focus { border-color: #22c55e; }
+        [data-theme="dark"] .filter-select::after { color: #64748b; }
+        [data-theme="dark"] .filter-search input { background: rgba(0,0,0,.2); border-color: rgba(255,255,255,.1); color: #e2e8f0; }
+        [data-theme="dark"] .filter-search input:focus { border-color: #22c55e; }
+        [data-theme="dark"] .filter-search .search-icon { color: #64748b; }
+        [data-theme="dark"] .btn-outline { background: rgba(255,255,255,.04); border-color: rgba(255,255,255,.1); color: #94a3b8; }
+        [data-theme="dark"] .btn-outline:hover { border-color: #22c55e; color: #22c55e; background: rgba(34,197,94,.08); }
+        [data-theme="dark"] .btn-icon { background: rgba(255,255,255,.04); border-color: rgba(255,255,255,.1); color: #64748b; }
+        [data-theme="dark"] .btn-icon:hover { border-color: #22c55e; color: #22c55e; background: rgba(34,197,94,.08); }
+        [data-theme="dark"] .btn-icon-danger:hover { border-color: #ef4444; color: #f87171; background: rgba(239,68,68,.1); }
+        .table-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; padding-top: 16px; border-top: 1px solid #e2e8f0; }
+        .table-total { font-size: 13px; color: #64748b; font-weight: 600; }
+        .pagination { display: flex; align-items: center; gap: 8px; }
+        .btn-page { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 8px; border: 1px solid #e2e8f0; background: #fff; color: #64748b; cursor: pointer; transition: all .15s ease; font-size: 12px; }
+        .btn-page:hover { border-color: #16a34a; color: #16a34a; background: #f0fdf4; }
+        .page-num { font-size: 13px; font-weight: 600; color: #1e293b; min-width: 24px; text-align: center; }
+        [data-theme="dark"] .table-footer { border-top-color: rgba(255,255,255,.06); }
+        [data-theme="dark"] .table-total { color: #94a3b8; }
+        [data-theme="dark"] .btn-page { background: rgba(255,255,255,.04); border-color: rgba(255,255,255,.1); color: #64748b; }
+        [data-theme="dark"] .btn-page:hover { border-color: #22c55e; color: #22c55e; background: rgba(34,197,94,.08); }
+        [data-theme="dark"] .page-num { color: #e2e8f0; }
+        [data-theme="dark"] body { background: #0f172a; color: #e2e8f0; }
+        [data-theme="dark"] .sidebar { background: #0f172a; border-inline-end: 1px solid rgba(255,255,255,.06); }
+        [data-theme="dark"] .topbar { background: rgba(15,23,42,.85); border-bottom: 1px solid rgba(255,255,255,.06); color: #e2e8f0; backdrop-filter: blur(12px); }
+        [data-theme="dark"] .nav-item { color: #94a3b8; }
+        [data-theme="dark"] .nav-item:hover { background: rgba(255,255,255,.06); color: #e2e8f0; }
+        [data-theme="dark"] .nav-item.active { background: rgba(34,197,94,.12); color: #22c55e; }
+        [data-theme="dark"] .card { background: rgba(255,255,255,.04); border-color: rgba(255,255,255,.08); color: #e2e8f0; }
+        [data-theme="dark"] .stat-card { background: rgba(255,255,255,.04); border-color: rgba(255,255,255,.08); color: #e2e8f0; }
+        [data-theme="dark"] .modal { background: rgba(15,23,42,.98); color: #e2e8f0; border-color: rgba(255,255,255,.08); backdrop-filter: blur(12px); }
+        [data-theme="dark"] th { color: #94a3b8; border-bottom-color: rgba(255,255,255,.08); }
+        [data-theme="dark"] td { border-bottom-color: rgba(255,255,255,.04); }
+        [data-theme="dark"] input, [data-theme="dark"] select, [data-theme="dark"] textarea { background: rgba(0,0,0,.2); border-color: rgba(255,255,255,.1); color: #e2e8f0; }
+        [data-theme="dark"] input:focus, [data-theme="dark"] select:focus, [data-theme="dark"] textarea:focus { border-color: #22c55e; box-shadow: 0 0 0 2px rgba(34,197,94,.15); }
+        [data-theme="dark"] .badge-success { background: rgba(34,197,94,.12); color: #4ade80; border: 1px solid rgba(34,197,94,.2); }
+        [data-theme="dark"] .badge-danger { background: rgba(239,68,68,.12); color: #f87171; border: 1px solid rgba(239,68,68,.2); }
+        [data-theme="dark"] .badge-warning { background: rgba(245,158,11,.12); color: #fbbf24; border: 1px solid rgba(245,158,11,.2); }
+        [data-theme="dark"] .badge-secondary { background: rgba(255,255,255,.04); color: #94a3b8; border: 1px solid rgba(255,255,255,.08); }
+        [data-theme="dark"] .badge-info { background: rgba(59,130,246,.12); color: #60a5fa; border: 1px solid rgba(59,130,246,.2); }
+        [data-theme="dark"] .hover-subtle:hover { background: rgba(255,255,255,.04); }
+        [data-theme="dark"] .text-gray-800 { color: #f1f5f9; }
+        [data-theme="dark"] .text-gray-700 { color: #e2e8f0; }
+        [data-theme="dark"] .text-gray-600 { color: #cbd5e1; }
+        [data-theme="dark"] .text-gray-500 { color: #94a3b8; }
+        [data-theme="dark"] .text-gray-400 { color: #64748b; }
+        [data-theme="dark"] .text-gray-900 { color: #f1f5f9; }
+        [data-theme="dark"] .bg-white { background: rgba(255,255,255,.04); }
+        [data-theme="dark"] .bg-gray-50 { background: rgba(255,255,255,.04); }
+        [data-theme="dark"] .bg-gray-100 { background: rgba(255,255,255,.06); }
+        [data-theme="dark"] .bg-gray-200 { background: rgba(255,255,255,.08); }
+        [data-theme="dark"] .border-gray-100 { border-color: rgba(255,255,255,.06); }
+        [data-theme="dark"] .border-gray-200 { border-color: rgba(255,255,255,.08); }
+        [data-theme="dark"] ::-webkit-scrollbar-thumb { background: rgba(255,255,255,.08); border-radius: 8px; }
+        [data-theme="dark"] ::-webkit-scrollbar-track { background: transparent; }
+        [data-theme="light"] .text-gray-400 { color: #4b5563; }
+        [data-theme="light"] .text-gray-500 { color: #374151; }
+        [data-theme="light"] .text-gray-600 { color: #1f2937; }
+        [data-theme="light"] .text-gray-700 { color: #111827; }
+        [data-theme="light"] .text-gray-800 { color: #030712; }
+        [data-theme="light"] body { background: #f1f5f9; }
+        [data-theme="light"] .card { background: #fafbfc; border-color: #e2e8f0; }
+        [data-theme="light"] .stat-card { background: #fafbfc; border-color: #e2e8f0; }
+        [data-theme="light"] .modal { background: #fafbfc; border-color: #e2e8f0; }
+        [data-theme="light"] .bg-white { background: #fafbfc; }
+        [data-theme="light"] .bg-gray-50 { background: #f1f5f9; }
+        [data-theme="light"] .stat-icon-deco { color: #22c55e; }
+        [data-theme="light"] .sidebar { background: #fafbfc; border-inline-end: 1px solid #e2e8f0; }
+        [data-theme="light"] .nav-item { color: #475569; }
+        [data-theme="light"] .nav-item:hover { background: rgba(0,0,0,.04); color: #1e293b; }
+        [data-theme="light"] .nav-item.active { background: rgba(22,163,74,.1); color: #16a34a; }
+        [data-theme="light"] .topbar { background: #fafbfc; border-bottom: 1px solid #e2e8f0; }
+        [data-theme="light"] th { background: #f1f5f9; color: #475569; border-bottom: 1px solid #e2e8f0; }
+        [data-theme="light"] td { border-bottom-color: #e2e8f0; }
+        [data-theme="light"] tr:hover td { background: rgba(0,0,0,.015); }
+        [data-theme="light"] input, [data-theme="light"] select, [data-theme="light"] textarea { background: #fff; border-color: #d1d5db; color: #1e293b; }
+        [data-theme="light"] input:focus, [data-theme="light"] select:focus, [data-theme="light"] textarea:focus { border-color: #16a34a; box-shadow: 0 0 0 2px rgba(22,163,74,.1); }
+        [data-theme="light"] .badge-success { background: #dcfce7; color: #15803d; }
+        [data-theme="light"] .badge-danger { background: #fef2f2; color: #b91c1c; }
+        [data-theme="light"] .badge-warning { background: #fef3c7; color: #b45309; }
+        [data-theme="light"] .badge-secondary { background: #f1f5f9; color: #475569; }
+        [data-theme="light"] .badge-info { background: #dbeafe; color: #1d4ed8; }
+        [data-theme="light"] .btn-outline { background: #fff; border-color: #d1d5db; color: #374151; }
+        [data-theme="light"] .btn-outline:hover { border-color: #16a34a; color: #16a34a; background: #f0fdf4; }
+        [data-theme="light"] .btn-icon { background: #fff; border-color: #d1d5db; color: #64748b; }
+        [data-theme="light"] .btn-icon:hover { border-color: #16a34a; color: #16a34a; background: #f0fdf4; }
+        [data-theme="light"] .btn-icon-danger:hover { border-color: #ef4444; color: #dc2626; background: #fef2f2; }
+        [data-theme="light"] .btn-page { background: #fff; border-color: #d1d5db; color: #64748b; }
+        [data-theme="light"] .btn-page:hover { border-color: #16a34a; color: #16a34a; background: #f0fdf4; }
+        [data-theme="light"] .page-num { color: #1e293b; }
+        [data-theme="light"] .filter-select select { background: #fff; border-color: #d1d5db; color: #1e293b; }
+        [data-theme="light"] .filter-select select:focus { border-color: #16a34a; }
+        [data-theme="light"] .filter-search input { background: #fff; border-color: #d1d5db; color: #1e293b; }
+        [data-theme="light"] .filter-search input:focus { border-color: #16a34a; }
+        [data-theme="light"] .filter-search .search-icon { color: #94a3b8; }
+        [data-theme="light"] .hover-subtle:hover { background: rgba(0,0,0,.03); }
+        [data-theme="light"] .pricing-plan { background: #fafbfc; border-color: #e2e8f0; }
+        [data-theme="light"] ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 8px; }
+        [data-theme="dark"] .stat-icon-deco { color: #fff; }
+        @media (max-width:1024px) {
+          .sidebar { inset-inline-start: -100%; transition: inset-inline-start .3s ease; }
+          .sidebar.open { inset-inline-start: 0; }
+          .content { margin-inline-start: 0; }
+        }
+      </style>
+</head>
+<body>
+  <div id="sidebar" class="sidebar">
+  <div style="padding:16px 8px">
+    <div class="nav-item active" onclick="showSection('dashboard')" data-section="dashboard"><i class="fas fa-chart-pie"></i><span data-i18n="nav_dashboard">لوحة البيانات</span></div>
+    <div class="nav-item" onclick="showSection('users')" data-section="users"><i class="fas fa-users"></i><span data-i18n="nav_users">المستخدمين</span></div>
+    <div class="nav-item" onclick="showSection('sessions')" data-section="sessions"><i class="fas fa-mobile-alt"></i><span data-i18n="nav_sessions">الجلسات</span></div>
+    <div class="nav-item" onclick="showSection('messages')" data-section="messages"><i class="fas fa-envelope"></i><span data-i18n="nav_messages">الرسائل</span></div>
+    <div class="nav-item" onclick="showSection('settings')" data-section="settings"><i class="fas fa-cog"></i><span data-i18n="nav_settings">الإعدادات</span></div>
+    <div class="nav-item" onclick="showSection('app')" data-section="app"><i class="fab fa-whatsapp"></i><span data-i18n="nav_whatsapp">واتساب ويب</span></div>
+    <div class="nav-item" onclick="showSection('admins')" data-section="admins"><i class="fas fa-user-shield"></i><span data-i18n="nav_admins">المشرفين</span></div>
+    <div class="nav-item" onclick="showSection('analytics')" data-section="analytics"><i class="fas fa-chart-line"></i><span data-i18n="nav_analytics">التحليلات</span></div>
+    <div class="nav-item" onclick="showSection('activity')" data-section="activity"><i class="fas fa-history"></i><span data-i18n="nav_activity">سجل النشاط</span></div>
+    <hr style="border-color: rgba(255,255,255,.08); margin: 12px 8px;">
+    <div class="nav-item text-blue-300 hover:!text-blue-200" onclick="downloadGuide()"><i class="fas fa-book"></i><span data-i18n="nav_guide">دليل العميل</span></div>
+    <div class="nav-item text-emerald-300 hover:!text-emerald-200" onclick="showHelp()"><i class="fas fa-question-circle"></i><span data-i18n="nav_help">مساعدة سريعة</span></div>
+    <div class="nav-item text-red-400 hover:!text-red-300" onclick="logout()"><i class="fas fa-sign-out-alt"></i><span data-i18n="nav_logout">تسجيل خروج</span></div>
+  </div>
+</div>
+
+<div class="content" id="mainContent">
+  <div class="topbar">
+    <div class="flex items-center gap-3">
+      <button class="lg:hidden btn btn-sm bg-gray-100" onclick="document.getElementById('sidebar').classList.toggle('open')"><i class="fas fa-bars"></i></button>
+      <h2 class="text-lg font-bold text-gray-800" id="pageTitle" data-i18n="dashboard_title">لوحة البيانات</h2>
+    </div>
+    <div class="flex items-center gap-3">
+      <button class="theme-btn" onclick="toggleTheme()" id="themeBtn" type="button" title="Toggle theme">☀️</button>
+      <select class="lang-toggle" onchange="switchLang(this.value)" id="langSelect"></select>
+      <div class="flex items-center gap-2" id="adminAvatarContainer">
+        <span class="text-sm font-medium text-gray-700 dark:text-gray-300 hidden sm:inline" id="adminNameLabel" style="white-space:nowrap"></span>
+        <div class="w-9 h-9 bg-gradient-to-br from-violet-500 to-purple-700 text-white rounded-full flex items-center justify-center font-bold text-sm shadow-md shadow-purple-200 dark:shadow-purple-900/30" id="adminAvatar">A</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="p-6">
+    <!-- Dashboard Section -->
+    <div id="section-dashboard" class="section active">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6" id="statsGrid"></div>
+      <div class="card mb-6" id="chartCard" style="display:none">
+        <h3 class="font-bold text-gray-800 mb-4"><i class="fas fa-chart-bar text-brand-600"></i> <span data-i18n="stats_messages">إحصائيات الرسائل</span></h3>
+        <div class="flex items-end gap-3 h-48" id="chartBars"></div>
+      </div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+        <div class="card"><h3 class="font-bold text-gray-800 mb-4" data-i18n="quick_links">روابط سريعة</h3>
+          <div class="space-y-3" id="quickLinks"></div>
+        </div>
+        <div class="card"><h3 class="font-bold text-gray-800 mb-4" data-i18n="recent_activity">آخر النشاطات</h3>
+          <div id="recentActivity"><p class="text-gray-400 text-sm" data-i18n="no_data">لا توجد بيانات</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Analytics Section -->
+    <div id="section-analytics" class="section">
+      <div class="flex flex-wrap gap-3 mb-4 items-center justify-between">
+        <h3 class="text-lg font-bold" data-i18n="analytics_title">التحليلات</h3>
+        <button class="btn btn-sm bg-gray-100" onclick="loadAnalytics()"><i class="fas fa-sync-alt"></i> <span data-i18n="refresh">تحديث</span></button>
+      </div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+        <div class="card">
+          <h4 class="font-bold text-gray-800 mb-3"><i class="fas fa-envelope text-brand-600"></i> <span data-i18n="analytics_msg_trend">اتجاه الرسائل</span></h4>
+          <div id="msgTrendChart" class="w-full h-48 flex items-end gap-1"></div>
+        </div>
+        <div class="card">
+          <h4 class="font-bold text-gray-800 mb-3"><i class="fas fa-user-plus text-blue-600"></i> <span data-i18n="analytics_user_growth">نمو المستخدمين</span></h4>
+          <div id="userGrowthChart" class="w-full h-48 flex items-end gap-1"></div>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+        <div class="card">
+          <h4 class="font-bold text-gray-800 mb-3"><i class="fas fa-circle text-purple-600"></i> <span data-i18n="analytics_sessions">حالة الجلسات</span></h4>
+          <div id="sessionDistChart" class="w-full h-48 flex items-center justify-center gap-6"></div>
+        </div>
+        <div class="card">
+          <h4 class="font-bold text-gray-800 mb-3"><i class="fas fa-layer-group text-orange-600"></i> <span data-i18n="analytics_plans">توزيع الخطط</span></h4>
+          <div id="planDistChart" class="w-full h-48 flex flex-col justify-center gap-2 px-4"></div>
+        </div>
+      </div>
+      <div class="card mb-4">
+        <h4 class="font-bold text-gray-800 mb-3"><i class="fas fa-trophy text-yellow-600"></i> <span data-i18n="analytics_top_users">أفضل المستخدمين</span></h4>
+        <div class="table-container">
+          <table>
+            <thead><tr>
+              <th style="width:40px">#</th>
+              <th data-i18n="th_name">الاسم</th>
+              <th data-i18n="th_messages">الرسائل</th>
+            </tr></thead>
+            <tbody id="topUsersTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Users Section -->
+    <div id="section-users" class="section">
+        <div class="filter-bar">
+          <div class="filter-bar-left">
+            <button class="btn btn-primary" onclick="openAddUser()"><i class="fas fa-plus"></i> <span data-i18n="add_user">إضافة مستخدم</span></button>
+            <button class="btn btn-outline" onclick="exportUsersCSV()"><i class="fas fa-download"></i> <span data-i18n="export">تصدير</span></button>
+          </div>
+          <div class="filter-bar-center">
+            <div class="filter-select">
+              <select id="filterUserStatus" onchange="usersPage=1; loadUsers()">
+                <option value="" data-i18n="filter_all">All</option>
+                <option value="active" data-i18n="active">Active</option>
+                <option value="expired" data-i18n="expired">Expired</option>
+              </select>
+            </div>
+            <div class="filter-select">
+              <select id="filterUserPlan" onchange="usersPage=1; loadUsers()">
+                <option value="">All Plans</option>
+                <option value="free">Free</option>
+                <option value="basic">Basic</option>
+                <option value="pro">Pro</option>
+                <option value="enterprise">Enterprise</option>
+              </select>
+            </div>
+            <div class="filter-select">
+              <select id="sortUserBy" onchange="usersPage=1; sortUsers(this.value)">
+                <option value="">Sort</option>
+                <option value="name">Name</option>
+                <option value="email">Email</option>
+                <option value="planId">Plan</option>
+                <option value="sessionCount">Sessions</option>
+                <option value="usedMessages">Messages</option>
+                <option value="status">Status</option>
+                <option value="expiryDate">Expiry</option>
+                <option value="createdAt">Created</option>
+              </select>
+            </div>
+            <div class="filter-search">
+              <i class="fas fa-search search-icon"></i>
+              <input id="searchUser" placeholder="Search users..." oninput="debounceSearch()">
+            </div>
+          </div>
+          <div class="filter-bar-right">
+            <button class="btn btn-icon" onclick="selectAllUsers()" title="Select All"><i class="fas fa-check-circle"></i></button>
+            <button class="btn btn-icon" onclick="deselectAllUsers()" title="Deselect All"><i class="fas fa-times-circle"></i></button>
+            <button class="btn btn-icon btn-icon-danger" onclick="deleteSelectedUsers()" title="Delete Selected" disabled id="deleteSelectedBtn"><i class="fas fa-trash"></i></button>
+          </div>
+        </div>
+      <div class="card">
+        <div class="table-container">
+          <table>
+            <thead><tr>
+              <th onclick="sortUsers('name')" style="cursor:pointer;user-select:none" data-i18n="th_name">الاسم <span class="sort-icon" data-sort="name"></span></th>
+              <th onclick="sortUsers('email')" style="cursor:pointer;user-select:none" data-i18n="th_email">البريد <span class="sort-icon" data-sort="email"></span></th>
+              <th data-i18n="th_api_key">API Key</th>
+              <th data-i18n="pricing_name">Plan</th>
+              <th onclick="sortUsers('sessionCount')" style="cursor:pointer;user-select:none" data-i18n="th_sessions">الجلسات <span class="sort-icon" data-sort="sessionCount"></span></th>
+              <th onclick="sortUsers('usedMessages')" style="cursor:pointer;user-select:none" data-i18n="th_messages">الرسائل <span class="sort-icon" data-sort="usedMessages"></span></th>
+              <th onclick="sortUsers('status')" style="cursor:pointer;user-select:none" data-i18n="th_status">الحالة <span class="sort-icon" data-sort="status"></span></th>
+              <th onclick="sortUsers('expiryDate')" style="cursor:pointer;user-select:none" data-i18n="th_expiry">الصلاحية <span class="sort-icon" data-sort="expiryDate"></span></th>
+              <th data-i18n="th_created_by">أضيف بواسطة</th>
+              <th data-i18n="th_actions">تحكم</th>
+            </tr></thead>
+            <tbody id="usersTable"></tbody>
+          </table>
+        </div>
+        <div class="table-footer">
+          <span class="table-total"><span data-i18n="total">Total</span>: <span id="usersTotal">0</span></span>
+          <div class="pagination">
+            <button class="btn-page" onclick="prevUsers()"><i class="fas fa-chevron-right"></i></button>
+            <span class="page-num" id="usersPage">1</span>
+            <button class="btn-page" onclick="nextUsers()"><i class="fas fa-chevron-left"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sessions Section -->
+    <div id="section-sessions" class="section">
+      <div class="card">
+        <div class="table-container">
+          <table>
+            <thead><tr>
+              <th data-i18n="th_id">#</th>
+              <th data-i18n="th_user">المستخدم</th>
+              <th data-i18n="th_phone">الهاتف</th>
+              <th data-i18n="th_status">الحالة</th>
+              <th data-i18n="th_created">التاريخ</th>
+            </tr></thead>
+            <tbody id="sessionsTable"></tbody>
+          </table>
+        </div>
+        <div class="table-footer">
+          <span class="table-total"><span data-i18n="total">Total</span>: <span id="sessionsTotal">0</span></span>
+          <div class="pagination">
+            <button class="btn-page" onclick="prevSessions()"><i class="fas fa-chevron-right"></i></button>
+            <span class="page-num" id="sessionsPage">1</span>
+            <button class="btn-page" onclick="nextSessions()"><i class="fas fa-chevron-left"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Messages Section -->
+    <div id="section-messages" class="section">
+      <div class="card">
+        <div class="table-container">
+          <table>
+            <thead><tr>
+              <th data-i18n="th_id">#</th>
+              <th data-i18n="th_user">المستخدم</th>
+              <th data-i18n="th_to">إلى</th>
+              <th data-i18n="th_status">الحالة</th>
+              <th data-i18n="th_time">الوقت</th>
+            </tr></thead>
+            <tbody id="messagesTable"></tbody>
+          </table>
+        </div>
+        <div class="table-footer">
+          <span class="table-total"><span data-i18n="total">Total</span>: <span id="messagesTotal">0</span></span>
+          <div class="pagination">
+            <button class="btn-page" onclick="prevMessages()"><i class="fas fa-chevron-right"></i></button>
+            <span class="page-num" id="messagesPage">1</span>
+            <button class="btn-page" onclick="nextMessages()"><i class="fas fa-chevron-left"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings Section -->
+    <div id="section-settings" class="section">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        <div class="lg:col-span-2">
+          <div class="card h-full">
+            <div class="flex items-center gap-3 mb-6 pb-4 border-b border-gray-100">
+              <div style="width:2.5rem;height:2.5rem;background:linear-gradient(135deg,#22c55e,#059669);border-radius:.75rem;display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 4px 6px rgba(0,0,0,.1)"><i class="fas fa-cog"></i></div>
+              <div>
+                <h3 class="font-bold text-gray-800" data-i18n="platform_settings">إعدادات المنصة</h3>
+                <p class="text-xs text-gray-400 mt-0.5" data-i18n="settings_subtitle">إعدادات عامة للمنصة</p>
+              </div>
+            </div>
+            <div class="space-y-5">
+              <div>
+                <label class="block text-sm font-semibold text-gray-900 dark:text-white mb-1.5" data-i18n="admin_email">بريد الأدمن</label>
+                <input value="admin@whatsapp.com" disabled class="bg-gray-50 text-gray-500 cursor-not-allowed">
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-gray-900 dark:text-white mb-1.5" data-i18n="server_status">حالة السيرفر</label>
+                <div id="serverStatus" class="flex items-center gap-2.5 bg-gray-50 rounded-xl px-4 py-3 border border-gray-100"><span class="w-2.5 h-2.5 rounded-full bg-green-500 shadow-sm shadow-green-200"></span> <span class="font-medium text-gray-900 dark:text-white" data-i18n="running">يعمل</span></div>
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-gray-900 dark:text-white mb-1.5" data-i18n="api_base">رابط API الأساسي</label>
+                <input id="apiBaseUrl" value="http://localhost:3000" class="bg-gray-50 text-left font-mono text-sm" dir="ltr">
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-gray-900 dark:text-white mb-1.5" data-i18n="default_currency">العملة الافتراضية</label>
+                <select id="defaultCurrency" class="!w-48"></select>
+              </div>
+              <div class="bg-brand-50 rounded-xl p-4 text-sm text-brand-800 border border-brand-200">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 bg-brand-100 rounded-xl flex items-center justify-center flex-shrink-0"><i class="fas fa-lightbulb text-brand-600"></i></div>
+                  <div class="flex-1"><strong data-i18n="tip" class="text-brand-700">💡 نصيحة:</strong> <span data-i18n="tip_text">غير بيانات الدخول في ملف .env قبل الاستخدام الفعلي.</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="card bg-gradient-to-b from-white to-gray-50/50">
+            <div class="flex items-center gap-3 mb-6 pb-4 border-b border-gray-100">
+              <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center text-white shadow-md"><i class="fas fa-info-circle"></i></div>
+              <div>
+                <h3 class="font-bold text-gray-800" data-i18n="quick_info">معلومات سريعة</h3>
+                <p class="text-xs text-gray-400 mt-0.5" data-i18n="quick_info_sub">نظرة عامة على المنصة</p>
+              </div>
+            </div>
+            <div class="space-y-4" id="quickInfo">
+              <div class="flex items-center justify-between p-3 bg-white rounded-xl border border-gray-100">
+                <span class="text-sm text-gray-500" data-i18n="stats_users">إجمالي المستخدمين</span>
+                <span class="font-bold text-gray-800" id="infoUsers">0</span>
+              </div>
+              <div class="flex items-center justify-between p-3 bg-white rounded-xl border border-gray-100">
+                <span class="text-sm text-gray-500" data-i18n="stats_sessions">الجلسات</span>
+                <span class="font-bold text-gray-800" id="infoSessions">0</span>
+              </div>
+              <div class="flex items-center justify-between p-3 bg-white rounded-xl border border-gray-100">
+                <span class="text-sm text-gray-500" data-i18n="stats_messages">إجمالي الرسائل</span>
+                <span class="font-bold text-gray-800" id="infoMessages">0</span>
+              </div>
+              <div class="flex items-center justify-between p-3 bg-white rounded-xl border border-gray-100">
+                <span class="text-sm text-gray-500" data-i18n="pricing_plans">خطط الأسعار</span>
+                <span class="font-bold text-gray-800" id="infoPlans">0</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Branding Settings -->
+          <div class="card mt-6">
+            <div class="flex items-center gap-3 mb-4 pb-4 border-b border-gray-100">
+              <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center text-white shadow-md"><i class="fas fa-palette"></i></div>
+              <div>
+                <h3 class="font-bold text-gray-800">Branding</h3>
+                <p class="text-xs text-gray-400 mt-0.5">Customize appearance &amp; brand</p>
+              </div>
+            </div>
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-semibold text-gray-900 dark:text-white mb-1.5">System Name</label>
+                <input id="brandSystemName" value="WhatsApp Sender" placeholder="WhatsApp Sender" >
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-gray-900 dark:text-white mb-1.5">Logo URL</label>
+                <input id="brandLogoUrl" placeholder="https://example.com/logo.png" oninput="showLogoPreview()">
+                <div id="brandLogoPreview" class="mt-2 hidden"></div>
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-gray-900 dark:text-white mb-1.5">Favicon URL</label>
+                <input id="brandFaviconUrl" placeholder="https://example.com/favicon.ico" oninput="showFaviconPreview()">
+                <div id="brandFaviconPreview" class="mt-2 hidden"></div>
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-gray-900 dark:text-white mb-1.5">Primary Color</label>
+                <div class="flex gap-3 items-center">
+                  <input id="brandPrimaryColor" type="color" value="#16a34a" class="!w-12 !h-10 !p-1 !rounded-lg !cursor-pointer">
+                  <input id="brandPrimaryColorText" value="#16a34a" class="!w-32 font-mono">
+                </div>
+              </div>
+              <div class="flex gap-2">
+                <button class="btn btn-primary flex-1" onclick="saveBranding()"><i class="fas fa-save"></i> Save</button>
+                <button class="btn bg-gray-100" onclick="resetBranding()" title="Reset to defaults"><i class="fas fa-undo"></i></button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Security / 2FA Settings -->
+          <div class="card mt-6">
+            <div class="flex items-center gap-3 mb-4 pb-4 border-b border-gray-100">
+              <div class="w-10 h-10 bg-gradient-to-br from-red-500 to-orange-600 rounded-xl flex items-center justify-center text-white shadow-md"><i class="fas fa-shield-alt"></i></div>
+              <div>
+                <h3 class="font-bold text-gray-800 dark:text-white">Security</h3>
+                <p class="text-xs text-gray-400 mt-0.5">Two-factor authentication</p>
+              </div>
+            </div>
+            <div class="space-y-4">
+              <div class="flex items-center justify-between p-3 bg-white dark:bg-gray-700/20 rounded-xl border border-gray-100 dark:border-gray-700">
+                <div>
+                  <span class="text-sm font-semibold text-gray-900 dark:text-white">Two-Factor Auth (TOTP)</span>
+                  <p class="text-xs text-gray-400 mt-0.5">Add an extra layer of security</p>
+                </div>
+                <span id="twoFAStatusBadge" class="badge badge-secondary">Checking...</span>
+              </div>
+              <div id="twoFAActions" class="flex gap-2">
+                <button class="btn btn-primary flex-1" id="btnSetup2FA" onclick="openSetup2FA()" style="display:none"><i class="fas fa-shield-alt"></i> Enable 2FA</button>
+                <button class="btn bg-gray-100 flex-1" id="btnDisable2FA" onclick="openDisable2FA()" style="display:none"><i class="fas fa-ban"></i> Disable 2FA</button>
+                <button class="btn bg-gray-100 flex-1" id="btnRecovery2FA" onclick="openRecoveryCodes()" style="display:none"><i class="fas fa-key"></i> Recovery Codes</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pricing Plans Editor -->
+      <div class="card">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-bold text-gray-800"><i class="fas fa-tags text-brand-600"></i> <span data-i18n="pricing_plans">خطط الأسعار</span></h3>
+          <button class="btn btn-sm bg-brand-500 text-white hover:bg-brand-600" onclick="openAddPlan()"><i class="fas fa-plus"></i> Add Plan</button>
+        </div>
+        <div id="pricingEditor" class="space-y-4">
+          <p class="text-gray-400 text-sm" data-i18n="loading">جار التحميل...</p>
+        </div>
+        <div class="flex gap-2 mt-4">
+          <button class="btn btn-primary flex-1" onclick="savePricing()"><i class="fas fa-save"></i> <span data-i18n="pricing_save">حفظ الخطط</span></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- WhatsApp Web Section -->
+    <div id="section-app" class="section">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
+        <div class="card lg:col-span-2">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-bold text-gray-800 flex items-center gap-2"><i class="fab fa-whatsapp text-brand-600 text-xl"></i> <span data-i18n="whatsapp_sessions">جلسات واتساب</span></h3>
+            <button class="btn btn-primary btn-sm" onclick="openCreateSession()"><i class="fas fa-plus"></i> <span data-i18n="new_session">جلسة جديدة</span></button>
+          </div>
+          <div id="sessionList" class="space-y-3">
+            <p class="text-gray-400 text-sm text-center py-8" data-i18n="loading">جار التحميل...</p>
+          </div>
+        </div>
+        <div class="card">
+          <h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2"><i class="fas fa-qrcode text-brand-600"></i> <span data-i18n="qr_scanner">ماسح QR</span></h3>
+          <div id="qrDisplay" class="flex flex-col items-center justify-center min-h-[200px] bg-gray-50 rounded-xl p-4">
+            <p class="text-gray-400 text-sm text-center" data-i18n="qr_placeholder">أنشئ جلسة جديدة لظهور رمز QR</p>
+          </div>
+          <div id="pairingSection" class="mt-3 pt-3 border-t border-gray-100" style="display:none">
+            <p class="text-xs text-gray-500 mb-2" data-i18n="pairing_hint">أو استخدم كود الاقتران من واتساب</p>
+            <div class="flex gap-2">
+              <input type="text" id="pairingPhone" placeholder="966501234567" class="text-left" dir="ltr">
+              <button class="btn btn-primary btn-sm" onclick="requestPairingCode()"><span data-i18n="pairing_btn">طلب كود</span></button>
+            </div>
+            <div id="pairingCodeDisplay" class="mt-2 text-lg font-bold text-brand-700 text-center bg-green-50 rounded-lg p-2" style="display:none" dir="ltr"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Send Message Card -->
+      <div class="card" id="sendCard" style="display:none">
+        <h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2"><i class="fas fa-paper-plane text-brand-600"></i> <span data-i18n="send_message">إرسال رسالة</span></h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <select id="sendSessionSelect" class="bg-gray-50"></select>
+          <input type="text" id="sendTo" placeholder="966501234567" class="text-left" dir="ltr">
+          <input type="text" id="sendText" data-i18n-placeholder="message_placeholder" placeholder="نص الرسالة">
+        </div>
+        <button class="btn btn-primary mt-3" onclick="sendTestMessage()"><i class="fas fa-paper-plane"></i> <span data-i18n="send">إرسال</span></button>
+      </div>
+    </div>
+
+    <!-- Admins Section -->
+    <div id="section-admins" class="section">
+      <div class="flex flex-wrap gap-3 mb-4">
+        <button class="btn btn-primary" onclick="openAddAdmin()"><i class="fas fa-plus"></i> <span data-i18n="add_admin">إضافة مشرف</span></button>
+      </div>
+      <div class="card">
+        <div class="table-container">
+          <table>
+            <thead><tr>
+              <th data-i18n="admin_name">اسم المشرف</th>
+              <th data-i18n="admin_email">البريد</th>
+              <th data-i18n="th_created">تاريخ الإنشاء</th>
+              <th data-i18n="th_actions">تحكم</th>
+            </tr></thead>
+            <tbody id="adminsTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <!-- Activity Log Section -->
+    <div id="section-activity" class="section">
+      <div class="flex flex-wrap gap-3 mb-4 items-center justify-between">
+        <h3 class="text-lg font-bold" data-i18n="activity_title">سجل النشاط</h3>
+        <div class="flex gap-2 items-center">
+          <input type="text" id="activitySearch" class="border rounded-lg px-3 py-1.5 text-sm w-48 dark:bg-gray-800 dark:border-gray-600 dark:text-white dark:placeholder-gray-400" placeholder="بحث..." onkeydown="if(event.key==='Enter'){ activityPage=1; loadActivity(); }">
+          <button class="btn btn-sm bg-gray-100" onclick="activityPage=1; loadActivity()"><i class="fas fa-search"></i></button>
+          <button class="btn btn-sm bg-gray-100" onclick="activityPage=1; document.getElementById('activitySearch').value=''; loadActivity()"><i class="fas fa-times"></i></button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="table-container">
+          <table>
+            <thead><tr>
+              <th data-i18n="th_date">التاريخ</th>
+              <th data-i18n="th_time">الوقت</th>
+              <th data-i18n="admin_name">المشرف</th>
+              <th data-i18n="th_action">الإجراء</th>
+              <th data-i18n="th_target">المستهدف</th>
+              <th data-i18n="th_ip">IP</th>
+              <th data-i18n="th_user_agent">المتصفح</th>
+              <th data-i18n="th_details">التفاصيل</th>
+            </tr></thead>
+            <tbody id="activityTable"></tbody>
+          </table>
+        </div>
+        <div class="flex items-center justify-between mt-4" id="activityPagination" style="display:none">
+          <button class="btn btn-sm bg-gray-100" onclick="prevActivityPage()"><i class="fas fa-chevron-right"></i> <span data-i18n="previous">السابق</span></button>
+          <span class="text-sm text-gray-500" id="activityPageInfo"></span>
+          <button class="btn btn-sm bg-gray-100" onclick="nextActivityPage()"><i class="fas fa-chevron-left"></i> <span data-i18n="next">التالي</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Activity Detail Modal -->
+<div class="modal-overlay" id="activityDetailModal">
+  <div class="modal" style="max-width:500px">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="text-lg font-bold" data-i18n="th_details">التفاصيل</h3>
+      <button class="text-gray-400 text-2xl" onclick="closeModal('activityDetailModal')">&times;</button>
+    </div>
+    <div id="activityDetailContent" class="max-h-80 overflow-y-auto"></div>
+    <div class="flex justify-end mt-4">
+      <button class="btn bg-gray-100" onclick="closeModal('activityDetailModal')"><span data-i18n="close">إغلاق</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Admin Modal -->
+<div class="modal-overlay" id="addAdminModal">
+  <div class="modal">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-xl font-bold" data-i18n="add_admin">إضافة مشرف</h3>
+      <button class="text-gray-400 text-2xl" onclick="closeModal('addAdminModal')">&times;</button>
+    </div>
+    <div class="space-y-4">
+      <div><label class="block text-sm font-medium text-gray-900 dark:text-white mb-1" data-i18n="admin_name">اسم المشرف</label><input id="adminName" data-i18n-placeholder="admin_name" placeholder="Admin Name" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100 transition"></div>
+      <div><label class="block text-sm font-medium text-gray-900 dark:text-white mb-1" data-i18n="admin_email">البريد</label><input id="adminEmail" type="email" placeholder="admin@example.com" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100 transition"></div>
+      <div><label class="block text-sm font-medium text-gray-900 dark:text-white mb-1" data-i18n="admin_password">كلمة المرور</label><input id="adminPass" type="password" placeholder="********" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100 transition"></div>
+    </div>
+    <div class="flex gap-3 mt-6">
+      <button class="btn btn-primary flex-1" onclick="addAdmin()"><span data-i18n="add">إضافة</span></button>
+      <button class="btn bg-gray-100 flex-1" onclick="closeModal('addAdminModal')"><span data-i18n="cancel">إلغاء</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- Add User Modal -->
+<div class="modal-overlay" id="addUserModal">
+  <div class="modal">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-xl font-bold" data-i18n="add_user_title">إضافة مستخدم جديد</h3>
+      <button class="text-gray-400 text-2xl" onclick="closeModal('addUserModal')">&times;</button>
+    </div>
+    <div class="space-y-4">
+      <div><label class="block text-sm font-medium text-gray-900 dark:text-white mb-1" data-i18n="name">الاسم</label><input id="newName" data-i18n-placeholder="name" placeholder="اسم المستخدم" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100 transition"></div>
+      <div><label class="block text-sm font-medium text-gray-900 dark:text-white mb-1" data-i18n="email">البريد الإلكتروني</label><input id="newEmail" type="email" placeholder="user@example.com" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100 transition"></div>
+      <div><label class="block text-sm font-medium text-gray-900 dark:text-white mb-1" data-i18n="password">كلمة المرور</label><input id="newPass" type="password" placeholder="********" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100 transition"></div>
+      <div><label class="block text-sm font-medium text-gray-900 dark:text-white mb-1" data-i18n="pricing_plans">الباقة</label>
+        <select id="newPlan" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100 transition bg-white" onchange="onPlanChange()"></select>
+      </div>
+      <div><label class="block text-sm font-medium text-gray-900 dark:text-white mb-1" data-i18n="max_messages">حد الرسائل</label><input id="newMsgs" type="number" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100 transition bg-gray-50" readonly></div>
+      <div><label class="block text-sm font-medium text-gray-900 dark:text-white mb-1" data-i18n="expiry_days">مدة الصلاحية (أيام)</label><input id="newExpiry" type="number" value="30" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100 transition"></div>
+    </div>
+    <div class="flex gap-3 mt-6">
+      <button class="btn btn-primary flex-1" onclick="addUser()"><span data-i18n="add">إضافة</span></button>
+      <button class="btn bg-gray-100 flex-1" onclick="closeModal('addUserModal')"><span data-i18n="cancel">إلغاء</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit User Modal -->
+<div class="modal-overlay" id="editUserModal">
+  <div class="modal">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-xl font-bold" data-i18n="edit_user_title">تعديل المستخدم</h3>
+      <button class="text-gray-400 text-2xl" onclick="closeModal('editUserModal')">&times;</button>
+    </div>
+    <div class="space-y-4">
+      <div><label class="block text-sm font-medium text-gray-900 dark:text-white mb-1" data-i18n="name">الاسم</label><input id="editName" placeholder="" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100 transition"></div>
+      <div><label class="block text-sm font-medium text-gray-900 dark:text-white mb-1" data-i18n="email">البريد الإلكتروني</label><input id="editEmail" type="email" placeholder="user@example.com" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100 transition"></div>
+      <div><label class="block text-sm font-medium text-gray-900 dark:text-white mb-1" data-i18n="pricing_plans">الباقة</label>
+        <select id="editPlan" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100 transition bg-white" onchange="onEditPlanChange()"></select>
+      </div>
+      <div><label class="block text-sm font-medium text-gray-900 dark:text-white mb-1" data-i18n="max_messages">حد الرسائل المسموحة</label><input id="editMsgs" type="number" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100 transition"></div>
+      <div><label class="block text-sm font-medium text-gray-900 dark:text-white mb-1" data-i18n="status">الحالة</label>
+        <select id="editStatus" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100 transition bg-white"><option value="active">Active</option><option value="expired">Expired</option></select>
+      </div>
+      <div><label class="block text-sm font-medium text-gray-900 dark:text-white mb-1" data-i18n="expiry_days">تاريخ الصلاحية</label><input id="editExpiry" type="date" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100 transition"></div>
+    </div>
+    <div class="flex gap-3 mt-6">
+      <button class="btn btn-primary flex-1" onclick="saveEditUser()"><span data-i18n="save">حفظ</span></button>
+      <button class="btn bg-gray-100 flex-1" onclick="closeModal('editUserModal')"><span data-i18n="cancel">إلغاء</span></button>
+    </div>
+    <input type="hidden" id="editUserId">
+  </div>
+</div>
+
+<!-- 2FA Setup Modal -->
+<div class="modal-overlay" id="setup2FAModal">
+  <div class="modal !max-w-lg">
+    <div class="flex justify-between items-center mb-5">
+      <h3 class="text-lg font-bold text-gray-800 dark:text-white flex items-center gap-2"><i class="fas fa-shield-alt text-red-500"></i> Setup Two-Factor Auth</h3>
+      <button class="text-gray-400 hover:text-gray-600 text-xl leading-none" onclick="closeModal('setup2FAModal')">&times;</button>
+    </div>
+    <div id="setup2FAStep1">
+      <div class="space-y-4">
+        <p class="text-sm text-gray-500 dark:text-gray-400">Scan the QR code below with your authenticator app (Google Authenticator, Authy, etc.), then enter the 6-digit code to verify.</p>
+        <div id="setup2FAQr" class="flex justify-center p-4 bg-gray-50 dark:bg-gray-700/20 rounded-xl min-h-[180px] items-center">
+          <p class="text-gray-400 text-sm">Generating QR code...</p>
+        </div>
+        <div class="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700/20 rounded-xl">
+          <span class="text-xs text-gray-500 font-medium flex-shrink-0">Secret:</span>
+          <code id="setup2FASecret" class="text-xs font-mono bg-white dark:bg-gray-700 px-2 py-1 rounded flex-1 text-center select-all"></code>
+          <button class="btn btn-xs bg-gray-100" onclick="copy2FASecret()" title="Copy secret"><i class="fas fa-copy"></i></button>
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-gray-900 dark:text-white mb-1.5">Verification Code</label>
+          <input id="setup2FACode" type="text" placeholder="000000" maxlength="6" class="!w-full text-center text-lg font-mono tracking-widest" oninput="this.value=this.value.replace(/\D/g,'')">
+        </div>
+      </div>
+      <div class="flex gap-3 mt-6 pt-4 border-t border-gray-100">
+        <button class="btn btn-primary flex-1" onclick="verify2FASetup()"><i class="fas fa-check"></i> Verify &amp; Enable</button>
+        <button class="btn bg-gray-100 flex-1" onclick="closeModal('setup2FAModal')">Cancel</button>
+      </div>
+    </div>
+    <div id="setup2FAStep2" style="display:none">
+      <div class="text-center py-6">
+        <div class="w-16 h-16 bg-brand-100 rounded-full flex items-center justify-center mx-auto mb-4"><i class="fas fa-check text-brand-600 text-2xl"></i></div>
+        <h4 class="text-lg font-bold text-gray-800 dark:text-white mb-2">2FA Enabled!</h4>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Save these recovery codes in a safe place. You can use each code once to access your account if you lose your device.</p>
+        <div id="setup2FARecoveryCodes" class="bg-gray-50 dark:bg-gray-700/20 rounded-xl p-4 mb-4 text-left font-mono text-sm leading-loose"></div>
+        <button class="btn btn-sm bg-gray-100 mb-3" onclick="printRecoveryCodes()"><i class="fas fa-print"></i> Print</button>
+      </div>
+      <div class="flex gap-3 mt-2 pt-4 border-t border-gray-100">
+        <button class="btn btn-primary flex-1" onclick="closeModal('setup2FAModal'); load2FAStatus();"><i class="fas fa-check"></i> Done</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Disable 2FA Modal -->
+<div class="modal-overlay" id="disable2FAModal">
+  <div class="modal !max-w-sm">
+    <div class="flex justify-between items-center mb-5">
+      <h3 class="text-lg font-bold text-gray-800 dark:text-white flex items-center gap-2"><i class="fas fa-exclamation-triangle text-red-500"></i> Disable 2FA</h3>
+      <button class="text-gray-400 hover:text-gray-600 text-xl leading-none" onclick="closeModal('disable2FAModal')">&times;</button>
+    </div>
+    <div class="space-y-4">
+      <p class="text-sm text-gray-500 dark:text-gray-400">Enter your current password to disable two-factor authentication.</p>
+      <div>
+        <label class="block text-sm font-semibold text-gray-900 dark:text-white mb-1.5">Current Password</label>
+        <input id="disable2FAPassword" type="password" placeholder="Enter your password" class="!w-full">
+      </div>
+    </div>
+    <div class="flex gap-3 mt-6 pt-4 border-t border-gray-100">
+      <button class="btn btn-danger flex-1" onclick="disable2FA()"><i class="fas fa-ban"></i> Disable 2FA</button>
+      <button class="btn bg-gray-100 flex-1" onclick="closeModal('disable2FAModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Recovery Codes Modal -->
+<div class="modal-overlay" id="recoveryCodesModal">
+  <div class="modal !max-w-sm">
+    <div class="flex justify-between items-center mb-5">
+      <h3 class="text-lg font-bold text-gray-800 dark:text-white flex items-center gap-2"><i class="fas fa-key text-amber-500"></i> Recovery Codes</h3>
+      <button class="text-gray-400 hover:text-gray-600 text-xl leading-none" onclick="closeModal('recoveryCodesModal')">&times;</button>
+    </div>
+    <div class="space-y-4">
+      <p class="text-sm text-gray-500 dark:text-gray-400">Enter your password to generate new recovery codes. Old codes will be invalidated.</p>
+      <div>
+        <label class="block text-sm font-semibold text-gray-900 dark:text-white mb-1.5">Current Password</label>
+        <input id="recoveryPassword" type="password" placeholder="Enter your password" class="!w-full">
+      </div>
+    </div>
+    <div class="flex gap-3 mt-6 pt-4 border-t border-gray-100">
+      <button class="btn btn-primary flex-1" onclick="generateRecoveryCodes()"><i class="fas fa-redo"></i> Generate</button>
+      <button class="btn bg-gray-100 flex-1" onclick="closeModal('recoveryCodesModal')">Cancel</button>
+    </div>
+    <div id="recoveryCodesDisplay" class="mt-4" style="display:none">
+      <div class="bg-gray-50 dark:bg-gray-700/20 rounded-xl p-4 text-left font-mono text-sm leading-loose" id="recoveryCodesList"></div>
+      <button class="btn btn-sm bg-gray-100 mt-2 w-full" onclick="printRecoveryCodes()"><i class="fas fa-print"></i> Print</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<!-- Help Guide Modal -->
+<div class="modal-overlay" id="helpModal">
+  <div class="modal !max-w-2xl">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-xl font-bold flex items-center gap-2"><i class="fas fa-question-circle text-brand-600"></i> <span data-i18n="help_title">دليل الاستخدام السريع</span></h3>
+      <button class="text-gray-400 text-2xl" onclick="closeModal('helpModal')">&times;</button>
+    </div>
+    <div class="space-y-6 text-sm" id="helpContent"></div>
+  </div>
+</div>
+
+<!-- Confirm Dialog -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal !max-w-sm">
+    <div class="text-center">
+      <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4"><i class="fas fa-exclamation-triangle text-red-500 text-2xl"></i></div>
+      <h3 class="text-lg font-bold text-gray-800 mb-2" id="confirmTitle">تأكيد</h3>
+      <p class="text-gray-500 text-sm mb-6" id="confirmMessage">هل أنت متأكد؟</p>
+      <div class="flex gap-3">
+        <button class="btn bg-gray-100 flex-1" onclick="closeConfirm()"><span data-i18n="cancel">إلغاء</span></button>
+        <button class="btn btn-danger flex-1" id="confirmBtn" onclick=""><span data-i18n="delete">تأكيد</span></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="createSessionModal">
+  <div class="modal">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-xl font-bold" data-i18n="create_session">إنشاء جلسة جديدة</h3>
+      <button class="text-gray-400 text-2xl" onclick="closeModal('createSessionModal')">&times;</button>
+    </div>
+    <div class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-900 dark:text-white mb-1" data-i18n="session_user">المستخدم</label>
+        <select id="sessionUserId" class="bg-gray-50"></select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-900 dark:text-white mb-1" data-i18n="session_phone">رقم الجوال</label>
+        <input id="sessionPhone" placeholder="966501234567" class="text-left" dir="ltr">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-900 dark:text-white mb-1" data-i18n="session_name">اسم الجلسة (اختياري)</label>
+        <input id="sessionName" placeholder="My Phone">
+      </div>
+    </div>
+    <div class="flex gap-3 mt-6">
+      <button class="btn btn-primary flex-1" onclick="createSession()"><span data-i18n="create">إنشاء</span></button>
+      <button class="btn bg-gray-100 flex-1" onclick="closeModal('createSessionModal')"><span data-i18n="cancel">إلغاء</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Plan Modal -->
+<div class="modal-overlay" id="addPlanModal">
+  <div class="modal">
+    <div class="flex justify-between items-center mb-5">
+      <h3 class="text-lg font-bold text-gray-800">Add Plan</h3>
+      <button class="text-gray-400 hover:text-gray-600 text-xl leading-none" onclick="closeModal('addPlanModal')">&times;</button>
+    </div>
+    <div class="space-y-4">
+      <div>
+        <label class="block text-sm font-semibold text-gray-900 dark:text-white mb-1.5">Plan ID</label>
+        <input id="newPlanId" placeholder="e.g. premium" class="!w-full">
+      </div>
+      <div>
+        <label class="block text-sm font-semibold text-gray-900 dark:text-white mb-1.5">Name</label>
+        <input id="newPlanName" placeholder="Premium" class="!w-full">
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-semibold text-gray-900 dark:text-white mb-1.5">Price</label>
+          <div class="flex gap-2">
+            <input id="newPlanCurrency" value="$" class="!w-16" placeholder="$">
+            <input id="newPlanPrice" type="number" value="0" min="0" class="!flex-1">
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-gray-900 dark:text-white mb-1.5">Messages</label>
+          <input id="newPlanMsgs" type="number" value="1000" min="0" class="!w-full">
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-semibold text-gray-900 dark:text-white mb-1.5">Sessions</label>
+          <input id="newPlanSessions" type="number" value="1" min="1" class="!w-full">
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-gray-900 dark:text-white mb-1.5">Discount %</label>
+          <input id="newPlanDiscount" type="number" value="0" min="0" max="100" class="!w-full">
+        </div>
+      </div>
+      <div>
+        <label class="block text-sm font-semibold text-gray-900 dark:text-white mb-1.5">Days</label>
+        <input id="newPlanDays" type="number" value="30" min="1" class="!w-full">
+      </div>
+      <div>
+        <label class="block text-sm font-semibold text-gray-900 dark:text-white mb-1.5">Features (one per line)</label>
+        <textarea id="newPlanFeatures" rows="4" class="!w-full" placeholder="Feature 1&#10;Feature 2&#10;Feature 3"></textarea>
+      </div>
+      <div class="flex items-center gap-3">
+        <input id="newPlanPopular" type="checkbox" style="width:18px;height:18px;accent-color:#16a34a">
+        <label class="text-sm font-medium text-gray-900 dark:text-white">Mark as popular</label>
+        <span id="newPlanPopularBadge" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-brand-100 text-brand-700 dark:bg-brand-900 dark:text-brand-300 hidden" data-i18n="pricing_popular">Popular</span>
+      </div>
+    </div>
+    <div class="flex gap-3 mt-6 pt-4 border-t border-gray-100">
+      <button class="btn btn-primary flex-1" onclick="addPlan()"><i class="fas fa-check"></i> Add</button>
+      <button class="btn bg-gray-100 flex-1" onclick="closeModal('addPlanModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- User Detail Modal -->
+<div class="modal-overlay" id="userDetailModal">
+  <div class="modal !max-w-3xl !p-0">
+    <div class="bg-brand-600 bg-gradient-to-r from-brand-600 to-brand-500 px-6 py-4 flex justify-between items-center sticky top-0" style="z-index:1">
+      <h3 class="text-white font-bold flex items-center gap-2 text-base"><i class="fas fa-user-circle text-white/80"></i> <span id="userDetailTitle">User Details</span></h3>
+      <button class="text-white/70 hover:text-white text-xl leading-none transition" onclick="closeModal('userDetailModal')">&times;</button>
+    </div>
+    <div class="px-6 py-5 overflow-y-auto" style="max-height:calc(85vh - 60px)">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6" id="userDetailStats"></div>
+      <div id="userDetailInfo" class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-5 mb-5"></div>
+      <div>
+        <h4 class="font-bold text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2 text-xs uppercase tracking-wide"><i class="fab fa-whatsapp text-brand-500"></i> <span data-i18n="user_sessions">جلسات المستخدم</span></h4>
+        <div id="userDetailSessions" class="space-y-2"><p class="text-gray-400 text-sm">Loading...</p></div>
+      </div>
+      <div class="border-t border-gray-100 dark:border-gray-700 pt-4 mt-4">
+        <h4 class="font-bold text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2 text-xs uppercase tracking-wide"><i class="fas fa-envelope text-orange-500"></i> <span data-i18n="user_messages">رسائل المستخدم</span></h4>
+        <div id="userDetailMessages"><p class="text-gray-400 text-sm">Loading...</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/i18n.js"></script>
+<script>
+const TOKEN = localStorage.getItem('adminToken');
+const LANG = localStorage.getItem('lang') || 'ar';
+if (!TOKEN && !window.location.pathname.includes('login.html')) window.location.href = '/api/admin/login';
+let ADMIN_DATA = null;
+try { ADMIN_DATA = JSON.parse(localStorage.getItem('adminData')); } catch(e) {}
+if (ADMIN_DATA && ADMIN_DATA.name) {
+  document.getElementById('adminNameLabel').textContent = ADMIN_DATA.name;
+  document.getElementById('adminAvatar').textContent = ADMIN_DATA.name[0].toUpperCase();
+}
+
+const i18n = window.LANGUAGES;
+const LANG_LIST = ['ar', 'en', 'de', 'fr', 'es', 'tr'];
+
+let currentLang = LANG;
+let usersPage = 1;
+let usersData = [];
+
+function t(key) { return (i18n[currentLang] && i18n[currentLang][key]) || key; }
+function formatDateTime(d) { const date = new Date(d); const day = String(date.getDate()).padStart(2,'0'); const month = String(date.getMonth()+1).padStart(2,'0'); const year = date.getFullYear(); let h = date.getHours(); const m = String(date.getMinutes()).padStart(2,'0'); const ap = h >= 12 ? 'PM' : 'AM'; h = h % 12 || 12; return `${day}-${month}-${year} ${h}:${m} ${ap}`; }
+
+function formatDate(d) { const date = new Date(d); const day = String(date.getDate()).padStart(2,'0'); const month = String(date.getMonth()+1).padStart(2,'0'); const year = date.getFullYear(); return `${day}-${month}-${year}`; }
+
+function formatTime(d) { const date = new Date(d); let h = date.getHours(); const m = String(date.getMinutes()).padStart(2,'0'); const ap = h >= 12 ? 'PM' : 'AM'; h = h % 12 || 12; return `${h}:${m} ${ap}`; }
+
+function applyLang() {
+  document.querySelectorAll('[data-i18n]').forEach(el => el.textContent = t(el.dataset.i18n));
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => el.placeholder = t(el.dataset.i18nPlaceholder));
+  document.documentElement.lang = currentLang;
+  document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+  document.documentElement.lang = currentLang;
+  const sel = document.getElementById('langSelect');
+  if (sel) {
+    sel.innerHTML = LANG_LIST.map(code =>
+      `<option value="${code}" ${code === currentLang ? 'selected' : ''}>${code.toUpperCase()}</option>`
+    ).join('');
+  }
+  localStorage.setItem('lang', currentLang);
+  populateCurrencySelect();
+}
+
+const CURRENCY_LABELS = {
+  '$': { ar: '$ دولار', en: '$ USD', de: '$ USD', fr: '$ USD', es: '$ USD', tr: '$ USD' },
+  '€': { ar: '€ يورو', en: '€ EUR', de: '€ EUR', fr: '€ EUR', es: '€ EUR', tr: '€ EUR' },
+  '£': { ar: '£ جنيه إسترليني', en: '£ GBP', de: '£ GBP', fr: '£ GBP', es: '£ GBP', tr: '£ GBP' },
+  'SAR': { ar: 'ريال', en: 'SAR', de: 'SAR', fr: 'SAR', es: 'SAR', tr: 'SAR' },
+  'AED': { ar: 'درهم', en: 'AED', de: 'AED', fr: 'AED', es: 'AED', tr: 'AED' },
+  'EGP': { ar: 'جنية', en: 'EGP', de: 'EGP', fr: 'EGP', es: 'EGP', tr: 'EGP' },
+  '₺': { ar: '₺ ليرة', en: '₺ TRY', de: '₺ TRY', fr: '₺ TRY', es: '₺ TRY', tr: '₺ TRY' },
+  '₹': { ar: '₹ روبية', en: '₹ INR', de: '₹ INR', fr: '₹ INR', es: '₹ INR', tr: '₹ INR' },
+  'PKR': { ar: 'روبية باكستانية', en: 'PKR', de: 'PKR', fr: 'PKR', es: 'PKR', tr: 'PKR' },
+  'BDT': { ar: 'تاكا بنغلاديشي', en: 'BDT', de: 'BDT', fr: 'BDT', es: 'BDT', tr: 'BDT' },
+  'IDR': { ar: 'روبية إندونيسية', en: 'IDR', de: 'IDR', fr: 'IDR', es: 'IDR', tr: 'IDR' },
+};
+
+function populateCurrencySelect() {
+  const sel = document.getElementById('defaultCurrency');
+  if (!sel) return;
+  const currentVal = sel.value;
+  sel.innerHTML = Object.keys(CURRENCY_LABELS).map(code =>
+    `<option value="${code}" ${code === currentVal ? 'selected' : ''}>${(CURRENCY_LABELS[code][currentLang] || CURRENCY_LABELS[code].en || code)}</option>`
+  ).join('');
+}
+
+function switchLang(code) {
+  currentLang = code;
+  applyLang();
+  loadDashboard();
+}
+
+async function API(url, opts = {}) {
+  const res = await fetch(url, { ...opts, headers: { ...opts.headers, 'Authorization': `Bearer ${TOKEN}`, 'Content-Type': 'application/json' } });
+  if (res.status === 401) { localStorage.removeItem('adminToken'); window.location.href = '/api/admin/login'; }
+  return res;
+}
+
+function toast(msg, type = 'info') {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.className = 'toast show';
+  el.style.background = type === 'error' ? '#dc2626' : type === 'success' ? '#16a34a' : '#1e293b';
+  setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+function openModal(id) { document.getElementById(id).classList.add('show'); }
+
+let confirmCallback = null;
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay.show').forEach(function(m) {
+      if (m.id !== 'confirmModal') m.classList.remove('show');
+    });
+  }
+  if (e.key === 'Enter' && document.activeElement && document.activeElement.tagName !== 'TEXTAREA') {
+    var openModal = document.querySelector('.modal-overlay.show');
+    if (!openModal) return;
+    var btn = openModal.querySelector('.btn-primary, .btn-danger, .btn.bg-brand-500');
+    if (btn) btn.click();
+  }
+});
+function showConfirm(title, message, cb) {
+  document.getElementById('confirmTitle').textContent = title;
+  document.getElementById('confirmMessage').textContent = message;
+  confirmCallback = cb;
+  document.getElementById('confirmBtn').onclick = () => { closeConfirm(); if (confirmCallback) confirmCallback(); };
+  openModal('confirmModal');
+}
+function closeConfirm() { closeModal('confirmModal'); confirmCallback = null; }
+
+function showSection(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(`section-${name}`).classList.add('active');
+  document.querySelector(`[data-section="${name}"]`).classList.add('active');
+  const titles = { dashboard: 'dashboard_title', users: 'nav_users', sessions: 'nav_sessions', messages: 'nav_messages', settings: 'nav_settings', app: 'nav_whatsapp', admins: 'nav_admins', analytics: 'nav_analytics', activity: 'nav_activity' };
+  document.getElementById('pageTitle').textContent = t(titles[name] || 'dashboard_title');
+  if (name === 'users') loadUsers();
+  else if (name === 'sessions') loadSessions();
+  else if (name === 'messages') loadMessages();
+  else if (name === 'dashboard') loadDashboard();
+  else if (name === 'settings') { loadPricing(); loadQuickInfo(); loadBranding(); load2FAStatus(); }
+  else if (name === 'app') { connectWaSocket(); loadWASessions(); }
+  else if (name === 'admins') loadAdmins();
+  else if (name === 'analytics') loadAnalytics();
+  else if (name === 'activity') loadActivity();
+}
+
+async function loadDashboard() {
+  try {
+    const res = await API('/api/admin/stats');
+    const d = await res.json();
+    if (!d || !d.users) throw new Error('Failed to load stats');
+    const msgs = d.messages || {};
+    const sess = d.sessions || {};
+    const usrs = d.users || {};
+    const gradients = {
+      green: 'linear-gradient(135deg,#22c55e,#16a34a)',
+      emerald: 'linear-gradient(135deg,#059669,#10b981)',
+      amber: 'linear-gradient(135deg,#d97706,#f59e0b)',
+      red: 'linear-gradient(135deg,#dc2626,#ef4444)',
+      purple: 'linear-gradient(135deg,#9333ea,#a855f7)',
+      gray: 'linear-gradient(135deg,#475569,#64748b)',
+    };
+    const cards = [
+      { label: 'stats_users', value: usrs.total || 0, bg: gradients.green, icon: 'fa-users' },
+      { label: 'stats_active', value: usrs.active || 0, bg: gradients.green, icon: 'fa-user-check' },
+      { label: 'stats_messages', value: msgs.total || 0, bg: gradients.amber, icon: 'fa-envelope' },
+      { label: 'stats_sent', value: msgs.sent || 0, bg: gradients.emerald, icon: 'fa-check-circle' },
+      { label: 'stats_failed', value: msgs.failed || 0, bg: gradients.red, icon: 'fa-exclamation-circle' },
+      { label: 'stats_sessions', value: sess.total || 0, bg: gradients.purple, icon: 'fa-mobile-alt' },
+      { label: 'stats_expired', value: usrs.expired || 0, bg: gradients.gray, icon: 'fa-clock' },
+    ];
+    let html = '';
+    cards.forEach(c => {
+      html += `<div class="stat-card">
+        <div class="flex items-center justify-between mb-3">
+          <div class="stat-icon text-white" style="background:${c.bg}">${c.value}</div>
+          <i class="fas ${c.icon} text-3xl stat-icon-deco"></i>
+        </div>
+        <div class="text-sm text-gray-500">${t(c.label)}</div>
+      </div>`;
+    });
+    document.getElementById('statsGrid').innerHTML = html;
+
+    document.getElementById('quickLinks').innerHTML = `
+      <a href="#" onclick="showSection('users')" class="flex items-center gap-3 p-3 rounded-xl hover-subtle"><i class="fas fa-users text-brand-600 w-6"></i> ${t('nav_users')}</a>
+      <a href="#" onclick="showSection('sessions')" class="flex items-center gap-3 p-3 rounded-xl hover-subtle"><i class="fas fa-mobile-alt text-blue-600 w-6"></i> ${t('nav_sessions')}</a>
+      <a href="#" onclick="showSection('messages')" class="flex items-center gap-3 p-3 rounded-xl hover-subtle"><i class="fas fa-envelope text-orange-600 w-6"></i> ${t('nav_messages')}</a>
+      <code class="block p-3 bg-gray-50 rounded-xl text-sm text-left" dir="ltr">POST /v1/send<br>X-API-Key: {key}</code>
+    `;
+
+    // Bar chart
+    const chartCard = document.getElementById('chartCard');
+    const total = d.messages.total || 0;
+    if (total > 0) {
+      chartCard.style.display = 'block';
+      const chartData = [
+        { label: t('stats_sent'), value: d.messages.sent, color: '#22c55e' },
+        { label: t('stats_failed'), value: d.messages.failed, color: '#ef4444' },
+        { label: t('stats_sessions'), value: d.sessions.total, color: '#8b5cf6' },
+        { label: t('stats_active'), value: d.users.active, color: '#3b82f6' },
+        { label: t('stats_expired'), value: d.users.expired, color: '#6b7280' },
+      ];
+      const maxVal = Math.max(...chartData.map(d => d.value), 1);
+      document.getElementById('chartBars').innerHTML = chartData.map(d => `
+        <div class="flex-1 flex flex-col items-center justify-end h-full gap-1">
+          <span class="text-xs font-bold text-gray-600">${d.value}</span>
+          <div class="w-full rounded-md transition-all duration-500 hover:opacity-80" style="height:${(d.value/maxVal)*100}%;max-height:160px;min-height:4px;background:${d.color}"></div>
+          <span class="text-xs text-gray-400 text-center leading-tight">${d.label}</span>
+        </div>
+      `).join('');
+    } else {
+      chartCard.style.display = 'none';
+    }
+
+    // Load recent activity with user names
+    try {
+      const [msgsRes, usersRes] = await Promise.all([
+        API('/api/admin/messages?limit=10'),
+        API('/api/admin/users?limit=1000')
+      ]);
+      const msgsData = await msgsRes.json();
+      const usersData = (await usersRes.json()).items || [];
+      const userMap = {};
+      usersData.forEach(u => { userMap[u.id] = u.name; });
+      const activityEl = document.getElementById('recentActivity');
+      if (msgsData.items && msgsData.items.length > 0) {
+        activityEl.innerHTML = msgsData.items.map(m => {
+          const statusIcon = m.status === 'sent' || m.status === 'delivered' ? '✅' : m.status === 'failed' ? '❌' : '⏳';
+          const time = formatDateTime(m.createdAt);
+          const userName = userMap[m.userId] || (m.userId || '').substring(0, 8);
+          return `<div class="flex items-start gap-3 py-2 border-b border-gray-50 last:border-0">
+            <span class="text-sm">${statusIcon}</span>
+            <div class="min-w-0 flex-1">
+              <div class="text-sm text-gray-700 truncate"><strong>${userName}</strong> → ${m.to}</div>
+              <div class="text-xs text-gray-400 truncate">${m.message?.substring(0, 60)}</div>
+              <div class="text-xs text-gray-400">${time}</div>
+            </div>
+          </div>`;
+        }).join('');
+      } else {
+        activityEl.innerHTML = `<p class="text-gray-400 text-sm">${t('no_data')}</p>`;
+      }
+    } catch(e) {
+      document.getElementById('recentActivity').innerHTML = `<p class="text-gray-400 text-sm">${t('no_data')}</p>`;
+    }
+  } catch(e) { toast(e.message, 'error'); }
+}
+
+let usersSortBy = '';
+let usersSortOrder = 'asc';
+async function loadUsers() {
+  try {
+    const search = document.getElementById('searchUser')?.value || '';
+    const status = document.getElementById('filterUserStatus')?.value || '';
+    const params = new URLSearchParams({ page: usersPage, limit: '50' });
+    if (search) params.set('search', search);
+    if (status) params.set('status', status);
+    if (usersSortBy) { params.set('sortBy', usersSortBy); params.set('sortOrder', usersSortOrder); }
+    const res = await API(`/api/admin/users?${params}`);
+    const d = await res.json();
+    if (!d || !d.items) throw new Error('Failed to load users');
+    usersData = d.items;
+    document.getElementById('usersTotal').textContent = d.total;
+    document.getElementById('usersPage').textContent = `${usersPage} / ${d.pages}`;
+
+    let html = '';
+    let plans = window._plans;
+    if (!plans) { const pRes = await API('/api/admin/pricing'); plans = await pRes.json(); window._plans = plans; }
+    d.items.forEach(u => {
+      const expiry = formatDate(u.expiryDate);
+      const statusClass = u.status === 'active' ? 'badge-success' : u.status === 'expired' ? 'badge-danger' : 'badge-warning';
+      const pct = u.maxMessages > 0 ? Math.round((u.usedMessages / u.maxMessages) * 100) : 0;
+      const sessionsClass = (u.sessionCount || 0) > 0 ? 'text-brand-600 font-medium' : 'text-gray-400';
+      const userPlan = plans.find(p => p.id === u.planId);
+      const planName = userPlan ? (userPlan.name[currentLang] || userPlan.name.en || u.planId) : u.planId || '-';
+      html += `<tr>
+        <td><span class="font-medium">${u.name}</span></td>
+        <td class="text-gray-500">${u.email}</td>
+        <td><code class="text-xs bg-gray-100 px-2 py-1 rounded">${(u.apiKey || '').substring(0,16)}...</code></td>
+        <td><span class="text-brand-600 font-medium text-sm">${planName}</span></td>
+        <td><span class="${sessionsClass}">${u.sessionCount || 0}</span></td>
+        <td>
+          <div class="flex items-center gap-2">
+            <span>${u.usedMessages}/${u.maxMessages}</span>
+            <div class="w-20 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+              <div class="h-full ${pct > 80 ? 'bg-red-500' : 'bg-brand-500'} rounded-full" style="width:${pct}%"></div>
+            </div>
+          </div>
+        </td>
+        <td><span class="badge ${statusClass}">${t(u.status)}</span></td>
+        <td class="text-gray-500 text-sm">${expiry}</td>
+        <td class="text-gray-500 text-xs">${u.createdBy || '-'}</td>
+        <td>
+          <button class="btn btn-sm bg-green-50 text-green-600 hover:bg-green-100" onclick="openEditUser('${u.id}')" title="${t('edit')}"><i class="fas fa-pen"></i></button>
+          <button class="btn btn-sm bg-blue-50 text-blue-600 hover:bg-blue-100" onclick="viewUserDetail('${u.id}')" title="${t('view_details')}"><i class="fas fa-eye"></i></button>
+          <button class="btn btn-sm bg-red-50 text-red-600 hover:bg-red-100" onclick="deleteUser('${u.id}', '${u.name}')"><i class="fas fa-trash"></i></button>
+        </td>
+      </tr>`;
+    });
+    document.getElementById('usersTable').innerHTML = html || `<tr><td colspan="10" class="text-center text-gray-400 py-8">${t('no_data')}</td></tr>`;
+  } catch(e) { toast(e.message, 'error'); }
+}
+
+let searchTimer;
+function debounceSearch() { clearTimeout(searchTimer); searchTimer = setTimeout(() => { usersPage = 1; loadUsers(); }, 300); }
+
+function sortUsers(field) {
+  if (!field) return;
+  if (usersSortBy === field) { usersSortOrder = usersSortOrder === 'asc' ? 'desc' : 'asc'; }
+  else { usersSortBy = field; usersSortOrder = 'asc'; }
+  document.querySelectorAll('.sort-icon').forEach(el => el.textContent = '');
+  const icon = document.querySelector(`.sort-icon[data-sort="${field}"]`);
+  if (icon) icon.textContent = usersSortOrder === 'asc' ? ' ▲' : ' ▼';
+  document.getElementById('sortUserBy').value = field;
+  document.getElementById('sortOrderBtn').innerHTML = usersSortOrder === 'asc' ? '<i class="fas fa-arrow-up"></i>' : '<i class="fas fa-arrow-down"></i>';
+  usersPage = 1; loadUsers();
+}
+
+function toggleSortOrder() {
+  if (!usersSortBy) return;
+  usersSortOrder = usersSortOrder === 'asc' ? 'desc' : 'asc';
+  document.getElementById('sortOrderBtn').innerHTML = usersSortOrder === 'asc' ? '<i class="fas fa-arrow-up"></i>' : '<i class="fas fa-arrow-down"></i>';
+  const icon = document.querySelector(`.sort-icon[data-sort="${usersSortBy}"]`);
+  if (icon) icon.textContent = usersSortOrder === 'asc' ? ' ▲' : ' ▼';
+  usersPage = 1; loadUsers();
+}
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  localStorage.setItem('adminTheme', isDark ? 'light' : 'dark');
+  document.getElementById('themeBtn').textContent = isDark ? '☀️' : '🌙';
+}
+function prevUsers() { if (usersPage > 1) { usersPage--; loadUsers(); } }
+function nextUsers() { usersPage++; loadUsers(); }
+
+async function openAddUser() {
+  document.getElementById('newName').value = '';
+  document.getElementById('newEmail').value = '';
+  document.getElementById('newPass').value = '';
+  document.getElementById('newExpiry').value = '30';
+  try {
+    const res = await API('/api/admin/pricing');
+    const plans = await res.json();
+    const sel = document.getElementById('newPlan');
+    sel.innerHTML = plans.map((p, i) => `<option value="${i}" data-id="${p.id}" data-msgs="${p.messages}" data-price="${p.price}" data-currency="${p.currency || '$'}">${p.name.en || p.name.ar} (${p.currency || '$'}${p.price})</option>`).join('');
+    onPlanChange();
+  } catch(e) { document.getElementById('newPlan').innerHTML = '<option value="">No plans</option>'; }
+  openModal('addUserModal');
+}
+
+function onPlanChange() {
+  const sel = document.getElementById('newPlan');
+  const opt = sel.options[sel.selectedIndex];
+  if (opt && opt.dataset.msgs) {
+    document.getElementById('newMsgs').value = opt.dataset.msgs;
+  }
+}
+
+async function addUser() {
+  const name = document.getElementById('newName').value;
+  const email = document.getElementById('newEmail').value;
+  const password = document.getElementById('newPass').value;
+  const maxMessages = parseInt(document.getElementById('newMsgs').value) || 1000;
+  const expiryDays = parseInt(document.getElementById('newExpiry').value) || 30;
+  const sel = document.getElementById('newPlan');
+  const planId = sel.options[sel.selectedIndex]?.dataset?.id || '';
+  if (!name || !email || !password) { toast('Fill all fields', 'error'); return; }
+  let createdBy = '';
+  try { const payload = JSON.parse(atob(TOKEN.split('.')[1])); createdBy = payload.email || ''; } catch {}
+  const res = await fetch('/api/auth/register', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, email, password, maxMessages, expiryDays, planId, createdBy })
+  });
+  if (!res.ok) { const e = await res.json(); toast(e.error || 'Error', 'error'); return; }
+  closeModal('addUserModal');
+  toast(t('add') + ' ✓', 'success');
+  loadUsers();
+}
+
+async function deleteUser(id, name) {
+  showConfirm(t('delete_confirm'), name, async () => {
+    await API(`/api/admin/users/${id}`, { method: 'DELETE' });
+    toast(name + ' deleted', 'success');
+    loadUsers();
+  });
+}
+
+async function viewUserDetail(id) {
+  try {
+    const res = await API(`/api/admin/users/${id}`);
+    const d = await res.json();
+    if (!d || !d.user) throw new Error('Failed to load user details');
+    const user = d.user;
+    document.getElementById('userDetailTitle').textContent = `${t('user_detail_title')}: ${user.name}`;
+    const totalMsgs = (d.stats && d.stats.total) || 0;
+    const sessions = d.sessions || [];
+    const statsHtml = `
+      <div class="bg-white dark:bg-gray-800 rounded-xl p-3 text-center shadow-sm border border-gray-100 dark:border-gray-700 border-t-2 border-t-brand-400"><i class="fas fa-envelope text-brand-300 dark:text-brand-600 text-xs mb-1 block"></i><div class="text-lg font-bold text-brand-600 dark:text-brand-400">${totalMsgs}</div><div class="text-2xs text-gray-500 dark:text-gray-400 mt-0.5">${t('user_messages')}</div></div>
+      <div class="bg-white dark:bg-gray-800 rounded-xl p-3 text-center shadow-sm border border-gray-100 dark:border-gray-700 border-t-2 border-t-violet-400"><i class="fas fa-mobile-alt text-violet-300 dark:text-violet-600 text-xs mb-1 block"></i><div class="text-lg font-bold text-brand-600 dark:text-brand-400">${sessions.length}</div><div class="text-2xs text-gray-500 dark:text-gray-400 mt-0.5">${t('user_sessions')}</div></div>
+      <div class="bg-white dark:bg-gray-800 rounded-xl p-3 text-center shadow-sm border border-gray-100 dark:border-gray-700 border-t-2 border-t-emerald-400"><i class="fas fa-chart-line text-emerald-300 dark:text-emerald-600 text-xs mb-1 block"></i><div class="text-lg font-bold text-brand-600 dark:text-brand-400">${user.maxMessages || 0}</div><div class="text-2xs text-gray-500 dark:text-gray-400 mt-0.5">${t('max_messages')}</div></div>
+    `;
+    document.getElementById('userDetailStats').innerHTML = statsHtml;
+
+    const plans = window.plans || await (await API('/api/admin/pricing')).json();
+    window.plans = plans;
+    const plan = plans.find(p => p.id === user.planId);
+    const planName = plan ? (plan.name[currentLang] || plan.name.en || user.planId) : user.planId || '-';
+    const expiryStr = formatDate(user.expiryDate);
+    const statusClass = user.status === 'active' ? 'badge-success' : 'badge-danger';
+    const initial = (user.name || 'U')[0].toUpperCase();
+    const infoHtml = `
+      <div class="flex items-center gap-4 pb-4 mb-5 border-b border-gray-100 dark:border-gray-700">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-brand-500 to-emerald-600 flex items-center justify-center text-white text-lg font-bold flex-shrink-0 shadow-sm">${initial}</div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 flex-wrap">
+            <h4 class="text-base font-bold text-gray-800 dark:text-white">${user.name}</h4>
+            <span class="badge ${statusClass} text-2xs">${t(user.status)}</span>
+          </div>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">${user.email}</p>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-x-5 gap-y-4 text-sm">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center text-white flex-shrink-0 shadow-sm"><i class="fas fa-box text-xs"></i></div>
+          <div class="min-w-0"><span class="text-gray-400 dark:text-gray-500 text-2xs uppercase tracking-wide block">${t('pricing_name')}</span><span class="text-gray-800 dark:text-gray-200 font-semibold text-sm">${planName}</span></div>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-400 to-violet-600 flex items-center justify-center text-white flex-shrink-0 shadow-sm"><i class="fas fa-calendar-alt text-xs"></i></div>
+          <div class="min-w-0"><span class="text-gray-400 dark:text-gray-500 text-2xs uppercase tracking-wide block">${t('th_expiry')}</span><span class="text-gray-800 dark:text-gray-200 font-semibold text-sm">${expiryStr}</span></div>
+        </div>
+        <div class="col-span-2 flex items-center gap-3 bg-gray-50 dark:bg-gray-700/20 rounded-xl p-3 -mx-1">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-slate-400 to-slate-600 flex items-center justify-center text-white flex-shrink-0 shadow-sm"><i class="fas fa-key text-xs"></i></div>
+          <div class="min-w-0"><span class="text-gray-400 dark:text-gray-500 text-2xs uppercase tracking-wide block">API Key</span><span class="text-gray-800 dark:text-gray-200 font-mono text-xs break-all font-medium">${user.apiKey}</span></div>
+        </div>
+        ${user.createdBy ? `<div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-400 to-cyan-600 flex items-center justify-center text-white flex-shrink-0 shadow-sm"><i class="fas fa-user-plus text-xs"></i></div>
+          <div class="min-w-0"><span class="text-gray-400 dark:text-gray-500 text-2xs uppercase tracking-wide block">${t('th_created_by')}</span><span class="text-gray-800 dark:text-gray-200 font-semibold text-sm truncate">${user.createdBy}</span></div>
+        </div>` : ''}
+        ${user.updatedBy ? `<div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-white flex-shrink-0 shadow-sm"><i class="fas fa-pen text-xs"></i></div>
+          <div class="min-w-0"><span class="text-gray-400 dark:text-gray-500 text-2xs uppercase tracking-wide block">${t('edit')}</span><span class="text-gray-800 dark:text-gray-200 font-semibold text-sm truncate">${user.updatedBy}</span></div>
+        </div>` : ''}
+        ${user.updatedAt ? `<div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-gray-400 to-gray-600 flex items-center justify-center text-white flex-shrink-0 shadow-sm"><i class="fas fa-clock text-xs"></i></div>
+          <div class="min-w-0"><span class="text-gray-400 dark:text-gray-500 text-2xs uppercase tracking-wide block">Updated</span><span class="text-gray-800 dark:text-gray-200 font-semibold text-sm">${formatDateTime(user.updatedAt)}</span></div>
+        </div>` : ''}
+      </div>
+    `;
+    document.getElementById('userDetailInfo').innerHTML = infoHtml;
+
+    if (sessions.length === 0) {
+      document.getElementById('userDetailSessions').innerHTML = `<div class="text-center py-8 text-gray-400 dark:text-gray-500 text-sm bg-gray-50 dark:bg-gray-700/10 rounded-xl border border-dashed border-gray-200 dark:border-gray-700"><i class="fas fa-mobile-alt text-3xl mb-3 block opacity-30"></i>${t('no_sessions_user')}</div>`;
+    } else {
+      document.getElementById('userDetailSessions').innerHTML = sessions.map(s => {
+        const statusColor = s.status === 'connected' ? 'badge-success' : s.status === 'waiting_qr' ? 'badge-warning' : 'badge-secondary';
+        return `<div class="flex items-center justify-between p-3.5 bg-gray-50 dark:bg-gray-700/20 rounded-xl text-sm hover:bg-gray-100 dark:hover:bg-gray-700/40 transition cursor-default border border-gray-100 dark:border-gray-700/50">
+          <div class="flex items-center gap-3 min-w-0"><div class="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-400 to-emerald-600 flex items-center justify-center text-white flex-shrink-0 shadow-sm"><i class="fas fa-mobile-alt text-xs"></i></div><span class="font-medium text-gray-800 dark:text-gray-200 truncate">${s.phone || s.name || '-'}</span> <span class="text-gray-400 dark:text-gray-500 text-xs flex-shrink-0">${formatDate(s.createdAt)}</span></div>
+          <span class="badge ${statusColor} flex-shrink-0">${t(s.status) || s.status}</span>
+        </div>`;
+      }).join('');
+    }
+
+    const msgsRes = await fetch(`/api/admin/messages?limit=20`, { headers: { 'Authorization': `Bearer ${TOKEN}` } });
+    const msgsData = await msgsRes.json();
+    const userMsgs = (msgsData && msgsData.items) ? msgsData.items.filter(m => m.userId === id) : [];
+    if (userMsgs.length === 0) {
+      document.getElementById('userDetailMessages').innerHTML = `<div class="text-center py-6 text-gray-400 dark:text-gray-500 text-sm bg-gray-50 dark:bg-gray-700/10 rounded-xl border border-dashed border-gray-200 dark:border-gray-700"><i class="fas fa-envelope text-2xl mb-2 block opacity-30"></i>${t('no_messages_user')}</div>`;
+    } else {
+      let msgsHtml = '<div class="table-container rounded-lg"><table><thead><tr class="bg-gray-50 dark:bg-gray-700/20"><th class="text-xs text-gray-500 dark:text-gray-400 font-semibold">' + t('th_to') + '</th><th class="text-xs text-gray-500 dark:text-gray-400 font-semibold">' + t('th_messages') + '</th><th class="text-xs text-gray-500 dark:text-gray-400 font-semibold">' + t('th_status') + '</th><th class="text-xs text-gray-500 dark:text-gray-400 font-semibold">' + t('th_time') + '</th></tr></thead><tbody>';
+      userMsgs.forEach(m => {
+        const statusClass = m.status === 'sent' || m.status === 'delivered' ? 'badge-success' : m.status === 'failed' ? 'badge-danger' : 'badge-secondary';
+        const time = formatDateTime(m.createdAt);
+        msgsHtml += `<tr class="hover:bg-gray-50 dark:hover:bg-gray-700/20 transition"><td class="font-mono text-xs text-gray-800 dark:text-gray-200">${m.to}</td><td class="truncate max-w-[200px] text-gray-800 dark:text-gray-200">${m.message?.substring(0, 40)}</td><td><span class="badge ${statusClass}">${t(m.status) || m.status}</span></td><td class="text-xs text-gray-500 dark:text-gray-400">${time}</td></tr>`;
+      });
+      msgsHtml += '</tbody></table></div>';
+      document.getElementById('userDetailMessages').innerHTML = msgsHtml;
+    }
+    openModal('userDetailModal');
+  } catch(e) { toast(e.message, 'error'); }
+}
+
+async function openEditUser(id) {
+  try {
+    const [userRes, planRes] = await Promise.all([
+      API(`/api/admin/users/${id}`),
+      API('/api/admin/pricing')
+    ]);
+    const d = await userRes.json();
+    const plans = await planRes.json();
+    if (!d || !d.user) throw new Error('Failed to load user');
+    const u = d.user;
+    document.getElementById('editUserId').value = u.id;
+    document.getElementById('editName').value = u.name || '';
+    document.getElementById('editEmail').value = u.email || '';
+    const sel = document.getElementById('editPlan');
+    sel.innerHTML = plans.map(p =>
+      `<option value="${p.id}" data-msgs="${p.messages}" data-price="${p.price}" data-currency="${p.currency || '$'}">${p.name[currentLang] || p.name.en || p.id} (${p.currency || '$'}${p.price})</option>`
+    ).join('');
+    sel.value = u.planId || 'free';
+    onEditPlanChange();
+    document.getElementById('editMsgs').value = u.maxMessages || 0;
+    document.getElementById('editStatus').value = u.status || 'active';
+    if (u.expiryDate) {
+      const expiry = new Date(u.expiryDate);
+      document.getElementById('editExpiry').value = expiry.toISOString().split('T')[0];
+    } else {
+      document.getElementById('editExpiry').value = '';
+    }
+    openModal('editUserModal');
+  } catch(e) { toast(e.message, 'error'); }
+}
+
+function onEditPlanChange() {
+  const sel = document.getElementById('editPlan');
+  const opt = sel.options[sel.selectedIndex];
+  if (opt && opt.dataset.msgs) {
+    document.getElementById('editMsgs').value = opt.dataset.msgs;
+  }
+}
+
+async function saveEditUser() {
+  const id = document.getElementById('editUserId').value;
+  const name = document.getElementById('editName').value.trim();
+  const email = document.getElementById('editEmail').value.trim();
+  const planId = document.getElementById('editPlan').value;
+  const maxMessages = parseInt(document.getElementById('editMsgs').value) || 0;
+  const status = document.getElementById('editStatus').value;
+  const expiryDate = document.getElementById('editExpiry').value;
+  if (!name || !email) { toast('Name and email required', 'error'); return; }
+  const body = { name, email, planId, maxMessages, status };
+  if (expiryDate) body.expiryDate = new Date(expiryDate).toISOString();
+  const res = await API(`/api/admin/users/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(body)
+  });
+  if (!res.ok) { const e = await res.json(); toast(e.error || 'Failed to save', 'error'); return; }
+  closeModal('editUserModal');
+  toast(t('edit_user_saved'), 'success');
+  loadUsers();
+}
+
+async function loadSessions() {
+  try {
+    const res = await API('/api/admin/sessions?limit=200');
+    const d = await res.json();
+    const items = d && d.items ? d.items : [];
+    let html = '';
+    items.forEach((s, i) => {
+      const statusClass = s.status === 'connected' ? 'badge-success' : s.status === 'disconnected' ? 'badge-secondary' : 'badge-warning';
+      html += `<tr>
+        <td class="text-gray-500">${i+1}</td>
+        <td><code class="text-xs">${(s.userId || '').substring(0,12)}...</code></td>
+        <td>${s.phone || '-'}</td>
+        <td><span class="badge ${statusClass}">${t(s.status) || s.status}</span></td>
+        <td class="text-gray-500 text-sm">${formatDate(s.createdAt)}</td>
+      </tr>`;
+    });
+    document.getElementById('sessionsTable').innerHTML = html || `<tr><td colspan="5" class="text-center text-gray-400 py-8">${t('no_data')}</td></tr>`;
+  } catch(e) { toast(e.message, 'error'); }
+}
+
+async function loadMessages() {
+  try {
+    const res = await API('/api/admin/messages?limit=100');
+    const d = await res.json();
+    const items = d && d.items ? d.items : [];
+    let html = '';
+    items.forEach((m, i) => {
+      const statusClass = m.status === 'sent' || m.status === 'delivered' ? 'badge-success' : m.status === 'failed' ? 'badge-danger' : 'badge-secondary';
+      html += `<tr>
+        <td class="text-gray-500">${i+1}</td>
+        <td><code class="text-xs">${(m.userId || '').substring(0,12)}...</code></td>
+        <td>${m.to}</td>
+        <td><span class="badge ${statusClass}">${t(m.status) || m.status}</span></td>
+        <td class="text-gray-500 text-sm">${formatTime(m.createdAt)}</td>
+      </tr>`;
+    });
+    document.getElementById('messagesTable').innerHTML = html || `<tr><td colspan="5" class="text-center text-gray-400 py-8">${t('no_data')}</td></tr>`;
+  } catch(e) { toast(e.message, 'error'); }
+}
+
+// ============ Pricing Plans ============
+async function loadPricing() {
+  try {
+    const res = await API('/api/admin/pricing');
+    const plans = await res.json();
+    const container = document.getElementById('pricingEditor');
+    if (!Array.isArray(plans) || plans.length === 0) {
+      container.innerHTML = `<p class="text-gray-400 text-sm text-center py-8" data-i18n="no_data">${t('no_data')}</p>`;
+      return;
+    }
+    let html = '';
+    plans.forEach((p, i) => {
+      const featuresArr = (p.features[currentLang] || p.features.en || []);
+      const sessionsLabel = p.sessions === 1 ? '1 WhatsApp Session' : p.sessions + ' WhatsApp Sessions';
+      const displayArr = [sessionsLabel, ...featuresArr];
+      const featuresStr = displayArr.join('\n');
+      const textareaRows = Math.max(featuresArr.length, 3);
+      html += `
+      <div class="pricing-plan card" data-id="${p.id}">
+        <div style="display:grid;grid-template-columns:1fr;gap:12px">
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+            <div>
+              <label style="display:block;font-size:12px;font-weight:500;color:#6b7280;margin-bottom:4px" data-i18n="pricing_id">${t('pricing_id')}</label>
+              <input value="${p.id}" disabled style="padding:8px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;width:100%">
+            </div>
+            <div>
+              <label style="display:block;font-size:12px;font-weight:500;color:#6b7280;margin-bottom:4px" data-i18n="pricing_name">${t('pricing_name')}</label>
+              <input class="plan-name" value="${p.name[currentLang] || p.name.en || ''}" placeholder="${t('pricing_name')}" style="padding:8px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;width:100%">
+            </div>
+            <div style="display:flex;align-items:flex-end;gap:8px;padding-bottom:4px">
+              <input type="checkbox" class="plan-popular" ${p.popular ? 'checked' : ''} style="width:18px;height:18px;accent-color:#16a34a">
+              <label class="text-sm font-medium text-gray-900 dark:text-white" data-i18n="pricing_popular">${t('pricing_popular')}</label>
+              ${p.popular ? `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-brand-100 text-brand-700 dark:bg-brand-900 dark:text-brand-300" data-i18n="pricing_popular">Popular</span>` : ''}
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;gap:12px">
+            <div>
+              <label style="display:block;font-size:12px;font-weight:500;color:inherit;margin-bottom:4px" data-i18n="pricing_price">${t('pricing_price')}</label>
+              <div style="display:flex;gap:6px">
+                <input class="plan-currency" value="${p.currency || '$'}" placeholder="$" style="width:50px;flex-shrink:0;padding:8px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px">
+                <input class="plan-price" type="number" value="${p.price}" min="0" step="1" style="flex:1;padding:8px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px">
+              </div>
+            </div>
+            <div>
+              <label style="display:block;font-size:12px;font-weight:500;color:inherit;margin-bottom:4px" data-i18n="pricing_messages">${t('pricing_messages')}</label>
+              <input class="plan-msgs" type="number" value="${p.messages}" min="0" style="padding:8px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;width:100%">
+            </div>
+            <div>
+              <label style="display:block;font-size:12px;font-weight:500;color:inherit;margin-bottom:4px">Sessions</label>
+              <input class="plan-sessions" type="number" value="${p.sessions||1}" min="1" style="padding:8px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;width:100%">
+            </div>
+            <div>
+              <label style="display:block;font-size:12px;font-weight:500;color:inherit;margin-bottom:4px" data-i18n="pricing_discount">${t('pricing_discount')}</label>
+              <div style="display:flex;gap:6px;align-items:center">
+                <input class="plan-discount" type="number" value="${p.discount || 0}" min="0" max="100" step="1" style="width:70px;padding:8px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px">
+                <span style="font-size:13px;color:inherit">%</span>
+                <label style="position:relative;display:inline-flex;align-items:center;cursor:pointer;margin-left:4px">
+                  <input type="checkbox" class="plan-discount-toggle" ${p.discountActive ? 'checked' : ''} style="width:16px;height:16px">
+                </label>
+              </div>
+            </div>
+          </div>
+          <div>
+              <label style="display:block;font-size:12px;font-weight:500;color:inherit;margin-bottom:4px" data-i18n="pricing_features">${t('pricing_features')}</label>
+            <textarea class="plan-features" rows="${textareaRows}" style="padding:8px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;width:100%">${featuresStr}</textarea>
+          </div>
+        </div>
+      </div>`;
+    });
+    container.innerHTML = html;
+  } catch(e) { toast(e.message, 'error'); }
+}
+
+async function savePricing() {
+  const plans = [];
+  document.querySelectorAll('.pricing-plan').forEach(el => {
+    const id = el.dataset.id;
+    const name = el.querySelector('.plan-name').value;
+    const currency = el.querySelector('.plan-currency').value || '$';
+    const price = parseInt(el.querySelector('.plan-price').value) || 0;
+    const messages = parseInt(el.querySelector('.plan-msgs').value) || 0;
+    const discount = parseInt(el.querySelector('.plan-discount').value) || 0;
+    const discountActive = el.querySelector('.plan-discount-toggle').checked;
+    const popular = el.querySelector('.plan-popular').checked;
+    const featuresText = el.querySelector('.plan-features').value;
+    const lines = featuresText.split('\n').filter(f => f.trim());
+    const features = lines.slice(1);
+    const featuresMulti = {};
+    LANG_LIST.forEach(lang => { featuresMulti[lang] = features; });
+    const nameMulti = {};
+    LANG_LIST.forEach(lang => { nameMulti[lang] = name; });
+    const sessionsInput = parseInt(el.querySelector('.plan-sessions').value);
+    const sessions = sessionsInput || 1;
+    plans.push({ id, name: nameMulti, currency, price, discount, discountActive, messages, sessions, features: featuresMulti, popular });
+  });
+  const res = await API('/api/admin/pricing', {
+    method: 'PUT',
+    body: JSON.stringify(plans)
+  });
+  if (!res.ok) { const e = await res.json(); toast(e.error, 'error'); return; }
+  toast(t('pricing_saved'), 'success');
+  loadPricing();
+  loadQuickInfo();
+}
+
+// ============ Add Plan ============
+function openAddPlan() {
+  ['newPlanId','newPlanName','newPlanFeatures'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('newPlanCurrency').value = '$';
+  document.getElementById('newPlanPrice').value = '0';
+  document.getElementById('newPlanMsgs').value = '1000';
+  document.getElementById('newPlanSessions').value = '1';
+  document.getElementById('newPlanDiscount').value = '0';
+  document.getElementById('newPlanDays').value = '30';
+  document.getElementById('newPlanPopular').checked = false;
+  openModal('addPlanModal');
+}
+
+async function addPlan() {
+  const id = document.getElementById('newPlanId').value.trim().toLowerCase().replace(/\s+/g, '_');
+  const name = document.getElementById('newPlanName').value.trim();
+  const currency = document.getElementById('newPlanCurrency').value.trim() || '$';
+  const price = parseInt(document.getElementById('newPlanPrice').value) || 0;
+  const messages = parseInt(document.getElementById('newPlanMsgs').value) || 0;
+  const sessions = parseInt(document.getElementById('newPlanSessions').value) || 1;
+  const discount = parseInt(document.getElementById('newPlanDiscount').value) || 0;
+  const days = parseInt(document.getElementById('newPlanDays').value) || 30;
+  const featuresText = document.getElementById('newPlanFeatures').value;
+  const popular = document.getElementById('newPlanPopular').checked;
+  if (!id) return toast('Plan ID is required', 'error');
+  if (!name) return toast('Plan name is required', 'error');
+  const lines = featuresText.split('\n').filter(f => f.trim());
+  const featuresMulti = {}; const nameMulti = {};
+  LANG_LIST.forEach(lang => { featuresMulti[lang] = lines; nameMulti[lang] = name; });
+  const res = await API('/api/admin/pricing');
+  const plans = await res.json();
+  plans.push({ id, name: nameMulti, currency, price, discount, discountActive: false, messages, sessions, features: featuresMulti, popular, days });
+  const saveRes = await API('/api/admin/pricing', { method: 'PUT', body: JSON.stringify(plans) });
+  if (!saveRes.ok) { const e = await saveRes.json(); toast(e.error, 'error'); return; }
+  closeModal('addPlanModal');
+  toast('Plan added', 'success');
+  loadPricing();
+  loadQuickInfo();
+}
+
+// ============ Branding ============
+async function loadBranding() {
+  try {
+    const settings = await (await API('/api/admin/settings')).json();
+    if (settings.systemName) document.getElementById('brandSystemName').value = settings.systemName;
+    if (settings.logoUrl) document.getElementById('brandLogoUrl').value = settings.logoUrl;
+    if (settings.faviconUrl) document.getElementById('brandFaviconUrl').value = settings.faviconUrl;
+    if (settings.primaryColor) { document.getElementById('brandPrimaryColor').value = settings.primaryColor; document.getElementById('brandPrimaryColorText').value = settings.primaryColor; }
+    applyBranding(settings);
+  } catch(e) {}
+}
+
+async function saveBranding() {
+  const btn = event?.target?.closest('button');
+  if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...'; }
+
+  const systemName = document.getElementById('brandSystemName').value.trim() || 'WhatsApp Sender';
+  const logoUrl = document.getElementById('brandLogoUrl').value.trim();
+  const faviconUrl = document.getElementById('brandFaviconUrl').value.trim();
+  const primaryColor = document.getElementById('brandPrimaryColorText').value.trim() || '#16a34a';
+
+  if (logoUrl && !/^https?:\/\/.+/i.test(logoUrl)) { toast('Logo URL must be a valid URL (http/https)', 'error'); if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-save"></i> Save'; } return; }
+  if (faviconUrl && !/^https?:\/\/.+/i.test(faviconUrl)) { toast('Favicon URL must be a valid URL (http/https)', 'error'); if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-save"></i> Save'; } return; }
+  if (!/^#[0-9A-Fa-f]{6}$/.test(primaryColor)) { toast('Primary color must be a valid hex color (e.g., #16a34a)', 'error'); if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-save"></i> Save'; } return; }
+
+  const settings = { systemName, logoUrl, faviconUrl, primaryColor };
+  const res = await API('/api/admin/settings', { method: 'PUT', body: JSON.stringify(settings) });
+  if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-save"></i> Save'; }
+  if (!res.ok) { try { const e = await res.json(); toast(e.error, 'error'); } catch(e) { toast('Failed to save', 'error'); } return; }
+  applyBranding(settings);
+  toast('Branding saved', 'success');
+}
+
+function resetBranding() {
+  if (!confirm('Reset all branding to defaults? This cannot be undone.')) return;
+  document.getElementById('brandSystemName').value = 'WhatsApp Sender';
+  document.getElementById('brandLogoUrl').value = '';
+  document.getElementById('brandFaviconUrl').value = '';
+  document.getElementById('brandPrimaryColor').value = '#16a34a';
+  document.getElementById('brandPrimaryColorText').value = '#16a34a';
+  showLogoPreview();
+  showFaviconPreview();
+  saveBranding();
+}
+
+function applyBranding(settings) {
+  if (!settings) return;
+  if (settings.systemName) document.title = settings.systemName + ' - Dashboard';
+  if (settings.faviconUrl) {
+    let link = document.querySelector('link[rel="icon"]');
+    if (!link) { link = document.createElement('link'); link.rel = 'icon'; document.head.appendChild(link); }
+    link.href = settings.faviconUrl;
+  }
+  if (settings.logoUrl) {
+    const preview = document.getElementById('brandLogoPreview');
+    preview.innerHTML = '<img src="' + settings.logoUrl + '" alt="Logo" style="max-height:40px;border-radius:8px;border:1px solid #e2e8f0;padding:4px">';
+    preview.classList.remove('hidden');
+  } else {
+    document.getElementById('brandLogoPreview').classList.add('hidden');
+  }
+  if (settings.faviconUrl) {
+    const preview = document.getElementById('brandFaviconPreview');
+    preview.innerHTML = '<img src="' + settings.faviconUrl + '" alt="Favicon" style="max-height:24px;border-radius:4px;border:1px solid #e2e8f0;padding:2px">';
+    preview.classList.remove('hidden');
+  } else {
+    document.getElementById('brandFaviconPreview').classList.add('hidden');
+  }
+}
+
+function showLogoPreview() {
+  const url = document.getElementById('brandLogoUrl').value.trim();
+  const preview = document.getElementById('brandLogoPreview');
+  if (url) {
+    preview.innerHTML = `
+      <div class="relative">
+        <img 
+          src="${url}" 
+          alt="Logo preview" 
+          class="max-h-12 rounded-lg border border-gray-200 p-2 bg-white"
+          onload="this.classList.remove('opacity-75')"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='block'"
+        />
+        <div class="hidden text-xs text-gray-500 mt-1">Failed to load image</div>
+      </div>
+    `;
+    preview.classList.remove('hidden');
+  } else {
+    preview.classList.add('hidden');
+  }
+}
+
+function showFaviconPreview() {
+  const url = document.getElementById('brandFaviconUrl').value.trim();
+  const preview = document.getElementById('brandFaviconPreview');
+  if (url) {
+    preview.innerHTML = `
+      <div class="relative">
+        <img 
+          src="${url}" 
+          alt="Favicon preview" 
+          class="max-h-6 rounded border border-gray-200 p-1 bg-white"
+          onload="this.classList.remove('opacity-75')"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='block'"
+        />
+        <div class="hidden text-xs text-gray-500 mt-1">Failed to load image</div>
+      </div>
+    `;
+    preview.classList.remove('hidden');
+  } else {
+    preview.classList.add('hidden');
+  }
+}
+
+// Debounce utility function
+function debounce(func, delay = 300) {
+  let timeoutId;
+  return function(...args) {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => func.apply(this, args), delay);
+  };
+}
+
+// Optimized preview functions with debounce
+const debouncedShowLogoPreview = debounce(showLogoPreview);
+const debouncedShowFaviconPreview = debounce(showFaviconPreview);
+
+// Update event listeners
+document.getElementById('brandLogoUrl').addEventListener('input', debouncedShowLogoPreview);
+document.getElementById('brandFaviconUrl').addEventListener('input', debouncedShowFaviconPreview);
+
+async function loadQuickInfo() {
+  try {
+    const [uRes, sRes, mRes, pRes] = await Promise.all([
+      API('/api/admin/users'),
+      API('/api/admin/sessions'),
+      API('/api/admin/messages'),
+      API('/api/admin/pricing')
+    ]);
+    const users = await uRes.json();
+    const sessions = await sRes.json();
+    const messages = await mRes.json();
+    const plans = await pRes.json();
+    document.getElementById('infoUsers').textContent = users.total || users.items?.length || 0;
+    document.getElementById('infoSessions').textContent = sessions.total || sessions.length || 0;
+    document.getElementById('infoMessages').textContent = messages.total || messages.items?.length || 0;
+    document.getElementById('infoPlans').textContent = plans.length || 0;
+  } catch(e) { /* silent */ }
+}
+
+// ============ WhatsApp Web (Admin) ============
+let waSocket = null;
+
+function connectWaSocket() {
+  if (waSocket && waSocket.connected) return;
+  waSocket = io({ auth: { token: TOKEN } });
+
+  waSocket.on('qr', ({ sessionId, qr }) => {
+    showQR(sessionId, qr);
+  });
+
+  waSocket.on('session-ready', ({ sessionId }) => {
+    hideQR(sessionId);
+    loadWASessions();
+    toast(t('connected') + ' ✓', 'success');
+  });
+
+  waSocket.on('session-disconnected', ({ sessionId }) => {
+    hideQR(sessionId);
+    loadWASessions();
+  });
+
+  waSocket.on('session-update', ({ sessionId }) => {
+    loadWASessions();
+  });
+
+  waSocket.on('message-status', ({ messageId, status, to }) => {
+  });
+}
+
+let waSessionsCache = [];
+let qrTimeout = null;
+
+function showQR(sessionId, qrDataUrl) {
+  const display = document.getElementById('qrDisplay');
+  const pairingSection = document.getElementById('pairingSection');
+  if (pairingSection) pairingSection.style.display = 'block';
+  display.innerHTML = `
+    <div class="text-center">
+      <img src="${qrDataUrl}" alt="QR Code" class="mx-auto mb-2" style="max-width:220px;border-radius:12px">
+      <p class="text-xs text-gray-500">${t('qr_scan_hint')}</p>
+    </div>
+  `;
+  display.dataset.sessionId = sessionId;
+
+  const cards = document.querySelectorAll(`[data-session-id="${sessionId}"]`);
+  cards.forEach(c => {
+    const badge = c.querySelector('.session-badge');
+    if (badge) { badge.textContent = t('waiting_qr'); badge.className = 'badge badge-warning session-badge'; }
+  });
+
+  if (qrTimeout) clearTimeout(qrTimeout);
+  qrTimeout = setTimeout(() => {
+    fetchSessionsForQR();
+  }, 60000);
+}
+
+function hideQR(sessionId) {
+  const display = document.getElementById('qrDisplay');
+  if (!display.dataset.sessionId || display.dataset.sessionId === sessionId) {
+    display.innerHTML = `<p class="text-gray-400 text-sm text-center">${t('qr_placeholder')}</p>`;
+    delete display.dataset.sessionId;
+  }
+}
+
+async function fetchSessionsForQR() {
+  try {
+    const res = await API('/api/admin/sessions?limit=200');
+    const d = await res.json();
+    const items = d && d.items ? d.items : [];
+    const waiting = items.find(s => s.status === 'waiting_qr' || s.status === 'waiting_code');
+    if (waiting) {
+      const res2 = await fetch(`/api/admin/sessions/${waiting.id}/qr`, { headers: { 'Authorization': `Bearer ${TOKEN}` } });
+      if (res2.ok) {
+        const data = await res2.json();
+        if (data.qrCode) showQR(waiting.id, data.qrCode);
+      }
+    }
+  } catch {}
+}
+
+async function loadWASessions() {
+  try {
+    const res = await API('/api/admin/sessions?limit=200');
+    const d = await res.json();
+    const items = d && d.items ? d.items : [];
+    waSessionsCache = items;
+    renderWASessions(items);
+    populateSendSelect(items);
+    const waiting = items.find(s => s.status === 'waiting_qr' || s.status === 'waiting_code');
+    const pairingSection = document.getElementById('pairingSection');
+    if (pairingSection) {
+      pairingSection.style.display = waiting ? 'block' : 'none';
+    }
+    if (waiting && waiting.qrCode) {
+      showQR(waiting.id, waiting.qrCode);
+    }
+    const connectedCount = items.filter(s => s.status === 'connected').length;
+    const sendCard = document.getElementById('sendCard');
+    if (sendCard) sendCard.style.display = connectedCount > 0 ? 'block' : 'none';
+  } catch(e) { console.error('loadWASessions:', e); }
+}
+
+function renderWASessions(sessions) {
+  const container = document.getElementById('sessionList');
+  if (!sessions || sessions.length === 0) {
+    container.innerHTML = `<p class="text-gray-400 text-sm text-center py-8">${t('no_sessions_yet')}</p>`;
+    return;
+  }
+  let html = '';
+  sessions.forEach(s => {
+    const isConnected = s.status === 'connected';
+    const isWaiting = s.status === 'waiting_qr' || s.status === 'waiting_code';
+    const isDisconnected = s.status === 'disconnected' || s.status === 'connecting';
+    const statusColor = isConnected ? '#22c55e' : isWaiting ? '#f59e0b' : '#94a3b8';
+    const statusClass = isConnected ? 'badge-success' : isWaiting ? 'badge-warning' : 'badge-secondary';
+    const statusLabel = isConnected ? t('connected') : isWaiting ? t('waiting_qr') : t('disconnected');
+    const dateStr = formatDate(s.createdAt);
+    html += `
+      <div class="flex items-center justify-between p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition" data-session-id="${s.id}">
+        <div class="flex items-center gap-3 min-w-0">
+          <span class="w-2.5 h-2.5 rounded-full flex-shrink-0" style="background:${statusColor}"></span>
+          <div class="min-w-0">
+            <div class="font-medium text-gray-800 truncate">${s.phone || s.name || (s.id || '').substring(0,8)}</div>
+            <div class="text-xs text-gray-400 truncate">${s.name || ''} ${s.name ? '·' : ''} ${dateStr}</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 flex-shrink-0">
+          <span class="badge ${statusClass} session-badge">${statusLabel}</span>
+          <button class="btn btn-sm bg-red-50 text-red-600 hover:bg-red-100" onclick="deleteSession('${s.id}')" title="${t('delete')}"><i class="fas fa-trash"></i></button>
+        </div>
+      </div>`;
+  });
+  container.innerHTML = html;
+}
+
+function populateSendSelect(sessions) {
+  const sel = document.getElementById('sendSessionSelect');
+  if (!sel) return;
+  const connected = sessions.filter(s => s.status === 'connected');
+  sel.innerHTML = connected.map(s => `<option value="${s.id}">${s.phone || s.name || (s.id || '').substring(0,8)}</option>`).join('');
+}
+
+function openCreateSession() {
+  const sel = document.getElementById('sessionUserId');
+  if (!sel) return;
+
+  API('/api/admin/users?limit=1000').then(r => r.json()).then(d => {
+    sel.innerHTML = `<option value="">${t('select_user')}</option>` +
+      d.items.map(u => `<option value="${u.id}">${u.name} (${u.email})</option>`).join('');
+    document.getElementById('sessionPhone').value = '';
+    document.getElementById('sessionName').value = '';
+    openModal('createSessionModal');
+  }).catch(e => toast(e.message, 'error'));
+}
+
+async function createSession() {
+  const userId = document.getElementById('sessionUserId').value;
+  const phone = document.getElementById('sessionPhone').value.trim();
+  const name = document.getElementById('sessionName').value.trim();
+  if (!userId || !phone) { toast('User and phone required', 'error'); return; }
+  const res = await API('/api/admin/sessions', {
+    method: 'POST',
+    body: JSON.stringify({ userId, phone, name })
+  });
+  if (!res.ok) { const e = await res.json(); toast(e.error, 'error'); return; }
+  closeModal('createSessionModal');
+  toast(t('session_created') + ' ✓', 'success');
+  loadWASessions();
+}
+
+async function deleteSession(id) {
+  showConfirm(t('confirm_delete_session'), '', async () => {
+    toast(t('deleting'), 'info');
+    const res = await API(`/api/admin/sessions/${id}`, { method: 'DELETE' });
+    if (!res.ok) { const e = await res.json(); toast(e.error, 'error'); return; }
+    toast(t('deleted') + ' ✓', 'success');
+    loadWASessions();
+  });
+}
+
+async function sendTestMessage() {
+  const sessionId = document.getElementById('sendSessionSelect').value;
+  const to = document.getElementById('sendTo').value.trim();
+  const text = document.getElementById('sendText').value.trim();
+  if (!sessionId || !to || !text) { toast('Fill all fields', 'error'); return; }
+  const res = await API(`/api/admin/sessions/${sessionId}/send`, {
+    method: 'POST',
+    body: JSON.stringify({ to, message: text })
+  });
+  if (!res.ok) { const e = await res.json(); toast(e.error, 'error'); return; }
+  toast(t('message_sent') + ' ✓', 'success');
+  document.getElementById('sendText').value = '';
+}
+
+async function requestPairingCode() {
+  const phone = document.getElementById('pairingPhone').value.trim();
+  if (!phone) { toast('Phone required', 'error'); return; }
+  const display = document.getElementById('pairingCodeDisplay');
+  if (display) { display.style.display = 'none'; display.textContent = ''; }
+  const sessions = waSessionsCache.filter(s => s.status === 'waiting_qr' || s.status === 'waiting_code');
+  if (sessions.length === 0) { toast('No waiting session', 'error'); return; }
+  const sessionId = sessions[0].id;
+  const res = await API(`/api/admin/sessions/${sessionId}/request-code`, {
+    method: 'POST',
+    body: JSON.stringify({ phone })
+  });
+  if (!res.ok) { const e = await res.json(); toast(e.error, 'error'); return; }
+  const data = await res.json();
+  if (display) { display.textContent = data.code; display.style.display = 'block'; }
+  toast('Code sent ✓', 'success');
+}
+
+function downloadGuide() { window.open('/client-guide.html', '_blank'); }
+
+// ============ Admin Management ============
+async function loadAdmins() {
+  try {
+    const res = await API('/api/admin/admins');
+    const admins = (await res.json()) || [];
+    let html = '';
+    (admins || []).forEach(a => {
+      const date = formatDate(a.createdAt);
+      html += `<tr>
+        <td><span class="font-medium">${a.name}</span></td>
+        <td class="text-gray-500">${a.email}</td>
+        <td class="text-gray-500 text-sm">${date}</td>
+        <td>
+          <button class="btn btn-sm bg-red-50 text-red-600 hover:bg-red-100" onclick="deleteAdmin('${a.id}', '${a.name}')"><i class="fas fa-trash"></i></button>
+        </td>
+      </tr>`;
+    });
+    document.getElementById('adminsTable').innerHTML = html || `<tr><td colspan="4" class="text-center text-gray-400 py-8">${t('no_data')}</td></tr>`;
+  } catch(e) { toast(e.message, 'error'); }
+}
+
+function openAddAdmin() {
+  document.getElementById('adminName').value = '';
+  document.getElementById('adminEmail').value = '';
+  document.getElementById('adminPass').value = '';
+  openModal('addAdminModal');
+}
+
+async function addAdmin() {
+  const name = document.getElementById('adminName').value;
+  const email = document.getElementById('adminEmail').value;
+  const password = document.getElementById('adminPass').value;
+  if (!name || !email || !password) { toast('Fill all fields', 'error'); return; }
+  const res = await API('/api/admin/admins', {
+    method: 'POST',
+    body: JSON.stringify({ name, email, password })
+  });
+  if (!res.ok) { const e = await res.json(); toast(e.error, 'error'); return; }
+  closeModal('addAdminModal');
+  toast(t('admin_created'), 'success');
+  loadAdmins();
+}
+
+function deleteAdmin(id, name) {
+  showConfirm(t('confirm_delete_admin'), name, async () => {
+    const res = await API(`/api/admin/admins/${id}`, { method: 'DELETE' });
+    if (!res.ok) { const e = await res.json(); toast(e.error, 'error'); return; }
+    toast(t('admin_deleted'), 'success');
+    loadAdmins();
+  });
+}
+
+function logout() { localStorage.removeItem('adminToken'); window.location.href = '/api/admin/login'; }
+
+function showHelp() {
+  const isAr = currentLang === 'ar';
+  const help = isAr ? `
+    <div class="bg-brand-50 rounded-xl p-4 border-r-4 border-brand-500">
+      <p class="font-bold text-brand-800">👋 مرحباً بك في لوحة التحكم!</p>
+      <p class="text-brand-700 mt-1">دي المنصة بتاعتك إنت بس. الـ clients مش بيشوفوها خالص.</p>
+    </div>
+
+    <div>
+      <p class="font-bold text-gray-800 mb-2">📊 <span data-i18n="nav_dashboard">لوحة البيانات</span></p>
+      <p class="text-gray-600">شوف إحصائيات سريعة: عدد المستخدمين، الرسايل المرسلة، الفاشل، الجلسات.</p>
+    </div>
+
+    <div>
+      <p class="font-bold text-gray-800 mb-2">👥 <span data-i18n="nav_users">المستخدمين</span></p>
+      <p class="text-gray-600">دي حسابات الـ clients اللي هيشتروا منك. تقدر تضيف، تعدل، وتحذف. كل client له API Key وحد رسائل وتاريخ صلاحية.</p>
+    </div>
+
+    <div>
+      <p class="font-bold text-gray-800 mb-2">📱 <span data-i18n="nav_sessions">الجلسات</span></p>
+      <p class="text-gray-600">كل client بيعمل جلسة واتساب عشان يبعت رسايل. هنا بتشوف كل الجلسات وحالتها.</p>
+    </div>
+
+    <div>
+      <p class="font-bold text-gray-800 mb-2">✉️ <span data-i18n="nav_messages">الرسائل</span></p>
+      <p class="text-gray-600">كل الرسايل اللي اتبعتت من كل الـ clients.</p>
+    </div>
+
+    <div>
+      <p class="font-bold text-gray-800 mb-2">🛡️ <span data-i18n="nav_admins">المشرفين</span></p>
+      <p class="text-gray-600">إدارة حسابات المشرفين اللي ليهم صلاحية دخول لوحة التحكم. تقدر تضيف مشرف جديد أو تحذف مشرف.</p>
+    </div>
+    <div>
+      <p class="font-bold text-gray-800 mb-2">💬 <span data-i18n="nav_whatsapp">واتساب ويب</span></p>
+      <p class="text-gray-600">هنا بتقدر تتحكم في جلسات واتساب نيابة عن الـ clients. تعمل session جديدة، تمسح QR، وتبعت رسالة اختبار.</p>
+    </div>
+
+    <div class="bg-yellow-50 rounded-xl p-4 border-r-4 border-yellow-500">
+      <p class="font-bold text-yellow-800">💡 الخلاصة:</p>
+      <p class="text-yellow-700 mt-1">إنت مدير المنصة ← بتضيف clients ← كل client بياخد API Key ← هو بيستخدمه من بره عشان يبعت رسايل. إنت بس اللي بتدخل الداشبورد وتدير كل حاجة.</p>
+    </div>
+  ` : `
+    <div class="bg-brand-50 rounded-xl p-4 border-l-4 border-brand-500">
+      <p class="font-bold text-brand-800">👋 Welcome to the Admin Dashboard!</p>
+      <p class="text-brand-700 mt-1">This is YOUR control panel. Clients never see this.</p>
+    </div>
+
+    <div>
+      <p class="font-bold text-gray-800 mb-2">📊 Dashboard</p>
+      <p class="text-gray-600">Quick stats: total users, messages sent, failed, connected sessions.</p>
+    </div>
+
+    <div>
+      <p class="font-bold text-gray-800 mb-2">👥 Users</p>
+      <p class="text-gray-600">Your clients' accounts. Add, edit, delete. Each has an API Key, message quota, and expiry date.</p>
+    </div>
+
+    <div>
+      <p class="font-bold text-gray-800 mb-2">📱 Sessions</p>
+      <p class="text-gray-600">Each client gets a WhatsApp session to send messages. Monitor all sessions here.</p>
+    </div>
+
+    <div>
+      <p class="font-bold text-gray-800 mb-2">✉️ Messages</p>
+      <p class="text-gray-600">All messages sent by all clients, with delivery status.</p>
+    </div>
+
+    <div>
+      <p class="font-bold text-gray-800 mb-2">🛡️ Admins</p>
+      <p class="text-gray-600">Manage admin accounts who can access this dashboard. Add or remove admins with full control.</p>
+    </div>
+    <div>
+      <p class="font-bold text-gray-800 mb-2">💬 WhatsApp Web</p>
+      <p class="text-gray-600">Manage WhatsApp sessions on behalf of clients. Create sessions, scan QR, send test messages.</p>
+    </div>
+
+    <div class="bg-yellow-50 rounded-xl p-4 border-l-4 border-yellow-500">
+      <p class="font-bold text-yellow-800">💡 Bottom line:</p>
+      <p class="text-yellow-700 mt-1">You manage the platform → add clients → each gets an API Key → they use it externally to send messages. Only YOU access this dashboard.</p>
+    </div>
+  `;
+  document.getElementById('helpContent').innerHTML = help;
+  openModal('helpModal');
+}
+
+// ============ Activity Log ============
+// ============ Analytics Dashboard ============
+async function loadAnalytics() {
+  try {
+    const res = await API('/api/admin/analytics?days=30');
+    const d = await res.json();
+    renderMsgTrend(d.msgTrend);
+    renderUserGrowth(d.userTrend);
+    renderSessionDist(d.sessionDist);
+    renderPlanDist(d.planDist);
+    renderTopUsers(d.topUsers);
+  } catch(e) { toast(e.message, 'error'); }
+}
+
+function renderMsgTrend(data) {
+  const el = document.getElementById('msgTrendChart');
+  if (!data || data.length === 0) { el.innerHTML = '<p class="text-gray-400 text-sm w-full text-center">No data</p>'; return; }
+  const maxVal = Math.max(...data.map(d => d.total), 1);
+  const colors = ['#22c55e', '#3b82f6', '#ef4444', '#f59e0b', '#8b5cf6'];
+  let html = '';
+  data.forEach((d, i) => {
+    const h = (d.total / maxVal) * 100;
+    const color = d.failed > d.sent ? colors[2] : colors[0];
+    html += `<div class="flex-1 flex flex-col items-center justify-end h-full gap-0.5" title="${d.date}: ${d.total} (${d.sent} sent, ${d.failed} failed)">
+      <div class="w-full rounded-sm transition-all duration-300 hover:opacity-80" style="height:${Math.max(h, 1)}%;background:${color};min-height:2px"></div>
+    </div>`;
+  });
+  el.innerHTML = html;
+}
+
+function renderUserGrowth(data) {
+  const el = document.getElementById('userGrowthChart');
+  if (!data || data.length === 0) { el.innerHTML = '<p class="text-gray-400 text-sm w-full text-center">No data</p>'; return; }
+  const maxVal = Math.max(...data.map(d => d.count), 1);
+  let html = '';
+  data.forEach(d => {
+    const h = (d.count / maxVal) * 100;
+    html += `<div class="flex-1 flex flex-col items-center justify-end h-full gap-0.5" title="${d.date}: ${d.count} new users">
+      <div class="w-full rounded-sm transition-all duration-300 hover:opacity-80" style="height:${Math.max(h, 1)}%;background:#3b82f6;min-height:2px"></div>
+    </div>`;
+  });
+  el.innerHTML = html;
+}
+
+function renderSessionDist(data) {
+  const el = document.getElementById('sessionDistChart');
+  if (!data || data.length === 0) { el.innerHTML = '<p class="text-gray-400 text-sm w-full text-center">No data</p>'; return; }
+  const total = data.reduce((s, d) => s + d.count, 0);
+  const statusColors = { connected: '#22c55e', disconnected: '#94a3b8', waiting_qr: '#f59e0b' };
+  let html = '<div class="flex flex-col gap-2 items-center">';
+  let cumulative = 0;
+  data.forEach(d => {
+    const pct = ((d.count / total) * 100).toFixed(1);
+    const color = statusColors[d.status] || '#64748b';
+    const offset = cumulative;
+    cumulative += (d.count / total) * 283;
+    html += `<div class="flex items-center gap-2 text-sm"><span class="w-3 h-3 rounded-full" style="background:${color}"></span> ${d.status}: ${d.count} (${pct}%)</div>`;
+  });
+  html += '</div>';
+  el.innerHTML = html;
+}
+
+function renderPlanDist(data) {
+  const el = document.getElementById('planDistChart');
+  if (!data || data.length === 0) { el.innerHTML = '<p class="text-gray-400 text-sm w-full text-center">No data</p>'; return; }
+  const total = data.reduce((s, d) => s + d.count, 0);
+  const colors = ['#22c55e', '#3b82f6', '#8b5cf6', '#f59e0b', '#ef4444', '#ec4899'];
+  let html = '';
+  data.forEach((d, i) => {
+    const pct = ((d.count / total) * 100).toFixed(1);
+    const color = colors[i % colors.length];
+    html += `<div class="flex items-center gap-3">
+      <span class="text-sm font-medium min-w-[60px]">${d.plan}</span>
+      <div class="flex-1 h-5 bg-gray-100 rounded-full overflow-hidden">
+        <div class="h-full rounded-full transition-all duration-500" style="width:${pct}%;background:${color}"></div>
+      </div>
+      <span class="text-sm text-gray-500 min-w-[60px] text-end">${d.count} (${pct}%)</span>
+    </div>`;
+  });
+  el.innerHTML = html;
+}
+
+function renderTopUsers(data) {
+  const tbody = document.getElementById('topUsersTable');
+  if (!data || data.length === 0) { tbody.innerHTML = '<tr><td colspan="3" class="text-center text-gray-400 py-4">No data</td></tr>'; return; }
+  let html = '';
+  data.forEach((u, i) => {
+    html += `<tr>
+      <td class="text-gray-500 text-xs">${i + 1}</td>
+      <td class="text-sm">${u.name}</td>
+      <td class="text-sm font-medium">${u.count}</td>
+    </tr>`;
+  });
+  tbody.innerHTML = html;
+}
+
+let activityPage = 1;
+async function loadActivity() {
+  try {
+    const search = document.getElementById('activitySearch')?.value || '';
+    const res = await API(`/api/admin/activity?page=${activityPage}&limit=50&search=${encodeURIComponent(search)}`);
+    const d = await res.json();
+    const tbody = document.getElementById('activityTable');
+    if (!d.items || d.items.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="8" class="text-center text-gray-400 py-8">${t('no_data')}</td></tr>`;
+      document.getElementById('activityPagination').style.display = 'none';
+      return;
+    }
+    let html = '';
+    d.items.forEach((e, idx) => {
+      const actionLabels = {
+        create: t('activity_create') || 'Create',
+        update: t('activity_update') || 'Update',
+        delete: t('activity_delete') || 'Delete',
+        approve_upgrade: t('activity_approve') || 'Approve Upgrade',
+        reject_upgrade: t('activity_reject') || 'Reject Upgrade',
+        login: 'Login',
+        login_2fa: '2FA Login',
+        ['2fa_setup_initiated']: '2FA Setup',
+        ['2fa_enabled']: '2FA Enabled',
+        ['2fa_disabled']: '2FA Disabled'
+      };
+      const actionLabel = actionLabels[e.action] || e.action;
+      const targetIcon = { user: '👤', admin: '🛡️', session: '📱', pricing: '💰', upgrade_request: '📋' };
+      const targetWithIcon = (targetIcon[e.targetType] || '▪️') + ' ' + (e.targetType || '');
+      let detailStr = '';
+      let detailObj = {};
+      if (e.details) {
+        detailObj = Object.fromEntries(Object.entries(e.details).filter(([k]) => k !== 'password'));
+        const entries = Object.entries(detailObj);
+        detailStr = entries.map(([k, v]) => `${k}: ${typeof v === 'object' ? JSON.stringify(v) : v}`).join(', ');
+      }
+      const hasDetails = Object.keys(detailObj).length > 0;
+      const dateStr = formatDate(e.timestamp);
+      const timeStr = formatTime(e.timestamp);
+      const detailForModal = Object.assign({}, detailObj);
+      if (e.ip) detailForModal['IP'] = e.ip;
+      if (e.userAgent) detailForModal['User Agent'] = e.userAgent;
+      const safeDetails = encodeURIComponent(JSON.stringify(detailForModal));
+      const ipDisplay = e.ip ? `<span class="text-xs text-gray-500" title="${e.ip}">${e.ip}</span>` : '<span class="text-xs text-gray-400">-</span>';
+      const uaDisplay = e.userAgent ? `<span class="text-xs text-gray-400 truncate block max-w-[150px]" title="${e.userAgent.replace(/"/g, '&quot;')}">${e.userAgent.substring(0, 40)}${e.userAgent.length > 40 ? '...' : ''}</span>` : '<span class="text-xs text-gray-400">-</span>';
+      html += `<tr>
+        <td class="text-gray-500 text-xs whitespace-nowrap">${dateStr}</td>
+        <td class="text-gray-500 text-xs whitespace-nowrap">${timeStr}</td>
+        <td class="text-sm">${e.adminName || e.adminEmail}</td>
+        <td><span class="badge badge-info">${actionLabel}</span></td>
+        <td class="text-sm">${targetWithIcon}</td>
+        <td class="whitespace-nowrap">${ipDisplay}</td>
+        <td>${uaDisplay}</td>
+        <td>${hasDetails ? `<button class="btn btn-xs bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-lg px-2 py-1 text-xs" onclick="showActivityDetails('${safeDetails}')">${t('view_details') || 'View'}</button>` : '<span class="text-xs text-gray-400">-</span>'}</td>
+      </tr>`;
+    });
+    tbody.innerHTML = html;
+    const pagination = document.getElementById('activityPagination');
+    if (d.totalPages > 1) {
+      pagination.style.display = 'flex';
+      document.getElementById('activityPageInfo').textContent = `${t('page') || 'Page'} ${d.page} / ${d.totalPages}`;
+    } else {
+      pagination.style.display = 'none';
+    }
+  } catch(e) { toast(e.message, 'error'); }
+}
+function showActivityDetails(jsonStr) {
+  try {
+    const data = JSON.parse(decodeURIComponent(jsonStr));
+    let html = '<div class="space-y-2">';
+    Object.entries(data).forEach(([k, v]) => {
+      const val = typeof v === 'object' ? `<pre class="text-xs bg-gray-50 p-2 rounded mt-1 overflow-x-auto">${JSON.stringify(v, null, 2)}</pre>` : `<span class="text-gray-800">${v}</span>`;
+      html += `<div class="flex items-start gap-2 p-2 bg-gray-50 rounded-lg"><span class="font-medium text-gray-600 text-sm min-w-[100px]">${k}</span><div class="flex-1">${val}</div></div>`;
+    });
+    html += '</div>';
+    document.getElementById('activityDetailContent').innerHTML = html;
+    openModal('activityDetailModal');
+  } catch { toast('Invalid details', 'error'); }
+}
+function nextActivityPage() { activityPage++; loadActivity(); }
+function prevActivityPage() { if (activityPage > 1) { activityPage--; loadActivity(); } }
+
+const savedAdminTheme = localStorage.getItem('adminTheme') || 'dark';
+document.documentElement.setAttribute('data-theme', savedAdminTheme);
+document.getElementById('themeBtn').textContent = savedAdminTheme === 'dark' ? '🌙' : '☀️';
+applyLang();
+loadDashboard();
+
+document.getElementById('apiBaseUrl').value = window.location.origin;
+(function checkFA(){var t=document.createElement('i');t.className='fas fa-rocket';t.style.cssText='position:absolute;visibility:hidden;font-size:100px';document.body.appendChild(t);var o=t.offsetWidth>50;document.body.removeChild(t);if(!o)document.documentElement.classList.add('fa-fallback')})();
+
+// ============ Two-Factor Authentication ============
+
+async function load2FAStatus() {
+  try {
+    const res = await API('/api/admin/2fa/status');
+    const data = await res.json();
+    const badge = document.getElementById('twoFAStatusBadge');
+    const btnSetup = document.getElementById('btnSetup2FA');
+    const btnDisable = document.getElementById('btnDisable2FA');
+    const btnRecovery = document.getElementById('btnRecovery2FA');
+
+    if (data.enabled) {
+      badge.textContent = '✅ Enabled';
+      badge.className = 'badge badge-success';
+      btnSetup.style.display = 'none';
+      btnDisable.style.display = '';
+      btnRecovery.style.display = '';
+    } else {
+      badge.textContent = '❌ Disabled';
+      badge.className = 'badge badge-secondary';
+      btnSetup.style.display = '';
+      btnDisable.style.display = 'none';
+      btnRecovery.style.display = 'none';
+    }
+  } catch(e) {
+    document.getElementById('twoFAStatusBadge').textContent = '⚠️ Error';
+  }
+}
+
+let _2faData = null;
+
+async function openSetup2FA() {
+  try {
+    _2faData = null;
+    document.getElementById('setup2FAStep1').style.display = '';
+    document.getElementById('setup2FAStep2').style.display = 'none';
+    document.getElementById('setup2FACode').value = '';
+    document.getElementById('setup2FAQr').innerHTML = '<p class="text-gray-400 text-sm">Generating QR code...</p>';
+    document.getElementById('setup2FASecret').textContent = '';
+
+    const res = await API('/api/admin/2fa/setup', { method: 'POST' });
+    if (!res.ok) { const e = await res.json(); toast(e.error, 'error'); return; }
+    const data = await res.json();
+    _2faData = data;
+
+    document.getElementById('setup2FAQr').innerHTML = `<img src="${data.qrCode}" alt="QR Code" style="max-width:200px;border-radius:12px">`;
+    document.getElementById('setup2FASecret').textContent = data.secret;
+    openModal('setup2FAModal');
+  } catch(e) { toast(e.message, 'error'); }
+}
+
+async function verify2FASetup() {
+  const code = document.getElementById('setup2FACode').value.trim();
+  if (!code || code.length < 6) { toast('Enter a valid 6-digit code', 'error'); return; }
+
+  const res = await API('/api/admin/2fa/verify', { method: 'POST', body: JSON.stringify({ code }) });
+  if (!res.ok) { const e = await res.json(); toast(e.error, 'error'); return; }
+
+  // Show recovery codes
+  document.getElementById('setup2FAStep1').style.display = 'none';
+  document.getElementById('setup2FAStep2').style.display = '';
+  if (_2faData && _2faData.recoveryCodes) {
+    document.getElementById('setup2FARecoveryCodes').innerHTML = _2faData.recoveryCodes.map(c => '<div>🔑 ' + c + '</div>').join('');
+  }
+  toast('2FA enabled successfully!', 'success');
+}
+
+function copy2FASecret() {
+  const secret = document.getElementById('setup2FASecret').textContent;
+  if (secret) {
+    navigator.clipboard.writeText(secret).then(() => toast('Secret copied!', 'success')).catch(() => {});
+  }
+}
+
+function printRecoveryCodes() {
+  const content = document.getElementById('recoveryCodesList')?.textContent || document.getElementById('setup2FARecoveryCodes')?.textContent;
+  if (content) {
+    const win = window.open('', '_blank');
+    if (win) {
+      win.document.write('<html><head><title>Recovery Codes</title><style>body{font-family:monospace;padding:40px;font-size:16px;line-height:2}</style></head><body>');
+      win.document.write('<h1>Recovery Codes</h1>');
+      win.document.write('<p>Keep these codes safe. Each can be used once.</p>');
+      win.document.write('<pre>' + content + '</pre>');
+      win.document.write('</body></html>');
+      win.document.close();
+      win.print();
+    }
+  }
+}
+
+function openDisable2FA() {
+  document.getElementById('disable2FAPassword').value = '';
+  openModal('disable2FAModal');
+}
+
+async function disable2FA() {
+  const password = document.getElementById('disable2FAPassword').value;
+  if (!password) { toast('Enter your current password', 'error'); return; }
+
+  const res = await API('/api/admin/2fa/disable', { method: 'POST', body: JSON.stringify({ password }) });
+  if (!res.ok) { const e = await res.json(); toast(e.error, 'error'); return; }
+
+  closeModal('disable2FAModal');
+  toast('2FA disabled', 'success');
+  load2FAStatus();
+}
+
+function openRecoveryCodes() {
+  document.getElementById('recoveryPassword').value = '';
+  document.getElementById('recoveryCodesDisplay').style.display = 'none';
+  openModal('recoveryCodesModal');
+}
+
+async function generateRecoveryCodes() {
+  const password = document.getElementById('recoveryPassword').value;
+  if (!password) { toast('Enter your current password', 'error'); return; }
+
+  const res = await API('/api/admin/2fa/recovery-codes', { method: 'POST', body: JSON.stringify({ password }) });
+  if (!res.ok) { const e = await res.json(); toast(e.error, 'error'); return; }
+  const data = await res.json();
+
+  document.getElementById('recoveryCodesList').innerHTML = data.recoveryCodes.map(c => '<div>🔑 ' + c + '</div>').join('');
+  document.getElementById('recoveryCodesDisplay').style.display = '';
+  toast('New recovery codes generated', 'success');
+}
+
+// Color picker sync
+(function(){var cp=document.getElementById('brandPrimaryColor'),ct=document.getElementById('brandPrimaryColorText');if(cp&&ct){cp.addEventListener('input',function(){ct.value=cp.value});ct.addEventListener('input',function(){if(/^#[0-9a-f]{6}$/i.test(ct.value))cp.value=ct.value})}})();
+</script>
+</body>
+</html>

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WhatsApp Sender - Client Login</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%92%AC%3C/text%3E%3C/svg%3E">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config={theme:{extend:{colors:{brand:{50:'#ecfdf5',100:'#d1fae5',200:'#a7f3d0',300:'#6ee7b7',400:'#34d399',500:'#10b981',600:'#059669',700:'#047857',800:'#065f46',900:'#064e3b'}}}}}
+</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif}
+.input-field:focus{border-color:#22c55e!important;box-shadow:0 0 0 4px rgba(34,197,94,.15)!important}
+.input-field::placeholder{color:#64748b}
+::placeholder{color:#94a3b8}input::placeholder,textarea::placeholder{color:#94a3b8}
+.btn-primary{transition:all .3s ease}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(22,163,74,.35)}
+.feature-item{transition:all .3s ease}
+.feature-item:hover{transform:translateX(4px)}
+@media(max-width:480px){
+  body{padding:8px!important}
+  .max-w-5xl{border-radius:20px!important}
+  .p-8{padding:20px 16px!important}
+  .text-2xl{font-size:20px!important}
+  .input-field{padding:12px 12px 12px 36px!important;font-size:14px!important}
+  .w-16{width:56px!important;height:56px!important}
+  .btn-primary{font-size:14px!important;padding:12px!important}
+  #langSelect{font-size:11px!important;padding:3px 6px!important}
+  .hidden.lg\\:flex{display:none!important}
+}
+</style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4" style="background:linear-gradient(135deg,#0f172a,#1e293b,#064e3b)">
+  <div class="w-full max-w-5xl rounded-3xl shadow-2xl overflow-hidden grid grid-cols-1 lg:grid-cols-2" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);backdrop-filter:blur(12px)">
+    
+    <!-- Brand Panel -->
+    <div class="hidden lg:flex flex-col justify-between p-10 relative overflow-hidden" style="background:linear-gradient(135deg,#064e3b,#14532d,#0f172a)">
+      <div class="relative z-10">
+        <div class="flex items-center gap-3 mb-10">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center font-bold text-xl shadow-lg" style="background:linear-gradient(135deg,#34d399,#22c55e);color:#fff">WS</div>
+          <div>
+            <div class="font-bold text-lg" style="color:#fff" id="brandName">WhatsApp Sender</div>
+            <div class="text-sm" style="color:#6ee7b7" id="brandTagline">Professional Messaging Platform</div>
+          </div>
+        </div>
+        <h2 class="text-white text-3xl font-bold mb-4 leading-tight" id="brandHero">Send Smarter.<br>Connect Faster.</h2>
+        <p class="text-sm leading-relaxed mb-8" style="color:rgba(110,231,183,.7)" id="brandDesc">Manage unlimited WhatsApp sessions, send bulk messages with anti-ban protection, and track delivery — all from one powerful dashboard.</p>
+        <div class="space-y-4">
+          <div class="feature-item flex items-start gap-3">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(34,197,94,.2)"><i class="fas fa-check" style="color:#34d399"></i></div>
+            <div><div class="text-sm font-medium" style="color:#fff" id="feat1Title">Multi-Device Sessions</div><div class="text-xs" style="color:rgba(110,231,183,.6)" id="feat1Desc">Connect multiple WhatsApp numbers simultaneously</div></div>
+          </div>
+          <div class="feature-item flex items-start gap-3">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(34,197,94,.2)"><i class="fas fa-check" style="color:#34d399"></i></div>
+            <div><div class="text-sm font-medium" style="color:#fff" id="feat2Title">Anti-Ban Protection</div><div class="text-xs" style="color:rgba(110,231,183,.6)" id="feat2Desc">Smart delays prevent WhatsApp from flagging your account</div></div>
+          </div>
+          <div class="feature-item flex items-start gap-3">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(34,197,94,.2)"><i class="fas fa-check" style="color:#34d399"></i></div>
+            <div><div class="text-sm font-medium" style="color:#fff" id="feat3Title">Bulk Messaging</div><div class="text-xs" style="color:rgba(110,231,183,.6)" id="feat3Desc">Send thousands of messages via CSV upload or API</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="relative z-10 text-xs" style="color:rgba(110,231,183,.5)" id="brandVersion">WhatsApp Sender Platform v2.0</div>
+    </div>
+
+    <!-- Login Form -->
+    <div class="p-8 lg:p-10" style="background:rgba(15,23,42,.6)">
+      <div class="flex items-center justify-between mb-8">
+        <div class="lg:hidden flex items-center gap-2">
+          <div class="w-9 h-9 rounded-xl flex items-center justify-center text-sm" style="background:linear-gradient(135deg,#16a34a,#22c55e);color:#fff;font-weight:700">WS</div>
+          <span class="text-sm font-bold" style="color:#e2e8f0" id="mobileBrandName">WhatsApp Sender</span>
+        </div>
+        <select class="ml-auto px-3 py-2 rounded-lg text-sm border cursor-pointer outline-none" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.1);color:#94a3b8" onchange="switchLang(this.value)" id="langSelect">
+          <option value="ar" style="background:#0f172a;color:#e2e8f0">🇪🇬 AR</option>
+          <option value="en" style="background:#0f172a;color:#e2e8f0">🇺🇸 EN</option>
+          <option value="de" style="background:#0f172a;color:#e2e8f0">🇩🇪 DE</option>
+          <option value="fr" style="background:#0f172a;color:#e2e8f0">🇫🇷 FR</option>
+          <option value="es" style="background:#0f172a;color:#e2e8f0">🇪🇸 ES</option>
+          <option value="tr" style="background:#0f172a;color:#e2e8f0">🇹🇷 TR</option>
+        </select>
+      </div>
+
+      <div class="max-w-sm mx-auto">
+        <div class="text-center mb-8">
+          <div class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg" style="background:linear-gradient(135deg,#16a34a,#10b981)"><i class="fas fa-user text-white text-2xl"></i></div>
+          <h1 class="text-2xl font-bold" id="loginTitle" style="color:#f1f5f9">Client Login</h1>
+          <p class="text-sm mt-1.5" id="loginSubtitle" style="color:#64748b">Sign in to your account to get started</p>
+        </div>
+
+        <div id="error" class="hidden flex items-center gap-2 px-4 py-3 rounded-xl text-sm mb-4" style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);color:#fca5a5">
+          <i class="fas fa-exclamation-circle"></i>
+          <span id="errorText"></span>
+        </div>
+
+        <form onsubmit="event.preventDefault(); login();" class="space-y-5">
+          <div>
+            <label class="block text-sm font-semibold mb-1.5" id="labelEmail" style="color:#94a3b8">Email Address</label>
+            <div class="relative">
+              <i class="fas fa-envelope absolute start-3 top-1/2 -translate-y-1/2" style="color:#64748b"></i>
+              <input type="email" id="email" class="input-field w-full px-4 py-3.5 ps-12 border-2 rounded-xl outline-none text-sm" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.1);color:#e2e8f0;placeholder-color:#64748b" placeholder="client@example.com" autocomplete="email">
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold mb-1.5" id="labelPass" style="color:#94a3b8">Password</label>
+            <div class="relative">
+              <i class="fas fa-lock absolute start-3 top-1/2 -translate-y-1/2" style="color:#64748b"></i>
+              <input type="password" id="password" class="input-field w-full px-4 py-3.5 ps-12 pe-12 border-2 rounded-xl outline-none text-sm" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.1);color:#e2e8f0;placeholder-color:#64748b" placeholder="••••••••" autocomplete="current-password">
+              <button type="button" onclick="togglePassword()" class="absolute end-3 top-1/2 -translate-y-1/2" style="color:#64748b;border:none;background:none;cursor:pointer" tabindex="-1"><i id="eyeIcon" class="fas fa-eye"></i></button>
+            </div>
+          </div>
+          <button type="submit" id="loginBtn" class="btn-primary w-full text-white py-3.5 rounded-xl font-bold text-base shadow-lg flex items-center justify-center gap-2" style="background:linear-gradient(90deg,#16a34a,#10b981)">
+            <i class="fas fa-sign-in-alt"></i>
+            <span id="btnText">Sign In</span>
+          </button>
+        </form>
+
+        <div class="mt-8 p-4 rounded-xl" style="background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.15)">
+          <div class="flex items-start gap-3">
+            <div class="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5" style="background:rgba(251,191,36,.15)"><i class="fas fa-info-circle" style="color:#fbbf24"></i></div>
+            <div>
+              <p class="text-sm font-semibold" id="helpTitle" style="color:#fbbf24">Don't have an account?</p>
+              <p class="text-xs mt-1 leading-relaxed" id="helpText" style="color:rgba(251,191,36,.8)">Contact your admin to create an account. You will receive your login credentials (email &amp; password) from the platform administrator.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4 text-center">
+          <button onclick="fillDemo()" class="text-xs underline underline-offset-2 transition" id="demoHint" style="color:#64748b;background:none;border:none;cursor:pointer">Use demo credentials</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const LANG_LIST = ['ar', 'en', 'de', 'fr', 'es', 'tr'];
+    let currentLang = localStorage.getItem('lang') || 'ar';
+
+    function t(key) {
+      const dict = {
+        ar: {
+          loginTitle: '\u062A\u0633\u062C\u064A\u0644 \u062F\u062E\u0648\u0644 \u0627\u0644\u0639\u0645\u064A\u0644',
+          loginSubtitle: '\u0633\u062C\u0644 \u062F\u062E\u0648\u0644\u0643 \u0644\u062D\u0633\u0627\u0628\u0643 \u0644\u0644\u0628\u062F\u0621',
+          labelEmail: '\u0627\u0644\u0628\u0631\u064A\u062F \u0627\u0644\u0625\u0644\u0643\u062A\u0631\u0648\u0646\u064A',
+          labelPass: '\u0643\u0644\u0645\u0629 \u0627\u0644\u0645\u0631\u0648\u0631',
+          btnText: '\u062A\u0633\u062C\u064A\u0644 \u0627\u0644\u062F\u062E\u0648\u0644',
+          helpTitle: '\u0644\u064A\u0633 \u0644\u062F\u064A\u0643 \u062D\u0633\u0627\u0628\u061F',
+          helpText: '\u062A\u0648\u0627\u0635\u0644 \u0645\u0639 \u0627\u0644\u0645\u0634\u0631\u0641 \u0644\u0625\u0646\u0634\u0627\u0621 \u062D\u0633\u0627\u0628. \u0633\u062A\u062A\u0644\u0642\u0649 \u0628\u064A\u0627\u0646\u0627\u062A \u0627\u0644\u062F\u062E\u0648\u0644 (\u0627\u0644\u0628\u0631\u064A\u062F \u0627\u0644\u0625\u0644\u0643\u062A\u0631\u0648\u0646\u064A \u0648\u0643\u0644\u0645\u0629 \u0627\u0644\u0645\u0631\u0648\u0631) \u0645\u0646 \u0645\u062F\u064A\u0631 \u0627\u0644\u0645\u0646\u0635\u0629.',
+          demoHint: '\u0627\u0633\u062A\u062E\u062F\u0627\u0645 \u0628\u064A\u0627\u0646\u0627\u062A \u062A\u062C\u0631\u064A\u0628\u064A\u0629',
+          errFill: '\u064A\u0631\u062C\u0649 \u0645\u0644\u0621 \u062C\u0645\u064A\u0639 \u0627\u0644\u062D\u0642\u0648\u0644',
+          errLogin: '\u062E\u0637\u0623 \u0641\u064A \u062A\u0633\u062C\u064A\u0644 \u0627\u0644\u062F\u062E\u0648\u0644',
+          errConn: '\u062E\u0637\u0623 \u0641\u064A \u0627\u0644\u0627\u062A\u0635\u0627\u0644 \u0628\u0627\u0644\u062E\u0627\u062F\u0645',
+          signingIn: '\u062C\u0627\u0631\u064A \u062A\u0633\u062C\u064A\u0644 \u0627\u0644\u062F\u062E\u0648\u0644...',
+          toastMsg: '\u0627\u0633\u062A\u062E\u062F\u0645 \u0628\u064A\u0627\u0646\u0627\u062A \u0627\u0644\u062F\u062E\u0648\u0644 \u0627\u0644\u062A\u064A \u0642\u062F\u0645\u0647\u0627 \u0644\u0643 \u0627\u0644\u0645\u0634\u0631\u0641',
+          brandName: '\u0648\u0627\u062A\u0633\u0627\u0628 \u0633\u064A\u0646\u062F\u0631',
+          brandTagline: '\u0645\u0646\u0635\u0629 \u0645\u0631\u0627\u0633\u0644\u0629 \u0627\u062D\u062A\u0631\u0627\u0641\u064A\u0629',
+          brandHero: '\u0623\u0631\u0633\u0644 \u0628\u0630\u0643\u0627\u0621.<br>\u062A\u0648\u0627\u0635\u0644 \u0623\u0633\u0631\u0639.',
+          brandDesc: '\u0625\u062F\u0627\u0631\u0629 \u062C\u0644\u0633\u0627\u062A \u0648\u0627\u062A\u0633\u0627\u0628 \u063A\u064A\u0631 \u0645\u062D\u062F\u0648\u062F\u0629\u060C \u0625\u0631\u0633\u0627\u0644 \u0631\u0633\u0627\u0626\u0644 \u062C\u0645\u0627\u0639\u064A\u0629 \u0645\u0639 \u062D\u0645\u0627\u064A\u0629 \u0636\u062F \u0627\u0644\u062D\u0638\u0631\u060C \u0648\u062A\u062A\u0628\u0639 \u0627\u0644\u062A\u0633\u0644\u064A\u0645 \u2014 \u0643\u0644 \u0630\u0644\u0643 \u0645\u0646 \u0644\u0648\u062D\u0629 \u062A\u062D\u0643\u0645 \u0642\u0648\u064A\u0629.',
+          feat1Title: '\u062C\u0644\u0633\u0627\u062A \u0645\u062A\u0639\u062F\u062F\u0629 \u0627\u0644\u0623\u062C\u0647\u0632\u0629',
+          feat1Desc: '\u0631\u0628\u0637 \u0623\u0631\u0642\u0627\u0645 \u0648\u0627\u062A\u0633\u0627\u0628 \u0645\u062A\u0639\u062F\u062F\u0629 \u0641\u064A \u0648\u0642\u062A \u0648\u0627\u062D\u062F',
+          feat2Title: '\u062D\u0645\u0627\u064A\u0629 \u0636\u062F \u0627\u0644\u062D\u0638\u0631',
+          feat2Desc: '\u062A\u0623\u062E\u064A\u0631 \u0630\u0643\u064A \u064A\u0645\u0646\u0639 \u0648\u0627\u062A\u0633\u0627\u0628 \u0645\u0646 \u062D\u0638\u0631 \u062D\u0633\u0627\u0628\u0643',
+          feat3Title: '\u0625\u0631\u0633\u0627\u0644 \u062C\u0645\u0627\u0639\u064A',
+          feat3Desc: '\u0625\u0631\u0633\u0627\u0644 \u0622\u0644\u0627\u0641 \u0627\u0644\u0631\u0633\u0627\u0626\u0644 \u0639\u0628\u0631 \u0631\u0641\u0639 \u0645\u0644\u0641 CSV \u0623\u0648 API',
+          brandVersion: '\u0645\u0646\u0635\u0629 \u0648\u0627\u062A\u0633\u0627\u0628 \u0633\u064A\u0646\u062F\u0631 v2.0',
+          mobileBrandName: '\u0648\u0627\u062A\u0633\u0627\u0628 \u0633\u064A\u0646\u062F\u0631'
+        }
+      };
+      const d = dict.ar;
+      if (currentLang === 'ar' && d[key]) return d[key];
+      const en = {
+        loginTitle: 'Client Login', loginSubtitle: 'Sign in to your account to get started',
+        labelEmail: 'Email Address', labelPass: 'Password', btnText: 'Sign In',
+        helpTitle: "Don't have an account?",
+        helpText: 'Contact your admin to create an account. You will receive your login credentials (email & password) from the platform administrator.',
+        demoHint: 'Use demo credentials', errFill: 'Please fill in all fields',
+        errLogin: 'Login failed', errConn: 'Connection error', signingIn: 'Signing in...',
+        toastMsg: 'Use the credentials provided by your admin',
+        brandName: 'WhatsApp Sender', brandTagline: 'Professional Messaging Platform',
+        brandHero: 'Send Smarter.<br>Connect Faster.',
+        brandDesc: 'Manage unlimited WhatsApp sessions, send bulk messages with anti-ban protection, and track delivery — all from one powerful dashboard.',
+        feat1Title: 'Multi-Device Sessions', feat1Desc: 'Connect multiple WhatsApp numbers simultaneously',
+        feat2Title: 'Anti-Ban Protection', feat2Desc: 'Smart delays prevent WhatsApp from flagging your account',
+        feat3Title: 'Bulk Messaging', feat3Desc: 'Send thousands of messages via CSV upload or API',
+        brandVersion: 'WhatsApp Sender Platform v2.0', mobileBrandName: 'WhatsApp Sender'
+      };
+      return en[key] || key;
+    }
+
+    function applyLang() {
+      const sel = document.getElementById('langSelect');
+      const L = { ar:'AR', en:'EN', de:'DE', fr:'FR', es:'ES', tr:'TR' };
+      if (sel) sel.innerHTML = LANG_LIST.map(c => `<option value="${c}"${c===currentLang?' selected':''} style="background:#0f172a;color:#e2e8f0">${L[c]}</option>`).join('');
+      document.documentElement.lang = currentLang;
+      document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+      document.title = currentLang === 'ar' ? 'تسجيل دخول - واتساب سيندر' : 'Client Login - WhatsApp Sender';
+      ['loginTitle','loginSubtitle','labelEmail','labelPass','btnText','helpTitle','helpText','demoHint','brandName','brandTagline','brandDesc','feat1Title','feat1Desc','feat2Title','feat2Desc','feat3Title','feat3Desc','brandVersion','mobileBrandName'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = t(id);
+      });
+      const hero = document.getElementById('brandHero');
+      if (hero) hero.innerHTML = t('brandHero');
+      document.getElementById('error').classList.add('hidden');
+      localStorage.setItem('lang', currentLang);
+    }
+
+    function switchLang(code) { currentLang = code; applyLang(); }
+
+    function togglePassword() {
+      const pw = document.getElementById('password');
+      const icon = document.getElementById('eyeIcon');
+      if (pw.type === 'password') { pw.type = 'text'; icon.className = 'fas fa-eye-slash'; }
+      else { pw.type = 'password'; icon.className = 'fas fa-eye'; }
+    }
+
+    function fillDemo() {
+      document.getElementById('email').value = '';
+      document.getElementById('password').value = '';
+      toast(t('toastMsg'));
+    }
+
+    function toast(msg) {
+      const el = document.getElementById('error');
+      document.getElementById('errorText').textContent = msg;
+      el.className = 'flex items-center gap-2 px-4 py-3 rounded-xl text-sm mb-4';
+      el.style.background = 'rgba(59,130,246,.1)';
+      el.style.border = '1px solid rgba(59,130,246,.2)';
+      el.style.color = '#93c5fd';
+      setTimeout(() => el.classList.add('hidden'), 4000);
+    }
+
+    async function login() {
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const err = document.getElementById('error');
+      const errText = document.getElementById('errorText');
+      err.classList.add('hidden');
+      if (!email || !password) {
+        errText.textContent = t('errFill');
+        err.className = 'flex items-center gap-2 px-4 py-3 rounded-xl text-sm mb-4';
+        err.style.background = 'rgba(239,68,68,.1)';
+        err.style.border = '1px solid rgba(239,68,68,.2)';
+        err.style.color = '#fca5a5';
+        return;
+      }
+      const btn = document.getElementById('loginBtn');
+      const orig = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>' + t('signingIn') + '</span>';
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        if (!res.ok) {
+          const e = await res.json();
+          errText.textContent = e.error || t('errLogin');
+          err.className = 'flex items-center gap-2 px-4 py-3 rounded-xl text-sm mb-4';
+          err.style.background = 'rgba(239,68,68,.1)';
+          err.style.border = '1px solid rgba(239,68,68,.2)';
+          err.style.color = '#fca5a5';
+          btn.disabled = false; btn.innerHTML = orig;
+          return;
+        }
+        const data = await res.json();
+        localStorage.setItem('clientToken', data.token);
+        localStorage.setItem('clientUser', JSON.stringify(data.user));
+        window.location.href = '/client/';
+      } catch(e) {
+        errText.textContent = t('errConn');
+        err.className = 'flex items-center gap-2 px-4 py-3 rounded-xl text-sm mb-4';
+        err.style.background = 'rgba(239,68,68,.1)';
+        err.style.border = '1px solid rgba(239,68,68,.2)';
+        err.style.color = '#fca5a5';
+        btn.disabled = false; btn.innerHTML = orig;
+      }
+    }
+
+    document.addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
+    applyLang();
+  </script>
+</body>
+</html>

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WhatsApp Sender - Admin Login</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #0f172a; }
+.text-white { color:#fff; } .text-gray-900 { color:#111827; } .text-gray-800 { color:#1f2937; } .text-gray-700 { color:#374151; } .text-gray-600 { color:#4b5563; } .text-gray-500 { color:#6b7280; } .text-gray-400 { color:#9ca3af; } .text-gray-300 { color:#d1d5db; } .text-red-700 { color:#b91c1c; } .text-emerald-300 { color:#6ee7b7; } .text-emerald-200 { color:#a7f3d0; } .text-emerald-400 { color:#34d399; } .text-brand-600 { color:#16a34a; } .text-brand-500 { color:#22c55e; }
+.text-xs { font-size:.75rem; } .text-sm { font-size:.875rem; } .text-base { font-size:1rem; } .text-lg { font-size:1.125rem; } .text-2xl { font-size:1.5rem; } .text-3xl { font-size:1.875rem; }
+.font-normal { font-weight:400; } .font-medium { font-weight:500; } .font-semibold { font-weight:600; } .font-bold { font-weight:700; } .font-extrabold { font-weight:800; }
+.rounded-lg { border-radius:.5rem; } .rounded-xl { border-radius:.75rem; } .rounded-2xl { border-radius:1rem; } .rounded-3xl { border-radius:1.5rem; } .rounded-full { border-radius:9999px; }
+.p-3 { padding:.75rem; } .p-4 { padding:1rem; } .p-8 { padding:2rem; } .p-10 { padding:2.5rem; } .px-3 { padding-left:.75rem; padding-right:.75rem; } .px-4 { padding-left:1rem; padding-right:1rem; } .px-8 { padding-left:2rem; padding-right:2rem; } .py-2 { padding-top:.5rem; padding-bottom:.5rem; } .py-3\.5 { padding-top:.875rem; padding-bottom:.875rem; } .ps-12 { padding-inline-start:3rem; }
+.mt-1\.5 { margin-top:.375rem; } .mt-8 { margin-top:2rem; } .mb-1\.5 { margin-bottom:.375rem; } .mb-4 { margin-bottom:1rem; } .mb-8 { margin-bottom:2rem; } .mb-10 { margin-bottom:2.5rem; } .mx-auto { margin-left:auto; margin-right:auto; } .ml-auto { margin-left:auto; } .-translate-y-1\/2 { transform:translateY(-50%); }
+.gap-2 { gap:.5rem; } .gap-3 { gap:.75rem; } .gap-0 { gap:0; }
+.flex { display:flex; } .grid { display:grid; } .hidden { display:none; } .block { display:block; } .items-center { align-items:center; } .items-start { align-items:flex-start; } .justify-center { justify-content:center; } .justify-between { justify-content:space-between; } .flex-1 { flex:1; } .flex-shrink-0 { flex-shrink:0; } .flex-col { flex-direction:column; } .flex-wrap { flex-wrap:wrap; }
+.grid-cols-1 { grid-template-columns:repeat(1,1fr); }
+.w-full { width:100%; } .w-4 { width:1rem; } .w-5 { width:1.25rem; } .w-8 { width:2rem; } .w-9 { width:2.25rem; } .w-12 { width:3rem; } .w-16 { width:4rem; } .w-40 { width:10rem; } .w-60 { width:15rem; } .w-64 { width:16rem; } .w-80 { width:20rem; } .w-96 { width:24rem; } .max-w-sm { max-width:24rem; } .max-w-5xl { max-width:55rem; }
+.h-4 { height:1rem; } .h-5 { height:1.25rem; } .h-8 { height:2rem; } .h-9 { height:2.25rem; } .h-12 { height:3rem; } .h-16 { height:4rem; } .h-40 { height:10rem; } .h-64 { height:16rem; } .h-96 { height:24rem; } .min-h-screen { min-height:100vh; }
+.relative { position:relative; } .absolute { position:absolute; } .inset-0 { top:0; right:0; bottom:0; left:0; } .top-1\/2 { top:50%; } .start-3 { inset-inline-start:.75rem; } .-top-40 { top:-10rem; } .-right-40 { right:-10rem; } .-bottom-40 { bottom:-10rem; } .-left-40 { left:-10rem; }
+.overflow-hidden { overflow:hidden; } .pointer-events-none { pointer-events:none; } .outline-none { outline:none; } .cursor-pointer { cursor:pointer; } .select-none { user-select:none; }
+.text-center { text-align:center; } .leading-tight { line-height:1.25; } .leading-relaxed { line-height:1.625; } .tracking-wide { letter-spacing:.025em; } .uppercase { text-transform:uppercase; } .font-mono { font-family: monospace; }
+.space-y-4 > * + * { margin-top:1rem; } .space-y-5 > * + * { margin-top:1.25rem; }
+.z-10 { z-index:10; }
+.input-field { transition: all .25s ease; background:rgba(255,255,255,.06); border-color:rgba(255,255,255,.1); color:#e2e8f0; }
+.input-field:focus { border-color: #22c55e !important; box-shadow: 0 0 0 4px rgba(34,197,94,.15) !important; }
+.input-field::placeholder { color: #64748b; }
+.btn-primary { position: relative; overflow: hidden; border:none; cursor:pointer; }
+.btn-primary:disabled { opacity:.6; cursor:not-allowed; }
+.feature-item { }
+.lang-select { cursor:pointer; background:rgba(255,255,255,.06); border-color:rgba(255,255,255,.1); color:#94a3b8; min-width:48px; height:36px; border-radius:10px; font-size:13px; padding:0 10px; }
+.lang-select:hover { border-color: #94a3b8; background: rgba(255,255,255,.1); }
+.theme-toggle { width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; cursor:pointer; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); color:#94a3b8; font-size:16px; flex-shrink:0; }
+.theme-toggle:hover { background:rgba(255,255,255,.12); border-color:rgba(255,255,255,.2); color:#e2e8f0; }
+.mr-auto { margin-right:auto; }
+@media (min-width:1024px) { .lg\:mr-0 { margin-right:0; } .lg\:ml-auto { margin-left:auto; } .lg\:grid-cols-2 { grid-template-columns:repeat(2,1fr); } .lg\:flex { display:flex; } .lg\:hidden { display:none; } }
+[data-theme="light"] body,
+[data-theme="light"] .min-h-screen { background:linear-gradient(135deg,#f8fafc,#e2e8f0,#f1f5f9) !important; }
+[data-theme="light"] .card-bg { background:rgba(255,255,255,.9) !important; border-color:rgba(0,0,0,.08) !important; }
+[data-theme="light"] .card-bg input { background:#fff !important; border-color:#d1d5db !important; color:#1f2937 !important; }
+[data-theme="light"] .card-bg label { color:#4b5563 !important; }
+[data-theme="light"] .card-bg .text-\[color\] { color:#1f2937 !important; }
+[data-theme="light"] .brand-panel { display:none !important; }
+[data-theme="light"] .lang-select { background:rgba(0,0,0,.05) !important; border-color:rgba(0,0,0,.15) !important; color:#4b5563 !important; }
+[data-theme="light"] .theme-toggle { background:rgba(0,0,0,.05); border-color:rgba(0,0,0,.15); color:#64748b; }
+[data-theme="light"] .theme-toggle:hover { background:rgba(0,0,0,.08); border-color:rgba(0,0,0,.2); color:#1f2937; }
+@keyframes spin { from { transform:rotate(0deg); } to { transform:rotate(360deg); } }
+.animate-spin { animation: spin 1s linear infinite; }
+@media (max-width:480px) {
+  .p-8 { padding:1rem; } .p-10 { padding:1.5rem; } .px-8 { padding-left:1rem; padding-right:1rem; }
+  .w-16 { width:3rem; height:3rem; } .w-12 { width:2.5rem; height:2.5rem; } .w-8 { width:1.75rem; height:1.75rem; }
+  .text-3xl { font-size:1.5rem; } .text-2xl { font-size:1.25rem; }
+  .max-w-sm { max-width:100%; } .mb-10 { margin-bottom:1.5rem; }
+  .py-3\.5 { padding-top:.75rem; padding-bottom:.75rem; }
+  .gap-3 { gap:.5rem; }
+  .lang-select { min-width:40px; height:32px; font-size:11px; border-radius:8px; padding:0 6px; }
+  .theme-toggle { width:32px; height:32px; font-size:14px; border-radius:8px; }
+  .btn-primary { font-size:.875rem; }
+}
+</style>
+</head>
+<body class="min-h-screen flex items-center justify-center" style="background:linear-gradient(135deg,#0f172a,#1e293b,#064e3b);">
+  <div class="absolute inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute -top-40 -right-40 w-80 h-80" style="background:rgba(52,211,153,.05);border-radius:9999px"></div>
+    <div class="absolute -bottom-40 -left-40 w-96 h-96" style="background:rgba(34,197,94,.05);border-radius:9999px"></div>
+    <div class="absolute top-1/2 left-1/3 w-64 h-64" style="background:rgba(59,130,246,.03);border-radius:9999px"></div>
+  </div>
+
+  <div class="w-full max-w-5xl relative z-10" style="height:85vh">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-0 rounded-3xl overflow-hidden" style="background:rgba(15,23,42,.85);border:1px solid rgba(255,255,255,.06);height:85vh">
+      <!-- Left: Brand Panel -->
+      <div class="relative hidden lg:flex flex-col justify-between p-10 brand-panel" style="background:linear-gradient(135deg,#064e3b,#14532d,#0f172a);overflow:hidden;height:85vh">
+        <div class="absolute inset-0">
+          <div class="absolute top-10 right-10 w-40 h-40" style="background:rgba(52,211,153,.03);border-radius:9999px"></div>
+          <div class="absolute bottom-10 left-10 w-60 h-60" style="background:rgba(34,197,94,.03);border-radius:9999px"></div>
+        </div>
+        <div class="relative z-10">
+          <div class="flex items-center gap-3 mb-10">
+            <div class="w-12 h-12" style="background:linear-gradient(135deg,#34d399,#22c55e);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.25rem">WS</div>
+            <div>
+              <div class="text-white font-bold text-lg" data-i18n="brand">WhatsApp Sender</div>
+              <div class="text-emerald-300 text-sm" data-i18n="brand_sub">Admin Dashboard</div>
+            </div>
+          </div>
+          <h2 class="text-white text-3xl font-bold mb-4 leading-tight" id="brandHeadline" data-i18n="brandHeadline">Full Control.<br>Complete Overview.</h2>
+          <p class="text-emerald-200/70 text-sm leading-relaxed mb-8" id="brandDesc" data-i18n="brandDesc">Manage users, monitor WhatsApp sessions, track messages, and control your entire platform from one powerful dashboard.</p>
+          <div class="space-y-4">
+            <div class="feature-item flex items-start gap-3">
+              <div class="w-8 h-8" style="background:rgba(34,197,94,.2);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg></div>
+              <div><div class="text-white text-sm font-medium" data-i18n="feat1Title">User Management</div><div class="text-emerald-200/60 text-xs" data-i18n="feat1Desc">Add, edit, and monitor all client accounts</div></div>
+            </div>
+            <div class="feature-item flex items-start gap-3">
+              <div class="w-8 h-8" style="background:rgba(34,197,94,.2);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg></div>
+              <div><div class="text-white text-sm font-medium" data-i18n="feat2Title">Real-time Monitoring</div><div class="text-emerald-200/60 text-xs" data-i18n="feat2Desc">Live WhatsApp session status and message tracking</div></div>
+            </div>
+            <div class="feature-item flex items-start gap-3">
+              <div class="w-8 h-8" style="background:rgba(34,197,94,.2);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg></div>
+              <div><div class="text-white text-sm font-medium" data-i18n="feat3Title">Full Analytics</div><div class="text-emerald-200/60 text-xs" data-i18n="feat3Desc">Charts, stats, and per-client usage reports</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="relative z-10 text-emerald-300/50 text-xs" data-i18n="login_footer">WhatsApp Sender Platform v2.0</div>
+      </div>
+
+      <!-- Right: Login Form -->
+      <div class="p-8 lg:p-10 card-bg" style="background:rgba(15,23,42,.6)">
+        <div class="flex items-center justify-between mb-8">
+          <div class="lg:hidden flex items-center gap-2">
+            <div class="w-9 h-9" style="background:linear-gradient(135deg,#16a34a,#22c55e);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:14px">WS</div>
+            <span class="text-sm font-bold" style="color:#e2e8f0" data-i18n="brand">WhatsApp Sender</span>
+          </div>
+          <div class="flex items-center gap-2 mr-auto lg:mr-0 lg:ml-auto">
+          <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn" type="button" aria-label="Toggle theme">🌙</button>
+          <select class="lang-select px-2 py-1 rounded-lg text-xs font-semibold uppercase tracking-wide border outline-none" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.1);color:#94a3b8;min-width:48px" onchange="switchLang(this.value)" id="langSelect">
+            <option value="ar" style="background:#0f172a;color:#e2e8f0">AR</option>
+            <option value="en" style="background:#0f172a;color:#e2e8f0">EN</option>
+            <option value="de" style="background:#0f172a;color:#e2e8f0">DE</option>
+            <option value="fr" style="background:#0f172a;color:#e2e8f0">FR</option>
+            <option value="es" style="background:#0f172a;color:#e2e8f0">ES</option>
+            <option value="tr" style="background:#0f172a;color:#e2e8f0">TR</option>
+          </select>
+          </div>
+        </div>
+
+        <div class="max-w-sm mx-auto">
+          <div class="text-center mb-8">
+            <div class="w-16 h-16" style="background:linear-gradient(135deg,#16a34a,#10b981);border-radius:1rem;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;color:#fff;font-size:1.5rem"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg></div>
+            <h1 class="text-2xl font-bold" data-i18n="login_title" style="color:#f1f5f9">Admin Panel</h1>
+            <p class="text-sm mt-1.5" data-i18n="login_subtitle" style="color:#64748b">Sign in to manage your platform</p>
+          </div>
+
+          <div id="error" class="hidden flex items-center gap-2 px-4 py-3 rounded-xl text-sm mb-4" style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);color:#fca5a5">
+            <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>
+            <span id="errorText"></span>
+          </div>
+
+          <form onsubmit="event.preventDefault(); loginStep()" class="space-y-5">
+            <div id="loginStep1">
+              <div>
+                <label class="block text-sm font-semibold mb-1.5" data-i18n="email_label" style="color:#94a3b8">Email Address</label>
+                <div class="relative">
+                  <svg class="absolute start-3 top-1/2 -translate-y-1/2 w-5 h-5" style="color:#64748b" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                  <input type="email" id="email" class="input-field w-full px-4 py-3.5 ps-12 border-2 rounded-xl outline-none text-sm" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.1);color:#e2e8f0" value="admin@whatsapp.com">
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-semibold mb-1.5" data-i18n="password_label" style="color:#94a3b8">Password</label>
+                <div class="relative">
+                  <svg class="absolute start-3 top-1/2 -translate-y-1/2 w-5 h-5" style="color:#64748b" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                  <input type="password" id="password" class="input-field w-full px-4 py-3.5 ps-12 border-2 rounded-xl outline-none text-sm" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.1);color:#e2e8f0" placeholder="••••••••">
+                </div>
+              </div>
+              <button type="submit" id="loginBtn" class="btn-primary w-full text-white py-3.5 rounded-xl font-bold text-base tracking-wide mt-8" style="background:linear-gradient(90deg,#16a34a,#10b981)">
+                <span class="flex items-center justify-center gap-2">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
+                  <span data-i18n="login_btn">Sign In</span>
+                </span>
+              </button>
+            </div>
+            <div id="loginStep2" style="display:none">
+              <div class="text-center mb-4">
+                <div class="w-12 h-12" style="background:linear-gradient(135deg,#f59e0b,#d97706);border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto .75rem;color:#fff;font-size:1.25rem"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg></div>
+                <p class="text-sm font-semibold" style="color:#e2e8f0">Two-Factor Authentication</p>
+                <p class="text-xs mt-1" style="color:#94a3b8">Enter the 6-digit code from your authenticator app</p>
+              </div>
+              <div>
+                <input type="text" id="twoFACode" class="input-field w-full px-4 py-3.5 border-2 rounded-xl outline-none text-lg text-center font-mono tracking-widest" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.1);color:#e2e8f0" placeholder="000000" maxlength="6" oninput="this.value=this.value.replace(/\D/g,'')">
+              </div>
+              <button type="submit" id="verifyBtn" class="btn-primary w-full text-white py-3.5 rounded-xl font-bold text-base tracking-wide" style="background:linear-gradient(90deg,#f59e0b,#d97706)">
+                <span class="flex items-center justify-center gap-2">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                  <span>Verify</span>
+                </span>
+              </button>
+              <p class="text-center mt-3"><a href="#" onclick="backToLogin()" style="color:#64748b;font-size:13px;text-decoration:none">← Back to login</a></p>
+            </div>
+          </form>
+
+          <p class="text-center text-xs mt-8" data-i18n="login_hint" style="color:#64748b">Default: admin@whatsapp.com</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const LANG_LIST = ['ar', 'en', 'de', 'fr', 'es', 'tr'];
+    let currentLang = localStorage.getItem('lang') || 'ar';
+    const i18n = {
+      ar: { flag: '🇪🇬', label: 'العربية', page_title: 'دخول - لوحة التحكم', login_title: 'لوحة التحكم', login_subtitle: 'سجل دخولك لإدارة المنصة', email_label: 'البريد الإلكتروني', password_label: 'كلمة المرور', login_btn: 'تسجيل الدخول', login_footer: 'واتساب سيندر بلاتفورم v2.0', login_hint: 'البريد الافتراضي: admin@whatsapp.com', brand: 'واتساب سيندر', brand_sub: 'لوحة التحكم', feat1Title: 'إدارة المستخدمين', feat1Desc: 'إضافة وتعديل ومراقبة حسابات العملاء', feat2Title: 'مراقبة لحظية', feat2Desc: 'حالة جلسات واتساب وتتبع الرسائل مباشر', feat3Title: 'تحليلات كاملة', feat3Desc: 'رسوم بيانية وإحصائيات استخدام لكل عميل', brandHeadline: 'تحكم كامل.<br>نظرة شاملة.', brandDesc: 'إدارة المستخدمين، مراقبة جلسات واتساب، تتبع الرسائل، والتحكم في المنصة بأكملها.' },
+      en: { flag: '🇺🇸', label: 'English', page_title: 'Admin Login - WhatsApp Sender', login_title: 'Admin Panel', login_subtitle: 'Sign in to manage your platform', email_label: 'Email Address', password_label: 'Password', login_btn: 'Sign In', login_footer: 'WhatsApp Sender Platform v2.0', login_hint: 'Default email: admin@whatsapp.com', brand: 'WhatsApp Sender', brand_sub: 'Admin Dashboard', feat1Title: 'User Management', feat1Desc: 'Add, edit, and monitor all client accounts', feat2Title: 'Real-time Monitoring', feat2Desc: 'Live WhatsApp session status and message tracking', feat3Title: 'Full Analytics', feat3Desc: 'Charts, stats, and per-client usage reports', brandHeadline: 'Full Control.<br>Complete Overview.', brandDesc: 'Manage users, monitor WhatsApp sessions, track messages, and control your entire platform.' },
+      de: { flag: '🇩🇪', label: 'Deutsch', page_title: 'Admin-Anmeldung - WhatsApp Sender', login_title: 'Admin-Bereich', login_subtitle: 'Melden Sie sich an, um Ihre Plattform zu verwalten', email_label: 'E-Mail-Adresse', password_label: 'Passwort', login_btn: 'Anmelden', login_footer: 'WhatsApp Sender Platform v2.0', login_hint: 'Standard-E-Mail: admin@whatsapp.com', brand: 'WhatsApp Sender', brand_sub: 'Admin-Dashboard', feat1Title: 'Benutzerverwaltung', feat1Desc: 'Kundenkonten hinzufügen, bearbeiten und überwachen', feat2Title: 'Echtzeit-Überwachung', feat2Desc: 'Live WhatsApp-Status und Nachrichtenverfolgung', feat3Title: 'Vollständige Analysen', feat3Desc: 'Diagramme, Statistiken und Nutzungsberichte pro Kunde', brandHeadline: 'Volle Kontrolle.<br>Kompletter Überblick.', brandDesc: 'Verwalten Sie Benutzer, überwachen Sie WhatsApp-Sitzungen und verfolgen Sie Nachrichten.' },
+      fr: { flag: '🇫🇷', label: 'Français', page_title: 'Connexion Admin - WhatsApp Sender', login_title: 'Panneau Admin', login_subtitle: 'Connectez-vous pour gérer votre plateforme', email_label: 'Adresse e-mail', password_label: 'Mot de passe', login_btn: 'Connexion', login_footer: 'WhatsApp Sender Platform v2.0', login_hint: 'E-mail par défaut: admin@whatsapp.com', brand: 'WhatsApp Sender', brand_sub: 'Tableau de bord', feat1Title: 'Gestion des utilisateurs', feat1Desc: 'Ajouter, modifier et surveiller les clients', feat2Title: 'Surveillance en direct', feat2Desc: 'Statut WhatsApp et suivi des messages en direct', feat3Title: 'Analyses complètes', feat3Desc: 'Graphiques, statistiques et rapports par client', brandHeadline: 'Contrôle total.<br>Aperçu complet.', brandDesc: 'Gérez les utilisateurs, surveillez les sessions WhatsApp.' },
+      es: { flag: '🇪🇸', label: 'Español', page_title: 'Inicio de sesión - WhatsApp Sender', login_title: 'Panel Admin', login_subtitle: 'Inicie sesión para administrar su plataforma', email_label: 'Correo electrónico', password_label: 'Contraseña', login_btn: 'Iniciar sesión', login_footer: 'WhatsApp Sender Platform v2.0', login_hint: 'Correo predeterminado: admin@whatsapp.com', brand: 'WhatsApp Sender', brand_sub: 'Panel de administración', feat1Title: 'Gestión de usuarios', feat1Desc: 'Añadir, editar y monitorizar clientes', feat2Title: 'Monitorización en vivo', feat2Desc: 'Estado de WhatsApp y seguimiento de mensajes', feat3Title: 'Analíticas completas', feat3Desc: 'Gráficos, estadísticas e informes por cliente', brandHeadline: 'Control total.<br>Visión completa.', brandDesc: 'Gestione usuarios, supervise sesiones de WhatsApp.' },
+      tr: { flag: '🇹🇷', label: 'Türkçe', page_title: 'Admin Giriş - WhatsApp Sender', login_title: 'Admin Paneli', login_subtitle: 'Platformunuzu yönetmek için giriş yapın', email_label: 'E-posta Adresi', password_label: 'Şifre', login_btn: 'Giriş Yap', login_footer: 'WhatsApp Sender Platform v2.0', login_hint: 'Varsayılan e-posta: admin@whatsapp.com', brand: 'WhatsApp Sender', brand_sub: 'Yönetici Paneli', feat1Title: 'Kullanıcı Yönetimi', feat1Desc: 'Müşteri hesaplarını ekleyin, düzenleyin ve izleyin', feat2Title: 'Gerçek Zamanlı İzleme', feat2Desc: 'Canlı WhatsApp durumu ve mesaj takibi', feat3Title: 'Tam Analitik', feat3Desc: 'Grafikler, istatistikler ve müşteri başına raporlar', brandHeadline: 'Tam Kontrol.<br>Tam Görünüm.', brandDesc: 'Kullanıcıları yönetin, WhatsApp oturumlarını izleyin.' }
+    };
+    function t(key) { return i18n[currentLang]?.[key] || key; }
+    function applyLang() {
+      document.title = t('page_title');
+      document.querySelectorAll('[data-i18n]').forEach(el => { el.innerHTML = t(el.dataset.i18n); });
+      document.documentElement.lang = currentLang;
+      document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+      const sel = document.getElementById('langSelect');
+      if (sel) sel.innerHTML = LANG_LIST.map(c => `<option value="${c}" ${c === currentLang ? 'selected' : ''} style="background:#0f172a;color:#e2e8f0">${c.toUpperCase()}</option>`).join('');
+      localStorage.setItem('lang', currentLang);
+    }
+    function switchLang(code) { currentLang = code; localStorage.setItem('lang', currentLang); applyLang(); }
+    function toggleTheme() {
+      const html = document.documentElement;
+      const isLight = html.getAttribute('data-theme') === 'light';
+      html.setAttribute('data-theme', isLight ? 'dark' : 'light');
+      localStorage.setItem('loginTheme', isLight ? 'dark' : 'light');
+      document.getElementById('themeBtn').textContent = isLight ? '🌙' : '☀️';
+    }
+    const savedTheme = localStorage.getItem('loginTheme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('themeBtn').textContent = savedTheme === 'light' ? '☀️' : '🌙';
+    });
+    let tempToken = null;
+
+    function showError(msg) {
+      const err = document.getElementById('error'); const errText = document.getElementById('errorText');
+      errText.textContent = msg; err.className = 'flex items-center gap-2 px-4 py-3 rounded-xl text-sm mb-4';
+      err.style.background = 'rgba(239,68,68,.1)'; err.style.border = '1px solid rgba(239,68,68,.2)'; err.style.color = '#fca5a5';
+    }
+
+    function hideError() { document.getElementById('error').classList.add('hidden'); }
+
+    function loginStep() {
+      if (document.getElementById('loginStep1').style.display !== 'none') { login(); }
+      else { verify2FA(); }
+    }
+
+    function backToLogin() {
+      tempToken = null;
+      document.getElementById('loginStep1').style.display = '';
+      document.getElementById('loginStep2').style.display = 'none';
+      document.getElementById('twoFACode').value = '';
+      hideError();
+    }
+
+    async function login() {
+      const email = document.getElementById('email').value; const password = document.getElementById('password').value;
+      hideError();
+      if (!email || !password) { showError(t('email_label') + ' & ' + t('password_label') + ' required'); return; }
+      const btn = document.getElementById('loginBtn'); const orig = btn.innerHTML;
+      btn.disabled = true; btn.innerHTML = '<span class="flex items-center justify-center gap-2"><svg class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg><span>' + t('login_btn') + '...</span></span>';
+      try {
+        const res = await fetch('/api/admin/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password }) });
+        if (!res.ok) { const e = await res.json(); showError(e.error); btn.disabled = false; btn.innerHTML = orig; return; }
+        const data = await res.json();
+        if (data.require2fa) {
+          tempToken = data.token;
+          document.getElementById('loginStep1').style.display = 'none';
+          document.getElementById('loginStep2').style.display = '';
+          document.getElementById('twoFACode').value = '';
+          document.getElementById('twoFACode').focus();
+          btn.disabled = false; btn.innerHTML = orig;
+        } else {
+          localStorage.setItem('adminToken', data.token);
+          if (data.admin) localStorage.setItem('adminData', JSON.stringify(data.admin));
+          window.location.href = '/admin';
+        }
+      } catch(e) { showError(e.message); btn.disabled = false; btn.innerHTML = orig; }
+    }
+
+    async function verify2FA() {
+      const code = document.getElementById('twoFACode').value.trim();
+      hideError();
+      if (!code || code.length < 6) { showError('Enter a valid 6-digit code'); return; }
+      const btn = document.getElementById('verifyBtn'); const orig = btn.innerHTML;
+      btn.disabled = true; btn.innerHTML = '<span class="flex items-center justify-center gap-2"><svg class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg><span>Verifying...</span></span>';
+      try {
+        const res = await fetch('/api/admin/login/verify-2fa', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token: tempToken, code }) });
+        if (!res.ok) { const e = await res.json(); showError(e.error); btn.disabled = false; btn.innerHTML = orig; return; }
+        const data = await res.json();
+        localStorage.setItem('adminToken', data.token);
+        if (data.admin) localStorage.setItem('adminData', JSON.stringify(data.admin));
+        window.location.href = '/admin';
+      } catch(e) { showError(e.message); btn.disabled = false; btn.innerHTML = orig; }
+    }
+
+    document.addEventListener('keydown', e => { if (e.key === 'Enter') loginStep(); });
+    applyLang();
+  </script>
+</body>
+</html>

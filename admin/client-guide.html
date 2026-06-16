@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Client Guide - WhatsApp Sender</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Segoe UI',system-ui,sans-serif;background:linear-gradient(135deg,#0f172a,#1e293b,#064e3b);color:#e2e8f0;min-height:100vh}
+  .max-w-3xl{max-width:48rem;margin:0 auto;padding:24px 16px}
+  pre{direction:ltr;text-align:left}
+  @media print{.no-print{display:none!important}}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:10px;font-size:13px;font-weight:600;border:none;cursor:pointer;transition:.2s;text-decoration:none}
+  .btn-primary{background:#16a34a;color:#fff}.btn-primary:hover{background:#15803d}
+  .btn-secondary{background:rgba(255,255,255,.06);color:#94a3b8;border:1px solid rgba(255,255,255,.08)}.btn-secondary:hover{background:rgba(255,255,255,.1)}
+  .card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:32px}
+  .text-center{text-align:center}
+  .border-b{border-bottom:1px solid rgba(255,255,255,.06)}
+  .pb-6{padding-bottom:24px}.mb-6{margin-bottom:24px}
+  .ws-icon{width:56px;height:56px;background:linear-gradient(135deg,#22c55e,#059669);border-radius:16px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:20px;margin:0 auto 12px;box-shadow:0 10px 15px -3px rgba(0,0,0,.3)}
+  h1{font-size:24px;font-weight:700;color:#f1f5f9;margin-bottom:4px}
+  .sub{color:#64748b;font-size:14px;margin-top:4px}
+  .section{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:16px;margin-bottom:16px}
+  .section-title{font-size:18px;font-weight:700;color:#f1f5f9;margin-bottom:12px}
+  .section-text{color:#94a3b8;font-size:14px;line-height:1.6;margin-bottom:8px}
+  .code-block{background:#0f172a;border-radius:12px;padding:16px;font-size:13px;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;direction:ltr;text-align:left;line-height:1.8;color:#4ade80;overflow-x:auto}
+  .code-block .comment{color:#64748b}
+  .tip{background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.15);border-radius:12px;padding:16px;margin-bottom:16px}
+  .tip-title{font-weight:700;color:#fbbf24;margin-bottom:4px}
+  .tip-text{color:rgba(251,191,36,.8);font-size:14px;line-height:1.6}
+  .tip-text li{margin-bottom:4px;list-style-position:inside}
+  .copyright{text-align:center;font-size:12px;color:#475569;margin-top:24px}
+</style>
+</head>
+<body>
+  <div class="max-w-3xl">
+    <div class="flex items-center justify-between mb-6 no-print">
+      <button onclick="window.print()" class="btn btn-primary">🖨️ Print / Save PDF</button>
+      <button onclick="window.close()" class="btn btn-secondary">✕ Close</button>
+    </div>
+
+    <div class="card">
+      <div class="text-center border-b pb-6 mb-6">
+        <div class="ws-icon">WS</div>
+        <h1 data-i18n="guide_title">📘 Client Integration Guide</h1>
+        <p class="sub" data-i18n="guide_subtitle">Everything you need to integrate WhatsApp Sender API</p>
+      </div>
+
+      <div class="section" style="border-color:rgba(34,197,94,.2);background:rgba(34,197,94,.04)">
+        <p style="font-weight:700;color:#4ade80;margin-bottom:4px" data-i18n="guide_what_title">🤔 What is WhatsApp Sender?</p>
+        <p class="section-text" data-i18n="guide_what_desc">A powerful API platform that lets you send WhatsApp messages programmatically. You get an API Key, create WhatsApp sessions, and send messages to any number.</p>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title" data-i18n="guide_step1">1️⃣ Get Your API Key</h2>
+        <p class="section-text" data-i18n="guide_step1_desc">Your API Key is provided by the platform admin. Keep it secret and use it in all API requests.</p>
+        <div class="code-block">
+          <span class="comment"># </span><span data-i18n="guide_example">Example request:</span><br>
+          curl -X POST https://your-server.com/v1/send \<br>
+          &nbsp;&nbsp;-H "X-API-Key: YOUR_API_KEY" \<br>
+          &nbsp;&nbsp;-H "Content-Type: application/json" \<br>
+          &nbsp;&nbsp;-d '{"to":"201234567890","message":"Hello from API!"}'
+        </div>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title" data-i18n="guide_step2">2️⃣ Check Balance</h2>
+        <p class="section-text" data-i18n="guide_step2_desc">Check your remaining message balance anytime:</p>
+        <div class="code-block">
+          curl -X GET https://your-server.com/v1/balance \<br>
+          &nbsp;&nbsp;-H "X-API-Key: YOUR_API_KEY"<br><br>
+          <span class="comment"># Response:</span><br>
+          {"usedMessages":150,"maxMessages":1000,"remaining":850,"status":"active"}
+        </div>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title" data-i18n="guide_step3">3️⃣ Manage WhatsApp Sessions</h2>
+        <p class="section-text" data-i18n="guide_step3_desc">You can create and manage your WhatsApp sessions via API or through the client panel.</p>
+        <div class="code-block">
+          <span class="comment"># Create session:</span><br>
+          curl -X POST https://your-server.com/v1/sessions/create \<br>
+          &nbsp;&nbsp;-H "X-API-Key: YOUR_API_KEY" \<br>
+          &nbsp;&nbsp;-H "Content-Type: application/json" \<br>
+          &nbsp;&nbsp;-d '{"phone":"201234567890","name":"My Phone"}'<br><br>
+          <span class="comment"># List sessions:</span><br>
+          curl -X GET https://your-server.com/v1/sessions \<br>
+          &nbsp;&nbsp;-H "X-API-Key: YOUR_API_KEY"<br><br>
+          <span class="comment"># Get QR code for scanning:</span><br>
+          curl -X GET https://your-server.com/v1/sessions/{sessionId}/qr \<br>
+          &nbsp;&nbsp;-H "X-API-Key: YOUR_API_KEY"
+        </div>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title" data-i18n="guide_step4">4️⃣ Send Messages</h2>
+        <p class="section-text" data-i18n="guide_step4_desc">Send messages through your connected WhatsApp session:</p>
+        <div class="code-block">
+          <span class="comment"># Send a message:</span><br>
+          curl -X POST https://your-server.com/v1/send \<br>
+          &nbsp;&nbsp;-H "X-API-Key: YOUR_API_KEY" \<br>
+          &nbsp;&nbsp;-H "Content-Type: application/json" \<br>
+          &nbsp;&nbsp;-d '{"to":"201234567890","message":"Hello World!"}'<br><br>
+          <span class="comment"># Response:</span><br>
+          {"success":true,"messageId":"abc123","status":"queued"}
+        </div>
+      </div>
+
+      <div class="tip">
+        <p class="tip-title" data-i18n="guide_tips_title">💡 Pro Tips</p>
+        <ul class="tip-text">
+          <li data-i18n="guide_tip1">Always use international format: 201234567890 (Egypt) or 966501234567 (Saudi Arabia)</li>
+          <li data-i18n="guide_tip2">Keep your session connected — scan QR again if disconnected</li>
+          <li data-i18n="guide_tip3">Each message counts toward your plan limit</li>
+          <li data-i18n="guide_tip4">Contact admin to upgrade your plan anytime</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="copyright no-print">
+      WhatsApp Sender Platform — <span data-i18n="guide_footer">Client Integration Guide</span>
+    </div>
+  </div>
+
+  <script>
+    const i18n = {
+      ar: {
+        guide_title: '📘 دليل استخدام العميل',
+        guide_subtitle: 'كل ما تحتاجه لدمج واجهة واتساب سيندر',
+        guide_what_title: '🤔 ما هو واتساب سيندر؟',
+        guide_what_desc: 'منصة API قوية تسمح لك بإرسال رسائل واتساب برمجياً. تحصل على مفتاح API، تنشئ جلسات واتساب، وترسل رسائل لأي رقم.',
+        guide_step1: '1️⃣ احصل على مفتاح API',
+        guide_step1_desc: 'مفتاح API يتم توفيره بواسطة مدير المنصة. احتفظ به سرياً واستخدمه في جميع طلبات API.',
+        guide_example: 'مثال على طلب:',
+        guide_step2: '2️⃣ تحقق من الرصيد',
+        guide_step2_desc: 'تحقق من رصيد الرسائل المتبقي في أي وقت:',
+        guide_step3: '3️⃣ إدارة جلسات واتساب',
+        guide_step3_desc: 'يمكنك إنشاء وإدارة جلسات واتساب عبر API أو من خلال لوحة العميل.',
+        guide_step4: '4️⃣ إرسال الرسائل',
+        guide_step4_desc: 'أرسل الرسائل من خلال جلسة واتساب المتصلة:',
+        guide_tips_title: '💡 نصائح احترافية',
+        guide_tip1: 'استخدم الصيغة الدولية: 201234567890 (مصر) أو 966501234567 (السعودية)',
+        guide_tip2: 'حافظ على اتصال الجلسة — أعد مسح QR إذا انفصلت',
+        guide_tip3: 'كل رسالة تحتسب ضمن حد خطتك',
+        guide_tip4: 'اتصل بالمدير لترقية خطتك في أي وقت',
+        guide_footer: 'دليل استخدام العميل'
+      },
+      en: {
+        guide_title: '📘 Client Integration Guide',
+        guide_subtitle: 'Everything you need to integrate WhatsApp Sender API',
+        guide_what_title: '🤔 What is WhatsApp Sender?',
+        guide_what_desc: 'A powerful API platform that lets you send WhatsApp messages programmatically. You get an API Key, create WhatsApp sessions, and send messages to any number.',
+        guide_step1: '1️⃣ Get Your API Key',
+        guide_step1_desc: 'Your API Key is provided by the platform admin. Keep it secret and use it in all API requests.',
+        guide_example: 'Example request:',
+        guide_step2: '2️⃣ Check Balance',
+        guide_step2_desc: 'Check your remaining message balance anytime:',
+        guide_step3: '3️⃣ Manage WhatsApp Sessions',
+        guide_step3_desc: 'Create and manage WhatsApp sessions via API or through the client panel.',
+        guide_step4: '4️⃣ Send Messages',
+        guide_step4_desc: 'Send messages through your connected WhatsApp session:',
+        guide_tips_title: '💡 Pro Tips',
+        guide_tip1: 'Always use international format: 201234567890 (Egypt) or 966501234567 (Saudi Arabia)',
+        guide_tip2: 'Keep your session connected — scan QR again if disconnected',
+        guide_tip3: 'Each message counts toward your plan limit',
+        guide_tip4: 'Contact admin to upgrade your plan anytime',
+        guide_footer: 'Client Integration Guide'
+      },
+      de: {
+        guide_title: '📘 Client-Integrationshandbuch',
+        guide_subtitle: 'Alles, was Sie für die Integration der WhatsApp Sender API benötigen',
+        guide_what_title: '🤔 Was ist WhatsApp Sender?',
+        guide_what_desc: 'Eine leistungsstarke API-Plattform zum programmgesteuerten Senden von WhatsApp-Nachrichten.',
+        guide_step1: '1️⃣ Holen Sie sich Ihren API-Schlüssel',
+        guide_step1_desc: 'Ihr API-Schlüssel wird vom Plattform-Admin bereitgestellt.',
+        guide_example: 'Beispielanfrage:',
+        guide_step2: '2️⃣ Guthaben prüfen',
+        guide_step2_desc: 'Überprüfen Sie jederzeit Ihr verbleibendes Nachrichtenguthaben:',
+        guide_step3: '3️⃣ WhatsApp-Sitzungen verwalten',
+        guide_step3_desc: 'Erstellen und verwalten Sie WhatsApp-Sitzungen über die API oder das Client-Panel.',
+        guide_step4: '4️⃣ Nachrichten senden',
+        guide_step4_desc: 'Senden Sie Nachrichten über Ihre verbundene WhatsApp-Sitzung:',
+        guide_tips_title: '💡 Profi-Tipps',
+        guide_tip1: 'Verwenden Sie immer das internationale Format: 201234567890 (Ägypten) oder 966501234567 (Saudi-Arabien)',
+        guide_tip2: 'Halten Sie Ihre Sitzung verbunden',
+        guide_tip3: 'Jede Nachricht zählt zu Ihrem Planlimit',
+        guide_tip4: 'Kontaktieren Sie den Admin für ein Upgrade',
+        guide_footer: 'Client-Integrationshandbuch'
+      },
+      fr: {
+        guide_title: '📘 Guide d\'intégration client',
+        guide_subtitle: 'Tout ce dont vous avez besoin pour intégrer l\'API WhatsApp Sender',
+        guide_what_title: '🤔 Qu\'est-ce que WhatsApp Sender?',
+        guide_what_desc: 'Une plateforme API puissante pour envoyer des messages WhatsApp par programmation.',
+        guide_step1: '1️⃣ Obtenez votre clé API',
+        guide_step1_desc: 'Votre clé API est fournie par l\'administrateur de la plateforme.',
+        guide_example: 'Exemple de requête:',
+        guide_step2: '2️⃣ Vérifier le solde',
+        guide_step2_desc: 'Vérifiez votre solde de messages restants à tout moment:',
+        guide_step3: '3️⃣ Gérer les sessions WhatsApp',
+        guide_step3_desc: 'Créez et gérez vos sessions WhatsApp via l\'API ou le panneau client.',
+        guide_step4: '4️⃣ Envoyer des messages',
+        guide_step4_desc: 'Envoyez des messages via votre session WhatsApp connectée:',
+        guide_tips_title: '💡 Conseils pro',
+        guide_tip1: 'Utilisez toujours le format international: 201234567890 (Égypte)',
+        guide_tip2: 'Gardez votre session connectée',
+        guide_tip3: 'Chaque message compte dans votre limite de forfait',
+        guide_tip4: 'Contactez l\'administrateur pour un upgrade',
+        guide_footer: 'Guide d\'intégration client'
+      },
+      es: {
+        guide_title: '📘 Guía de integración para clientes',
+        guide_subtitle: 'Todo lo que necesita para integrar la API de WhatsApp Sender',
+        guide_what_title: '🤔 ¿Qué es WhatsApp Sender?',
+        guide_what_desc: 'Una potente plataforma API que le permite enviar mensajes de WhatsApp mediante programación.',
+        guide_step1: '1️⃣ Obtenga su clave API',
+        guide_step1_desc: 'Su clave API es proporcionada por el administrador de la plataforma.',
+        guide_example: 'Ejemplo de solicitud:',
+        guide_step2: '2️⃣ Verificar saldo',
+        guide_step2_desc: 'Verifique su saldo de mensajes restante en cualquier momento:',
+        guide_step3: '3️⃣ Administrar sesiones de WhatsApp',
+        guide_step3_desc: 'Cree y administre sesiones de WhatsApp a través de la API o el panel del cliente.',
+        guide_step4: '4️⃣ Enviar mensajes',
+        guide_step4_desc: 'Envíe mensajes a través de su sesión de WhatsApp conectada:',
+        guide_tips_title: '💡 Consejos profesionales',
+        guide_tip1: 'Utilice el formato internacional: 201234567890 (Egipto)',
+        guide_tip2: 'Mantenga su sesión conectada',
+        guide_tip3: 'Cada mensaje cuenta para el límite de su plan',
+        guide_tip4: 'Contacte al administrador para actualizar su plan',
+        guide_footer: 'Guía de integración para clientes'
+      },
+      tr: {
+        guide_title: '📘 Müşteri Entegrasyon Kılavuzu',
+        guide_subtitle: 'WhatsApp Sender API\'sini entegre etmek için ihtiyacınız olan her şey',
+        guide_what_title: '🤔 WhatsApp Sender Nedir?',
+        guide_what_desc: 'WhatsApp mesajlarını programlı olarak göndermenizi sağlayan güçlü bir API platformu.',
+        guide_step1: '1️⃣ API Anahtarınızı Alın',
+        guide_step1_desc: 'API Anahtarınız platform yöneticisi tarafından sağlanır.',
+        guide_example: 'Örnek istek:',
+        guide_step2: '2️⃣ Bakiyenizi Kontrol Edin',
+        guide_step2_desc: 'Kalan mesaj bakiyenizi istediğiniz zaman kontrol edin:',
+        guide_step3: '3️⃣ WhatsApp Oturumlarını Yönetin',
+        guide_step3_desc: 'API veya müşteri paneli aracılığıyla WhatsApp oturumları oluşturun ve yönetin.',
+        guide_step4: '4️⃣ Mesaj Gönderin',
+        guide_step4_desc: 'Bağlı WhatsApp oturumunuz üzerinden mesaj gönderin:',
+        guide_tips_title: '💡 Profesyonel İpuçları',
+        guide_tip1: 'Her zaman uluslararası formatı kullanın: 201234567890 (Mısır)',
+        guide_tip2: 'Oturumunuzu bağlı tutun',
+        guide_tip3: 'Her mesaj plan limitinize dahildir',
+        guide_tip4: 'Planınızı yükseltmek için yöneticinizle iletişime geçin',
+        guide_footer: 'Müşteri Entegrasyon Kılavuzu'
+      }
+    };
+    const lang = localStorage.getItem('lang') || 'ar';
+    const fallbackLang = i18n[lang] ? lang : 'en';
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.dataset.i18n;
+      el.textContent = i18n[fallbackLang]?.[key] || i18n['en']?.[key] || key;
+    });
+  </script>
+</body>
+</html>
