@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: whatsapp-sender
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node src/index.js
+    envVars:
+      - key: ADMIN_EMAIL
+        value: admin@whatsapp.com
+      - key: ADMIN_PASSWORD
+        value: Ahmed@122112
+      - key: JWT_SECRET
+        generateValue: true
+      - key: NODE_ENV
+        value: production
+    disk:
+      name: data
+      mountPath: /opt/render/project/src/data
+      sizeGB: 1
