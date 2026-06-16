@@ -14,7 +14,4 @@ services:
         generateValue: true
       - key: NODE_ENV
         value: production
-    disk:
-      name: data
-      mountPath: /opt/render/project/src/data
-      sizeGB: 1
+
